@@ -1,5 +1,3 @@
-using System;
-
 namespace QuizMaker.Models
 {
     public class ErrorViewModel
