@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{7B2AAD5E-368
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		LICENSE = LICENSE
+		doc\quiz.md = doc\quiz.md
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -20,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{7F48B88A-6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "release", "release", "{EC9C2024-7F3E-4C94-B592-9BC6A96AB14E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizMaker", "src\QuizMaker\QuizMaker.csproj", "{5A14ED66-1CBE-41C7-81E3-BED03D5F2BF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizMaker", "src\QuizMaker\QuizMaker.csproj", "{5A14ED66-1CBE-41C7-81E3-BED03D5F2BF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
