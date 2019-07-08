@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using QuizMaker.Data;
 
 namespace QuizMaker
 {
@@ -29,6 +31,13 @@ namespace QuizMaker
                 options.CheckConsentNeeded = context => true;
             });
 
+            services.AddApplicationInsightsTelemetry();
+
+            var storageAccount = CloudStorageAccount.Parse(Configuration["StorageConnectionString"]);
+            var tableClient = storageAccount.CreateCloudTableClient();
+            tableClient.GetTableReference(TableNames.Users).CreateIfNotExists();
+            tableClient.GetTableReference(TableNames.Quizzes).CreateIfNotExists();
+            tableClient.GetTableReference(TableNames.QuizResponses).CreateIfNotExists();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
