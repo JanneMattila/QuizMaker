@@ -7,5 +7,7 @@ namespace QuizMaker.Data
         public QuizEntity(string quizKey, string quizQuestionKey) : base(quizKey, quizQuestionKey)
         {
         }
+
+        public string Json { get; set; }
     }
 }
