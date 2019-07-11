@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuizMaker.Data;
+using QuizMaker.Hubs;
 
 namespace QuizMaker
 {
@@ -33,11 +34,7 @@ namespace QuizMaker
 
             services.AddApplicationInsightsTelemetry();
 
-            var storageAccount = CloudStorageAccount.Parse(Configuration["StorageConnectionString"]);
-            var tableClient = storageAccount.CreateCloudTableClient();
-            tableClient.GetTableReference(TableNames.Users).CreateIfNotExists();
-            tableClient.GetTableReference(TableNames.Quizzes).CreateIfNotExists();
-            tableClient.GetTableReference(TableNames.QuizResponses).CreateIfNotExists();
+            services.AddSignalR();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -72,6 +69,7 @@ namespace QuizMaker
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<QuizHub>("/QuizHub");
             });
         }
     }
