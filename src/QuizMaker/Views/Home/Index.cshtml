@@ -3,5 +3,15 @@
 }
 
 <div class="text-center">
-    Waiting for quiz...
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div id="quizForm" class="form-group">
+            Waiting for available quiz...
+        </div>
+
+        <div id="quizSubmit" class="form-group" style="display:none">
+            <input type="submit" value="Submit" class="btn btn-primary" onclick="return formSubmitCheck();" />
+            <div id="quizSubmitError" class="text-danger quiz-submit-error"></div>
+        </div>
+    </form>
 </div>

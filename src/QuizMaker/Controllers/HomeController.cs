@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuizMaker.Models;
 
@@ -6,7 +7,7 @@ namespace QuizMaker.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(IFormCollection form)
         {
             return View();
         }

@@ -79,3 +79,8 @@ body {
 .alert-link {
     font-weight: 500;
 }
+
+div.quiz-submit-error {
+    margin-top: 10px;
+    font-weight: 600;
+}
