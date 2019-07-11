@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewData["Title"] = "Results";
+    ViewData["MinimalLayout"] = true;
+}
+
+<h3>Results</h3>
+
+<svg id="quizChart" width="1024" height="800"></svg>
+
+@section Scripts {
+    <script src="~/lib/d3js/d3.v5.min.js"></script>
+    <script src="~/js/quizResults.js" asp-append-version="true"></script>
+}

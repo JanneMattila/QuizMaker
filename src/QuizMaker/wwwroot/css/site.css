@@ -84,3 +84,12 @@ div.quiz-submit-error {
     margin-top: 10px;
     font-weight: 600;
 }
+
+/* Quiz Results: */
+.quiz-results-bar {
+    fill: blue;
+}
+
+.quiz-results-bar:hover {
+    fill: darkblue;
+}
