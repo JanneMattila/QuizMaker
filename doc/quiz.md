@@ -7,10 +7,11 @@ Here is example quiz format:
 ```json
 {
   "quizId": "123-abc-123",
+  "quizTitle": "Animal survey",
   "questions": [
     {
       "questionId": "123-abc-123-1",
-      "title": "What's your favorite animal?",
+      "questionTitle": "What's your favorite animal?",
       "options": [
         {
           "optionId": "123-abc-123-1-1",

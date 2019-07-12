@@ -1,4 +1,5 @@
 ﻿declare var signalR: typeof import("@aspnet/signalr");
+import { Quiz, QuizQuestion } from "./quiz";
 
 function addMessage(msg: any) {
     console.log(msg);
@@ -13,6 +14,7 @@ let connection = new signalR.HubConnectionBuilder()
     .build();
 
 let quizMandatoryQuestions = [];
+let quiz: Quiz;
 
 function createHiddenElement(name: string, value: string): HTMLInputElement {
     let hidden = document.createElement("input") as HTMLInputElement;
@@ -70,6 +72,15 @@ connection.on('Connected', function (msg: any) {
 
     let quizForm = document.getElementById("quizForm");
     quizForm.innerHTML = "";
+
+    let question = new QuizQuestion();
+    question.questionId = "questionId-333";
+    question.questionTitle = "What's your favorite animal?";
+
+    quiz = new Quiz();
+    quiz.quizId = "111";
+    quiz.quizTitle = "Animal survey";
+    quiz.questions.push(question);
 
     quizForm.appendChild(createHiddenElement("quizId", "111"));
     quizForm.appendChild(createHiddenElement("userId", "222"));
