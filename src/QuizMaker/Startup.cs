@@ -37,6 +37,13 @@ namespace QuizMaker
 
             services.AddSignalR();
 
+            var storageConnectionString = Configuration["StorageConnectionString"];
+            services.AddSingleton<IQuizDataContext>((services) => 
+            new QuizDataContext(new QuizDataContextOptions()
+            {
+                StorageConnectionString = storageConnectionString
+            }));
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

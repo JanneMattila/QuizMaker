@@ -4,12 +4,11 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./quiz"], factory);
+        define(["require", "exports"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var quiz_1 = require("./quiz");
     function addMessage(msg) {
         console.log(msg);
     }
@@ -68,22 +67,55 @@
         var data = "Date received: " + new Date().toLocaleTimeString();
         addMessage(data);
         addMessage(msg);
+        //let quizForm = document.getElementById("quizForm");
+        //quizForm.innerHTML = "";
+        //let question = new QuizQuestion();
+        //question.questionId = "questionId-333";
+        //question.questionTitle = "What's your favorite animal?";
+        //for (let i = 1; i < 5; i++) {
+        //    let option = new QuizQuestionOption();
+        //    option.optionId = i.toString();
+        //    option.optionText = `Text for option ${i}`;
+        //    question.options.push(option);
+        //}
+        //quiz = new Quiz();
+        //quiz.quizId = "111";
+        //quiz.quizTitle = "Animal survey";
+        //quiz.questions.push(question);
+        //quizForm.appendChild(createHiddenElement("quizId", "111"));
+        //quizForm.appendChild(createHiddenElement("userId", "222"));
+        //quizForm.appendChild(createRadioButton("questionId-333", "1", "Text 1 is longer"));
+        //quizForm.appendChild(createRadioButton("questionId-333", "2", "Text 2"));
+        //quizForm.appendChild(createRadioButton("questionId-333", "3", "Text 3"));
+        //quizForm.appendChild(createRadioButton("questionId-333", "4", "Text 4"));
+        //quizMandatoryQuestions.push("questionId-333");
+        //let quizSubmit = document.getElementById("quizSubmit");
+        //quizSubmit.style.display = "";
+    });
+    connection.on('Disconnected', function (msg) {
+        var data = "Disconnected: " + new Date().toLocaleTimeString();
+        addMessage(data);
+    });
+    connection.on('Quiz', function (quizReceived) {
+        var data = "Quiz received: " + new Date().toLocaleTimeString();
+        addMessage(data);
+        addMessage(quizReceived);
+        if (quiz != null && quiz.quizId == quizReceived.quizId) {
+            // Do not reprocess question
+            return;
+        }
+        quiz = quizReceived;
         var quizForm = document.getElementById("quizForm");
         quizForm.innerHTML = "";
-        var question = new quiz_1.QuizQuestion();
-        question.questionId = "questionId-333";
-        question.questionTitle = "What's your favorite animal?";
-        quiz = new quiz_1.Quiz();
-        quiz.quizId = "111";
-        quiz.quizTitle = "Animal survey";
-        quiz.questions.push(question);
-        quizForm.appendChild(createHiddenElement("quizId", "111"));
-        quizForm.appendChild(createHiddenElement("userId", "222"));
-        quizForm.appendChild(createRadioButton("questionId-333", "1", "Text 1 is longer"));
-        quizForm.appendChild(createRadioButton("questionId-333", "2", "Text 2"));
-        quizForm.appendChild(createRadioButton("questionId-333", "3", "Text 3"));
-        quizForm.appendChild(createRadioButton("questionId-333", "4", "Text 4"));
-        quizMandatoryQuestions.push("questionId-333");
+        quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
+        for (var i = 0; i < quiz.questions.length; i++) {
+            var question = quiz.questions[i];
+            quizMandatoryQuestions.push(question.questionId);
+            for (var j = 0; j < question.options.length; j++) {
+                var option = quiz.questions[i].options[j];
+                quizForm.appendChild(createRadioButton(question.questionId, option.optionId, option.optionText));
+            }
+        }
         var quizSubmit = document.getElementById("quizSubmit");
         quizSubmit.style.display = "";
     });

@@ -1,5 +1,5 @@
 ﻿declare var signalR: typeof import("@aspnet/signalr");
-import { Quiz, QuizQuestion } from "./quiz";
+import { Quiz, QuizQuestion, QuizQuestionOption } from "./quiz";
 
 function addMessage(msg: any) {
     console.log(msg);
@@ -70,25 +70,70 @@ connection.on('Connected', function (msg: any) {
     addMessage(data);
     addMessage(msg);
 
+    //let quizForm = document.getElementById("quizForm");
+    //quizForm.innerHTML = "";
+
+    //let question = new QuizQuestion();
+    //question.questionId = "questionId-333";
+    //question.questionTitle = "What's your favorite animal?";
+
+    //for (let i = 1; i < 5; i++) {
+    //    let option = new QuizQuestionOption();
+    //    option.optionId = i.toString();
+    //    option.optionText = `Text for option ${i}`;
+
+    //    question.options.push(option);
+    //}
+
+    //quiz = new Quiz();
+    //quiz.quizId = "111";
+    //quiz.quizTitle = "Animal survey";
+    //quiz.questions.push(question);
+
+    //quizForm.appendChild(createHiddenElement("quizId", "111"));
+    //quizForm.appendChild(createHiddenElement("userId", "222"));
+    //quizForm.appendChild(createRadioButton("questionId-333", "1", "Text 1 is longer"));
+    //quizForm.appendChild(createRadioButton("questionId-333", "2", "Text 2"));
+    //quizForm.appendChild(createRadioButton("questionId-333", "3", "Text 3"));
+    //quizForm.appendChild(createRadioButton("questionId-333", "4", "Text 4"));
+    //quizMandatoryQuestions.push("questionId-333");
+
+    //let quizSubmit = document.getElementById("quizSubmit");
+    //quizSubmit.style.display = "";
+});
+
+connection.on('Disconnected', function (msg: any) {
+    let data = "Disconnected: " + new Date().toLocaleTimeString();
+    addMessage(data);
+});
+
+connection.on('Quiz', function (quizReceived: Quiz) {
+    let data = "Quiz received: " + new Date().toLocaleTimeString();
+    addMessage(data);
+    addMessage(quizReceived);
+
+    if (quiz != null && quiz.quizId == quizReceived.quizId) {
+        // Do not reprocess question
+        return;
+    }
+
+    quiz = quizReceived;
+
     let quizForm = document.getElementById("quizForm");
     quizForm.innerHTML = "";
 
-    let question = new QuizQuestion();
-    question.questionId = "questionId-333";
-    question.questionTitle = "What's your favorite animal?";
+    quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
+    
+    for (let i = 0; i < quiz.questions.length; i++) {
+        let question = quiz.questions[i];
 
-    quiz = new Quiz();
-    quiz.quizId = "111";
-    quiz.quizTitle = "Animal survey";
-    quiz.questions.push(question);
+        quizMandatoryQuestions.push(question.questionId);
 
-    quizForm.appendChild(createHiddenElement("quizId", "111"));
-    quizForm.appendChild(createHiddenElement("userId", "222"));
-    quizForm.appendChild(createRadioButton("questionId-333", "1", "Text 1 is longer"));
-    quizForm.appendChild(createRadioButton("questionId-333", "2", "Text 2"));
-    quizForm.appendChild(createRadioButton("questionId-333", "3", "Text 3"));
-    quizForm.appendChild(createRadioButton("questionId-333", "4", "Text 4"));
-    quizMandatoryQuestions.push("questionId-333");
+        for (let j = 0; j < question.options.length; j++) {
+            let option = quiz.questions[i].options[j];
+            quizForm.appendChild(createRadioButton(question.questionId, option.optionId, option.optionText));
+        }
+    }
 
     let quizSubmit = document.getElementById("quizSubmit");
     quizSubmit.style.display = "";
