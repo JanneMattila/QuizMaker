@@ -47,10 +47,20 @@
         }
         return true;
     }
+    function updateQuizTitle(title) {
+        var titleElement = document.getElementById("homeLink");
+        titleElement.innerHTML = title;
+        return titleElement;
+    }
+    function createQuestionTitle(title) {
+        var titleElement = document.createElement("h4");
+        titleElement.innerText = title;
+        return titleElement;
+    }
     function createRadioButton(name, value, text) {
         var id = name + "-" + value;
         var div = document.createElement("div");
-        div.className = "radio";
+        div.className = "quiz-question-option";
         var radioButton = document.createElement("input");
         radioButton.type = "radio";
         radioButton.id = id;
@@ -107,9 +117,11 @@
         quiz = quizReceived;
         var quizForm = document.getElementById("quizForm");
         quizForm.innerHTML = "";
+        updateQuizTitle(quiz.quizTitle);
         quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
         for (var i = 0; i < quiz.questions.length; i++) {
             var question = quiz.questions[i];
+            quizForm.appendChild(createQuestionTitle(question.questionTitle));
             quizMandatoryQuestions.push(question.questionId);
             for (var j = 0; j < question.options.length; j++) {
                 var option = quiz.questions[i].options[j];

@@ -47,10 +47,22 @@ function formSubmitCheck() {
     return true;
 }
 
+function updateQuizTitle(title: string): HTMLElement {
+    let titleElement = document.getElementById("homeLink");
+    titleElement.innerHTML = title;
+    return titleElement;
+}
+
+function createQuestionTitle(title: string): HTMLElement {
+    let titleElement = document.createElement("h4") as HTMLElement;
+    titleElement.innerText = title;
+    return titleElement;
+}
+
 function createRadioButton(name: string, value: string, text: string): HTMLDivElement {
     let id = `${name}-${value}`;
     let div = document.createElement("div") as HTMLDivElement;
-    div.className = "radio";
+    div.className = "quiz-question-option";
     let radioButton = document.createElement("input") as HTMLInputElement;
     radioButton.type = "radio";
     radioButton.id = id;
@@ -122,10 +134,12 @@ connection.on('Quiz', function (quizReceived: Quiz) {
     let quizForm = document.getElementById("quizForm");
     quizForm.innerHTML = "";
 
+    updateQuizTitle(quiz.quizTitle);
     quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
-    
+
     for (let i = 0; i < quiz.questions.length; i++) {
         let question = quiz.questions[i];
+        quizForm.appendChild(createQuestionTitle(question.questionTitle));
 
         quizMandatoryQuestions.push(question.questionId);
 

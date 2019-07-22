@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{7B2AAD5E-368D-44EC-9215-418C718128CD}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		doc\acknowledgements.md = doc\acknowledgements.md
 		LICENSE = LICENSE
 		doc\quiz.md = doc\quiz.md
 		README.md = README.md
