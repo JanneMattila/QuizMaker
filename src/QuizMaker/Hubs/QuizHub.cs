@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QuizMaker.Hubs
 {
-    public class QuizHub : Hub
+    public class QuizHub : Hub<IQuizHub>
     {
         private readonly IQuizDataContext _quizDataContext;
 
@@ -20,21 +20,34 @@ namespace QuizMaker.Hubs
         {
             // TODO: Central counter management
             var counter = 2;
-            await Clients.All.SendAsync(HubConstants.ConnectedMethod, counter);
-
-            var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
-            if (activeQuiz != null)
+            await Clients.All.Connected(new ConnectionViewModel()
             {
-                var quiz = JsonSerializer.Parse<QuizViewModel>(activeQuiz.Json);
-                await Clients.Caller.SendAsync(HubConstants.QuizMethod, quiz);
-            }
+                Counter = counter
+            });
+            await SendActiveQuizAsync();
+            await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             // TODO: Central counter management
             var counter = 1;
-            await Clients.All.SendAsync(HubConstants.DisconnectedMethod, counter);
+            await Clients.All.Disconnected(new ConnectionViewModel()
+            {
+                Counter = counter
+            });
+
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        private async Task SendActiveQuizAsync()
+        {
+            var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
+            if (activeQuiz != null)
+            {
+                var quiz = QuizViewModel.FromJson(activeQuiz.Json);
+                await Clients.All.Quiz(quiz);
+            }
         }
     }
 }

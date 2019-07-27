@@ -5,6 +5,9 @@ namespace QuizMaker.Data
 {
     public class QuizDataContext : IQuizDataContext
     {
+        private const string Active = "active";
+        private const string Quizzes = "quizzes";
+
         private readonly CloudStorageAccount _cloudStorageAccount;
         private readonly CloudTable _usersTable;
         private readonly CloudTable _quizzesTable;
@@ -28,10 +31,33 @@ namespace QuizMaker.Data
 
         public async Task<QuizEntity> GetActiveQuizAsync()
         {
-            const string active = "active";
-            var retrieveUserOperation = TableOperation.Retrieve<QuizEntity>(active, active);
+            var retrieveUserOperation = TableOperation.Retrieve<QuizEntity>(Active, Active);
             var result = await _quizzesTable.ExecuteAsync(retrieveUserOperation);
             return result.Result as QuizEntity;
+        }
+
+        public async Task<QuizEntity> ActivateQuizAsync(string id)
+        {
+            var retrieveOperation = TableOperation.Retrieve<QuizEntity>(Quizzes, id);
+            var result = await _quizzesTable.ExecuteAsync(retrieveOperation);
+            if (!(result.Result is QuizEntity quizEntity))
+            {
+                // No quiz found so clear the current active quiz
+                var retrieveActiveQuizOperation = TableOperation.Retrieve<QuizEntity>(Active, Active);
+                var activeQuizResult = await _quizzesTable.ExecuteAsync(retrieveActiveQuizOperation);
+                var activeQuiz = activeQuizResult.Result as QuizEntity;
+                if (activeQuiz != null)
+                {
+                    var deleteOperation = TableOperation.Delete(activeQuiz);
+                    await _quizzesTable.ExecuteAsync(deleteOperation);
+                }
+                return null;
+            }
+
+            quizEntity.PartitionKey = quizEntity.RowKey = Active;
+            var upsertOperation = TableOperation.InsertOrReplace(quizEntity);
+            var upsertResult = await _quizzesTable.ExecuteAsync(upsertOperation);
+            return upsertResult.Result as QuizEntity;
         }
     }
 }

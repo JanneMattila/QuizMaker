@@ -24,7 +24,7 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     return hidden;
 }
 
-function formSubmitCheck() {
+(<any>window).formSubmitCheck = () => {
     let quizSubmitError = document.getElementById("quizSubmitError");
     quizSubmitError.innerHTML = "";
 
@@ -125,14 +125,23 @@ connection.on('Quiz', function (quizReceived: Quiz) {
     addMessage(quizReceived);
 
     if (quiz != null && quiz.quizId == quizReceived.quizId) {
-        // Do not reprocess question
+        // Do not reprocess same question
         return;
     }
 
     quiz = quizReceived;
 
     let quizForm = document.getElementById("quizForm");
-    quizForm.innerHTML = "";
+    let quizSubmit = document.getElementById("quizSubmit");
+
+    if (quiz.questions.length === 0) {
+        quizSubmit.style.display = "none";
+        quizForm.innerHTML = "Waiting for available quiz...";
+    }
+    else {
+        quizSubmit.style.display = "";
+        quizForm.innerHTML = "";
+    }
 
     updateQuizTitle(quiz.quizTitle);
     quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
@@ -148,9 +157,6 @@ connection.on('Quiz', function (quizReceived: Quiz) {
             quizForm.appendChild(createRadioButton(question.questionId, option.optionId, option.optionText));
         }
     }
-
-    let quizSubmit = document.getElementById("quizSubmit");
-    quizSubmit.style.display = "";
 });
 
 connection.onclose(function (e: any) {

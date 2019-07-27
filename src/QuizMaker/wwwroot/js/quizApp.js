@@ -28,7 +28,7 @@
         hidden.value = value;
         return hidden;
     }
-    function formSubmitCheck() {
+    window.formSubmitCheck = function () {
         var quizSubmitError = document.getElementById("quizSubmitError");
         quizSubmitError.innerHTML = "";
         if (document.cookie.indexOf(".AspNet.Consent=yes") == -1) {
@@ -46,7 +46,7 @@
             }
         }
         return true;
-    }
+    };
     function updateQuizTitle(title) {
         var titleElement = document.getElementById("homeLink");
         titleElement.innerHTML = title;
@@ -111,12 +111,20 @@
         addMessage(data);
         addMessage(quizReceived);
         if (quiz != null && quiz.quizId == quizReceived.quizId) {
-            // Do not reprocess question
+            // Do not reprocess same question
             return;
         }
         quiz = quizReceived;
         var quizForm = document.getElementById("quizForm");
-        quizForm.innerHTML = "";
+        var quizSubmit = document.getElementById("quizSubmit");
+        if (quiz.questions.length === 0) {
+            quizSubmit.style.display = "none";
+            quizForm.innerHTML = "Waiting for available quiz...";
+        }
+        else {
+            quizSubmit.style.display = "";
+            quizForm.innerHTML = "";
+        }
         updateQuizTitle(quiz.quizTitle);
         quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
         for (var i = 0; i < quiz.questions.length; i++) {
@@ -128,8 +136,6 @@
                 quizForm.appendChild(createRadioButton(question.questionId, option.optionId, option.optionText));
             }
         }
-        var quizSubmit = document.getElementById("quizSubmit");
-        quizSubmit.style.display = "";
     });
     connection.onclose(function (e) {
         if (e) {

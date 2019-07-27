@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace QuizMaker.Models
@@ -23,6 +25,20 @@ namespace QuizMaker.Models
         public QuizViewModel()
         {
             Questions = new List<QuestionViewModel>();
+        }
+
+        public static QuizViewModel FromJson(string json)
+        {
+            return JsonSerializer.Deserialize<QuizViewModel>(json);
+        }
+
+        public static QuizViewModel CreateBlank()
+        {
+            return new QuizViewModel()
+            {
+                Title = "Quiz",
+                ID = Guid.Empty.ToString()
+            };
         }
     }
 }
