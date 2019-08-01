@@ -41,9 +41,9 @@ namespace QuizMaker.Controllers
             return View();
         }
 
-        public IActionResult Deactivate()
+        public async Task<IActionResult> Deactivate()
         {
-            return View();
+            return await Activate(string.Empty);
         }
 
         public IActionResult Edit()
