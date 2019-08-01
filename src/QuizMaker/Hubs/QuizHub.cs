@@ -40,6 +40,12 @@ namespace QuizMaker.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
+        public async Task QuizResponse(QuizResponseViewModel quizResponse)
+        {
+            await _quizDataContext.UpsertResponseAsync(quizResponse);
+            await Clients.Caller.Quiz(QuizViewModel.CreateBlank());
+        }
+
         private async Task SendActiveQuizAsync()
         {
             var activeQuiz = await _quizDataContext.GetActiveQuizAsync();

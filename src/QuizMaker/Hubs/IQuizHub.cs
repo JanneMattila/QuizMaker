@@ -8,6 +8,5 @@ namespace QuizMaker.Hubs
         Task Connected(ConnectionViewModel connection);
         Task Disconnected(ConnectionViewModel connection);
         Task Quiz(QuizViewModel quiz);
-        Task SendQuizResponse(QuizViewModel quiz);
     }
 }

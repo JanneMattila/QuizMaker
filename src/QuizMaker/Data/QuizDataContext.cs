@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
+using QuizMaker.Models;
 using System.Threading.Tasks;
 
 namespace QuizMaker.Data
@@ -58,6 +59,11 @@ namespace QuizMaker.Data
             var upsertOperation = TableOperation.InsertOrReplace(quizEntity);
             var upsertResult = await _quizzesTable.ExecuteAsync(upsertOperation);
             return upsertResult.Result as QuizEntity;
+        }
+
+        public async Task UpsertResponseAsync(QuizResponseViewModel quizResponse)
+        {
+            await Task.CompletedTask;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using QuizMaker.Models;
+using System.Threading.Tasks;
 
 namespace QuizMaker.Data
 {
@@ -7,5 +8,6 @@ namespace QuizMaker.Data
         Task<QuizEntity> ActivateQuizAsync(string id);
         Task<QuizEntity> GetActiveQuizAsync();
         void Initialize();
+        Task UpsertResponseAsync(QuizResponseViewModel quizResponse);
     }
 }

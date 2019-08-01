@@ -26,8 +26,12 @@ export class Quiz {
 }
 
 export class QuizQuestionResponse {
-    quiestionId: string;
-    optionId: string;
+    questionId: string;
+    options: Array<string>;
+
+    constructor() {
+        this.options = [];
+    }
 }
 
 export class QuizResponse {

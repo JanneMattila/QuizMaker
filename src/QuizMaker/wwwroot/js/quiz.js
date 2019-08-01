@@ -31,6 +31,7 @@
     exports.Quiz = Quiz;
     var QuizQuestionResponse = /** @class */ (function () {
         function QuizQuestionResponse() {
+            this.options = [];
         }
         return QuizQuestionResponse;
     }());

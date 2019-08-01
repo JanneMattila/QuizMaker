@@ -4,11 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports"], factory);
+        define(["require", "exports", "./quiz"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var quiz_1 = require("./quiz");
     function addMessage(msg) {
         console.log(msg);
     }
@@ -19,7 +20,7 @@
         .withUrl(hubRoute)
         .withHubProtocol(protocol)
         .build();
-    var quizMandatoryQuestions = [];
+    var quizMandatoryQuestions = Array();
     var quiz;
     function createHiddenElement(name, value) {
         var hidden = document.createElement("input");
@@ -45,7 +46,30 @@
                 return false;
             }
         }
-        return true;
+        // Submit form
+        var quizResponse = new quiz_1.QuizResponse();
+        quizResponse.quizId = quiz.quizId;
+        quizResponse.userId = "123abc";
+        for (var i = 0; i < quiz.questions.length; i++) {
+            var question = quiz.questions[i];
+            var inputElement = document.forms[0].elements[question.questionId];
+            var value = inputElement.value;
+            var questionResponse = new quiz_1.QuizQuestionResponse();
+            questionResponse.questionId = question.questionId;
+            questionResponse.options.push(value);
+            quizResponse.responses.push(questionResponse);
+        }
+        connection.invoke("QuizResponse", quizResponse)
+            .then(function () {
+            console.log("QuizResponse submitted");
+        })
+            .catch(function (err) {
+            console.log("QuizResponse submission error");
+            console.log(err);
+            addMessage(err);
+        });
+        ;
+        return false;
     };
     function updateQuizTitle(title) {
         var titleElement = document.getElementById("homeLink");

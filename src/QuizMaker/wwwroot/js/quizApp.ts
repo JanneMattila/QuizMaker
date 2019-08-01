@@ -1,5 +1,5 @@
 ﻿declare var signalR: typeof import("@aspnet/signalr");
-import { Quiz, QuizQuestion, QuizQuestionOption } from "./quiz";
+import { Quiz, QuizResponse, QuizQuestionResponse } from "./quiz";
 
 function addMessage(msg: any) {
     console.log(msg);
@@ -13,7 +13,7 @@ let connection = new signalR.HubConnectionBuilder()
     .withHubProtocol(protocol)
     .build();
 
-let quizMandatoryQuestions = [];
+let quizMandatoryQuestions = Array<string>();
 let quiz: Quiz;
 
 function createHiddenElement(name: string, value: string): HTMLInputElement {
@@ -44,7 +44,34 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
             return false;
         }
     }
-    return true;
+
+    // Submit form
+    let quizResponse = new QuizResponse();
+    quizResponse.quizId = quiz.quizId;
+    quizResponse.userId = "123abc";
+    for (let i = 0; i < quiz.questions.length; i++) {
+        let question = quiz.questions[i];
+        let inputElement = document.forms[0].elements[question.questionId] as HTMLInputElement;
+        let value = inputElement.value;
+
+        let questionResponse = new QuizQuestionResponse();
+        questionResponse.questionId = question.questionId;
+        questionResponse.options.push(value);
+
+        quizResponse.responses.push(questionResponse);
+    }
+
+    connection.invoke<QuizResponse>("QuizResponse", quizResponse)
+        .then(function () {
+            console.log("QuizResponse submitted");
+        })
+        .catch(function (err: any) {
+            console.log("QuizResponse submission error");
+            console.log(err);
+
+            addMessage(err);
+        });;
+    return false;
 }
 
 function updateQuizTitle(title: string): HTMLElement {
