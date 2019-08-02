@@ -2,7 +2,6 @@
 using QuizMaker.Data;
 using QuizMaker.Models;
 using System;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace QuizMaker.Hubs

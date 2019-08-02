@@ -5,6 +5,7 @@ using QuizMaker.Hubs;
 using QuizMaker.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace QuizMaker.Controllers
 {
@@ -19,9 +20,10 @@ namespace QuizMaker.Controllers
             _quizHub = quizHub;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = new List<QuizViewModel>();
+            var list = (await _quizDataContext.GetQuizzesAsync())
+                .Select(entity => QuizViewModel.FromJson(entity.Json));
             return View(list);
         }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
 using QuizMaker.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace QuizMaker.Data
@@ -64,6 +65,21 @@ namespace QuizMaker.Data
         public async Task UpsertResponseAsync(QuizResponseViewModel quizResponse)
         {
             await Task.CompletedTask;
+        }
+
+        public async Task<List<QuizEntity>> GetQuizzesAsync()
+        {
+            var list = new List<QuizEntity>();
+            var query = new TableQuery<QuizEntity>();
+            TableContinuationToken token = null;
+
+            do
+            {
+                var result = await _quizzesTable.ExecuteQuerySegmentedAsync<QuizEntity>(query, token);
+                list.AddRange(result);
+            } while (token != null);
+
+            return list;
         }
     }
 }
