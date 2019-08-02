@@ -7,8 +7,11 @@
 <h1>Available Quizzes</h1>
 
 @*<p>
-    <a asp-action="Create">Create New</a>
+        <a asp-action="Create">Create New</a>
 </p>*@
+<p>
+        <a asp-action="Deactivate">Deactivate</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +25,9 @@
             <tr>
                 <td>@item.Title</td>
                 <td>
-                    @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Results", "Results", new { id = item.ID }) |
+                    @Html.ActionLink("Activate", "Activate", new { id = item.ID }) |
                 </td>
             </tr>
         }
