@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Azure.Cosmos.Table;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuizMaker.Data;
 using QuizMaker.Hubs;
+using System;
 
 namespace QuizMaker
 {
@@ -44,6 +40,7 @@ namespace QuizMaker
                 StorageConnectionString = storageConnectionString
             }));
 
+            services.AddSingleton<IUserIdProvider, UniqueIdentifierUserIdProvider>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

@@ -13,11 +13,40 @@
     function addMessage(msg) {
         console.log(msg);
     }
+    function getUserId() {
+        var id = "";
+        var QuizUserId = "QuizUserId";
+        var searchText = QuizUserId + "=";
+        var startIndex = document.cookie.indexOf(searchText);
+        if (startIndex == -1) {
+            try {
+                var random = window.crypto.getRandomValues(new Uint32Array(4));
+                id = random[0].toString(16) + "-" + random[1].toString(16) + "-" + random[2].toString(16) + "-" + random[3].toString(16);
+            }
+            catch (e) {
+                console.log("Secure random number generation is not supported.");
+                id = Math.floor(Math.random() * 10000000000).toString();
+            }
+            document.cookie = QuizUserId + "=" + id + "; max-age=" + 3600 * 12 + "; secure; samesite=strict";
+        }
+        else {
+            startIndex = startIndex + searchText.length;
+            var endIndex = document.cookie.indexOf(";", startIndex);
+            if (endIndex == -1) {
+                id = document.cookie.substr(startIndex);
+            }
+            else {
+                id = document.cookie.substring(startIndex, endIndex);
+            }
+        }
+        return id;
+    }
+    var userId = getUserId();
     var protocol = new signalR.JsonHubProtocol();
     var hubRoute = "QuizHub";
     var connection = new signalR.HubConnectionBuilder()
         .configureLogging(signalR.LogLevel.Information)
-        .withUrl(hubRoute)
+        .withUrl(hubRoute, { accessTokenFactory: function () { return userId; } })
         .withHubProtocol(protocol)
         .build();
     var quizMandatoryQuestions = Array();
@@ -49,7 +78,7 @@
         // Submit form
         var quizResponse = new quiz_1.QuizResponse();
         quizResponse.quizId = quiz.quizId;
-        quizResponse.userId = "123abc";
+        quizResponse.userId = userId;
         for (var i = 0; i < quiz.questions.length; i++) {
             var question = quiz.questions[i];
             var inputElement = document.forms[0].elements[question.questionId];

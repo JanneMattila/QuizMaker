@@ -5,11 +5,43 @@ function addMessage(msg: any) {
     console.log(msg);
 }
 
+function getUserId() {
+    let id = "";
+    const QuizUserId = "QuizUserId";
+    const searchText = `${QuizUserId}=`;
+    let startIndex = document.cookie.indexOf(searchText);
+    if (startIndex == -1) {
+        try {
+            let random = window.crypto.getRandomValues(new Uint32Array(4));
+            id = random[0].toString(16) + "-" + random[1].toString(16) + "-" + random[2].toString(16) + "-" + random[3].toString(16);
+        } catch (e) {
+            console.log("Secure random number generation is not supported.");
+            id = Math.floor(Math.random() * 10000000000).toString();
+        }
+
+        document.cookie = `${QuizUserId}=${id}; max-age=${3600*12}; secure; samesite=strict`;
+    }
+    else {
+        startIndex = startIndex + searchText.length;
+        let endIndex = document.cookie.indexOf(";", startIndex);
+        if (endIndex == -1) {
+            id = document.cookie.substr(startIndex);
+        }
+        else {
+            id = document.cookie.substring(startIndex, endIndex);
+        }
+    }
+
+    return id;
+}
+
+let userId = getUserId();
+
 let protocol = new signalR.JsonHubProtocol();
 let hubRoute = "QuizHub";
 let connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Information)
-    .withUrl(hubRoute)
+    .withUrl(hubRoute, { accessTokenFactory: () => { return userId; }})
     .withHubProtocol(protocol)
     .build();
 
@@ -48,7 +80,7 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     // Submit form
     let quizResponse = new QuizResponse();
     quizResponse.quizId = quiz.quizId;
-    quizResponse.userId = "123abc";
+    quizResponse.userId = userId;
     for (let i = 0; i < quiz.questions.length; i++) {
         let question = quiz.questions[i];
         let inputElement = document.forms[0].elements[question.questionId] as HTMLInputElement;
