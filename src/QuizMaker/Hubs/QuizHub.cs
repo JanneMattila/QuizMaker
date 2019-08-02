@@ -23,7 +23,18 @@ namespace QuizMaker.Hubs
             {
                 Counter = counter
             });
-            await SendActiveQuizAsync();
+
+            var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
+            if (activeQuiz != null)
+            {
+                var quiz = QuizViewModel.FromJson(activeQuiz.Json);
+                var userHasResponded = await _quizDataContext.UserHasResponseAsync(quiz.ID, this.Context.UserIdentifier);
+                if (!userHasResponded)
+                {
+                    await Clients.Caller.Quiz(quiz);
+                }
+            }
+
             await base.OnConnectedAsync();
         }
 

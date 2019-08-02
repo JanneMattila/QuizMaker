@@ -2,6 +2,8 @@
 using QuizMaker.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Net;
 
 namespace QuizMaker.Data
 {
@@ -62,9 +64,21 @@ namespace QuizMaker.Data
             return upsertResult.Result as QuizEntity;
         }
 
+        public async Task<bool> UserHasResponseAsync(string quizID, string userID)
+        {
+            var retrieveOperation = TableOperation.Retrieve(quizID, userID);
+            var retrieveResult = await _quizResponsesTable.ExecuteAsync(retrieveOperation);
+            return retrieveResult.HttpStatusCode == (int)HttpStatusCode.OK;
+        }
+
         public async Task UpsertResponseAsync(QuizResponseViewModel quizResponse)
         {
-            await Task.CompletedTask;
+            var quizResponseEntity = new QuizResponseEntity(quizResponse.ID, quizResponse.UserID)
+            {
+                Response = string.Join(';', quizResponse.Responses.Select(r => $"{r.ID}={string.Join(',', r.Options)}"))
+            };
+            var upsertOperation = TableOperation.InsertOrReplace(quizResponseEntity);
+            var upsertResult = await _quizResponsesTable.ExecuteAsync(upsertOperation);
         }
 
         public async Task<List<QuizEntity>> GetQuizzesAsync()
