@@ -4,12 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./quiz"], factory);
+        define(["require", "exports", "./quizAppTypes"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var quiz_1 = require("./quiz");
+    var quizAppTypes_1 = require("./quizAppTypes");
     function addMessage(msg) {
         console.log(msg);
     }
@@ -43,7 +43,7 @@
     }
     var userId = getUserId();
     var protocol = new signalR.JsonHubProtocol();
-    var hubRoute = "QuizHub";
+    var hubRoute = "/QuizHub";
     var connection = new signalR.HubConnectionBuilder()
         .configureLogging(signalR.LogLevel.Information)
         .withUrl(hubRoute, { accessTokenFactory: function () { return userId; } })
@@ -76,14 +76,14 @@
             }
         }
         // Submit form
-        var quizResponse = new quiz_1.QuizResponse();
+        var quizResponse = new quizAppTypes_1.QuizResponse();
         quizResponse.quizId = quiz.quizId;
         quizResponse.userId = userId;
         for (var i = 0; i < quiz.questions.length; i++) {
             var question = quiz.questions[i];
             var inputElement = document.forms[0].elements[question.questionId];
             var value = inputElement.value;
-            var questionResponse = new quiz_1.QuizQuestionResponse();
+            var questionResponse = new quizAppTypes_1.QuizQuestionResponse();
             questionResponse.questionId = question.questionId;
             questionResponse.options.push(value);
             quizResponse.responses.push(questionResponse);

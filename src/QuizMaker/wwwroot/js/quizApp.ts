@@ -1,5 +1,5 @@
 ﻿declare var signalR: typeof import("@aspnet/signalr");
-import { Quiz, QuizResponse, QuizQuestionResponse } from "./quiz";
+import { Quiz, QuizResponse, QuizQuestionResponse } from "./quizAppTypes";
 
 function addMessage(msg: any) {
     console.log(msg);
@@ -38,7 +38,7 @@ function getUserId() {
 let userId = getUserId();
 
 let protocol = new signalR.JsonHubProtocol();
-let hubRoute = "QuizHub";
+let hubRoute = "/QuizHub";
 let connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Information)
     .withUrl(hubRoute, { accessTokenFactory: () => { return userId; }})

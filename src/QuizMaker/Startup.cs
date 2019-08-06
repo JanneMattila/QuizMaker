@@ -75,6 +75,7 @@ namespace QuizMaker
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
                 endpoints.MapHub<QuizHub>("/QuizHub");
+                endpoints.MapHub<QuizResultsHub>("/QuizResultsHub");
             });
         }
     }

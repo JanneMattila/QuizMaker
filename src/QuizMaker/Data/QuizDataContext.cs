@@ -40,6 +40,29 @@ namespace QuizMaker.Data
             return result.Result as QuizEntity;
         }
 
+        public async Task<QuizEntity> GetQuizAsync(string id)
+        {
+            var retrieveOperation = TableOperation.Retrieve<QuizEntity>(Quizzes, id);
+            var result = await _quizzesTable.ExecuteAsync(retrieveOperation);
+            return result.Result as QuizEntity;
+        }
+
+        public async Task<List<QuizResponseEntity>> GetQuizResponsesAsync(string id)
+        {
+            var list = new List<QuizResponseEntity>();
+            var query = new TableQuery<QuizResponseEntity>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, id));
+            TableContinuationToken token = null;
+
+            do
+            {
+                var result = await _quizzesTable.ExecuteQuerySegmentedAsync<QuizResponseEntity>(query, token);
+                list.AddRange(result);
+            } while (token != null);
+
+            return list;
+        }
+
         public async Task<QuizEntity> ActivateQuizAsync(string id)
         {
             var retrieveOperation = TableOperation.Retrieve<QuizEntity>(Quizzes, id);

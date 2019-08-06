@@ -44,4 +44,4 @@
     }());
     exports.QuizResponse = QuizResponse;
 });
-//# sourceMappingURL=quiz.js.map
+//# sourceMappingURL=quizAppTypes.js.map
