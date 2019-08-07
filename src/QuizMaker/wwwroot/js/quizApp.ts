@@ -102,7 +102,7 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
             console.log(err);
 
             addMessage(err);
-        });;
+        });
     return false;
 }
 

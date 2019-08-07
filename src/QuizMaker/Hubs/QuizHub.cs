@@ -9,10 +9,12 @@ namespace QuizMaker.Hubs
     public class QuizHub : Hub<IQuizHub>
     {
         private readonly IQuizDataContext _quizDataContext;
+        private readonly IHubContext<QuizResultsHub> _quizResultsHub;
 
-        public QuizHub(IQuizDataContext quizDataContext)
+        public QuizHub(IQuizDataContext quizDataContext, IHubContext<QuizResultsHub> quizResultsHub)
         {
             _quizDataContext = quizDataContext;
+            _quizResultsHub = quizResultsHub;
         }
 
         public override async Task OnConnectedAsync()
@@ -54,6 +56,12 @@ namespace QuizMaker.Hubs
         {
             await _quizDataContext.UpsertResponseAsync(quizResponse);
             await Clients.Caller.Quiz(QuizViewModel.CreateBlank());
+
+            // Submit this response to the reports view
+            var resultsBuilder = new QuizResultsBuilder(_quizDataContext);
+            var results = await resultsBuilder.GetResultsAsync(quizResponse.ID);
+
+            await _quizResultsHub.Clients.Group(quizResponse.ID).SendAsync("Results", results);
         }
 
         private async Task SendActiveQuizAsync()

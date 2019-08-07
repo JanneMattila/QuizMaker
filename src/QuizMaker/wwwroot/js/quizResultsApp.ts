@@ -1,6 +1,6 @@
 ﻿declare var d3: typeof import("d3");
 declare var signalR: typeof import("@aspnet/signalr");
-import { QuizResults } from "./quizResultsAppTypes";
+import { QuizResults, QuizQuestionResults, QuizQuestionResultsRow } from "./quizResultsAppTypes";
 
 let protocol = new signalR.JsonHubProtocol();
 let hubRoute = "/QuizResultsHub";
@@ -10,10 +10,18 @@ let connection = new signalR.HubConnectionBuilder()
     .withHubProtocol(protocol)
     .build();
 
-connection.on('Results', function (msg: QuizResults) {
-    let data = "Date received: " + new Date().toLocaleTimeString();
+let quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
+
+let results = new QuizResults();
+results.quizId = quizId;
+
+connection.on('Results', function (r: QuizResults) {
+    let data = "Results received: " + new Date().toLocaleTimeString();
     console.log(data);
-    console.log(msg);
+    console.log(r);
+
+    results = r;
+    renderQuizResults(results);
 });
 
 connection.onclose(function (e: any) {
@@ -28,6 +36,15 @@ connection.onclose(function (e: any) {
 connection.start()
     .then(function () {
         console.log("SignalR connected");
+
+        connection.invoke<string>("GetResults", quizId)
+            .then(function () {
+                console.log("GetResults called");
+            })
+            .catch(function (err: any) {
+                console.log("GetResults submission error");
+                console.log(err);
+            });
     })
     .catch(function (err: any) {
         console.log("SignalR error");
@@ -36,19 +53,24 @@ connection.start()
         console.log(err);
     });
 
-let quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
-
-let results = new QuizResults();
-results.quizId = quizId;
-results.quizTitle = "Example";
-results.values = [
-    { name: "Text 1", count: 16 },
-    { name: "Text 3", count: 12 },
-    { name: "Text 2", count: 5 },
-    { name: "Text 4", count: 2 }
-];
+function getQuestionTitle(results: QuizResults) {
+    let title = "Results";
+    if (results.results.length > 0) {
+        title = results.results[0].questionTitle;
+    }
+    return title;
+}
 
 function renderQuizResults(results: QuizResults) {
+
+    let resultsTitleElement = document.getElementById("resultsTitle") as HTMLElement;
+    resultsTitleElement.innerText = getQuestionTitle(results);
+
+    let resultQuestion = new QuizQuestionResults();
+    if (results.results.length > 0) {
+        resultQuestion = results.results[0];
+    }
+
     let svg = d3.select("svg");
     svg.selectAll("*").remove();
     let containerElement = document.getElementById("containerElement") as HTMLDivElement;
@@ -70,10 +92,10 @@ function renderQuizResults(results: QuizResults) {
     let y = d3.scaleLinear()
         .rangeRound([height, 0]);
 
-    x.domain(results.values.map(function (d) {
+    x.domain(resultQuestion.answers.map(function (d: QuizQuestionResultsRow) {
         return d.name;
     }));
-    y.domain([0, d3.max(results.values, function (d: any) {
+    y.domain([0, d3.max(resultQuestion.answers, function (d: QuizQuestionResultsRow) {
         return Number(d.count);
     })]);
 
@@ -92,7 +114,7 @@ function renderQuizResults(results: QuizResults) {
         .text("Count");
 
     g.selectAll(".quiz-results-bar")
-        .data(results.values)
+        .data(resultQuestion.answers)
         .enter().append("rect")
         .attr("class", "quiz-results-bar")
         .attr("x", function (d: any) {

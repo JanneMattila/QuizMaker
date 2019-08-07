@@ -97,7 +97,6 @@
             console.log(err);
             addMessage(err);
         });
-        ;
         return false;
     };
     function updateQuizTitle(title) {

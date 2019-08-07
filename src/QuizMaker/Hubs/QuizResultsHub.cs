@@ -28,12 +28,15 @@ namespace QuizMaker.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task Results(string id)
+        [HubMethodName("GetResults")]
+        public async Task GetResultsAsync(string id)
         {
-            var quiz = await _quizDataContext.GetQuizAsync(id);
-            var quizModel = QuizViewModel.FromJson(quiz.Json);
+            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, id);
 
-            var quizResponses = await _quizDataContext.GetQuizResponsesAsync(id);
+            var resultsBuilder = new QuizResultsBuilder(_quizDataContext);
+            var results = await resultsBuilder.GetResultsAsync(id);
+
+            await Clients.Caller.SendAsync("Results", results);
         }
     }
 }

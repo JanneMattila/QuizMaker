@@ -9,15 +9,22 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var QuizResultsRow = /** @class */ (function () {
-        function QuizResultsRow() {
+    var QuizQuestionResultsRow = /** @class */ (function () {
+        function QuizQuestionResultsRow() {
         }
-        return QuizResultsRow;
+        return QuizQuestionResultsRow;
     }());
-    exports.QuizResultsRow = QuizResultsRow;
+    exports.QuizQuestionResultsRow = QuizQuestionResultsRow;
+    var QuizQuestionResults = /** @class */ (function () {
+        function QuizQuestionResults() {
+            this.answers = [];
+        }
+        return QuizQuestionResults;
+    }());
+    exports.QuizQuestionResults = QuizQuestionResults;
     var QuizResults = /** @class */ (function () {
         function QuizResults() {
-            this.values = [];
+            this.results = [];
         }
         return QuizResults;
     }());

@@ -17,10 +17,15 @@
         .withUrl(hubRoute)
         .withHubProtocol(protocol)
         .build();
-    connection.on('Results', function (msg) {
-        var data = "Date received: " + new Date().toLocaleTimeString();
+    var quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
+    var results = new quizResultsAppTypes_1.QuizResults();
+    results.quizId = quizId;
+    connection.on('Results', function (r) {
+        var data = "Results received: " + new Date().toLocaleTimeString();
         console.log(data);
-        console.log(msg);
+        console.log(r);
+        results = r;
+        renderQuizResults(results);
     });
     connection.onclose(function (e) {
         if (e) {
@@ -33,23 +38,34 @@
     connection.start()
         .then(function () {
         console.log("SignalR connected");
+        connection.invoke("GetResults", quizId)
+            .then(function () {
+            console.log("GetResults called");
+        })
+            .catch(function (err) {
+            console.log("GetResults submission error");
+            console.log(err);
+        });
     })
         .catch(function (err) {
         console.log("SignalR error");
         console.log(err);
         console.log(err);
     });
-    var quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
-    var results = new quizResultsAppTypes_1.QuizResults();
-    results.quizId = quizId;
-    results.quizTitle = "Example";
-    results.values = [
-        { name: "Text 1", count: 16 },
-        { name: "Text 3", count: 12 },
-        { name: "Text 2", count: 5 },
-        { name: "Text 4", count: 2 }
-    ];
+    function getQuestionTitle(results) {
+        var title = "Results";
+        if (results.results.length > 0) {
+            title = results.results[0].questionTitle;
+        }
+        return title;
+    }
     function renderQuizResults(results) {
+        var resultsTitleElement = document.getElementById("resultsTitle");
+        resultsTitleElement.innerText = getQuestionTitle(results);
+        var resultQuestion = new quizResultsAppTypes_1.QuizQuestionResults();
+        if (results.results.length > 0) {
+            resultQuestion = results.results[0];
+        }
         var svg = d3.select("svg");
         svg.selectAll("*").remove();
         var containerElement = document.getElementById("containerElement");
@@ -69,10 +85,10 @@
             .padding(0.1);
         var y = d3.scaleLinear()
             .rangeRound([height, 0]);
-        x.domain(results.values.map(function (d) {
+        x.domain(resultQuestion.answers.map(function (d) {
             return d.name;
         }));
-        y.domain([0, d3.max(results.values, function (d) {
+        y.domain([0, d3.max(resultQuestion.answers, function (d) {
                 return Number(d.count);
             })]);
         g.append("g")
@@ -88,7 +104,7 @@
             .attr("text-anchor", "end")
             .text("Count");
         g.selectAll(".quiz-results-bar")
-            .data(results.values)
+            .data(resultQuestion.answers)
             .enter().append("rect")
             .attr("class", "quiz-results-bar")
             .attr("x", function (d) {

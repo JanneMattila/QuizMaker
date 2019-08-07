@@ -56,7 +56,7 @@ namespace QuizMaker.Data
 
             do
             {
-                var result = await _quizzesTable.ExecuteQuerySegmentedAsync<QuizResponseEntity>(query, token);
+                var result = await _quizResponsesTable.ExecuteQuerySegmentedAsync<QuizResponseEntity>(query, token);
                 list.AddRange(result);
             } while (token != null);
 
