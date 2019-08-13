@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{7B2AAD5E-368
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{8E178E6A-3786-4105-87DA-7523E146F09C}"
+	ProjectSection(SolutionItems) = preProject
+		deploy\azuredeploy.json = deploy\azuredeploy.json
+		deploy\deploy.ps1 = deploy\deploy.ps1
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{70D80D12-0F5B-4966-9543-5304131A9000}"
 EndProject
