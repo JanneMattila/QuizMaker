@@ -114,7 +114,7 @@ namespace QuizMaker.Data
             do
             {
                 var result = await _quizzesTable.ExecuteQuerySegmentedAsync<QuizEntity>(query, token);
-                list.AddRange(result);
+                list.AddRange(result.Where(r => r.PartitionKey != Active));
             } while (token != null);
 
             return list;

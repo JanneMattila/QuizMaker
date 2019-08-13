@@ -41,7 +41,7 @@ namespace QuizMaker.Controllers
                 QuizViewModel.CreateBlank();
 
             await _quizHub.Clients.All.Quiz(quiz);
-            return View();
+            return View(quiz);
         }
 
         public async Task<IActionResult> Deactivate()
