@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace QuizMaker.Models
+namespace QuizMaker.Models.Quiz
 {
     public class QuestionViewModel
     {

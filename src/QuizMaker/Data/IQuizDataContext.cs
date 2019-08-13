@@ -1,4 +1,5 @@
 ﻿using QuizMaker.Models;
+using QuizMaker.Models.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace QuizMaker.Data
         Task<List<QuizResponseEntity>> GetQuizResponsesAsync(string id);
         void Initialize();
         Task<bool> UserHasResponseAsync(string quizID, string userID);
-        Task UpsertResponseAsync(QuizResponseViewModel quizResponse);
+        Task UpsertResponseAsync(ResponseViewModel quizResponse);
         Task<List<QuizEntity>> GetQuizzesAsync();
     }
 }

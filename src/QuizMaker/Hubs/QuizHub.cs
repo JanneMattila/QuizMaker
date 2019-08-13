@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using QuizMaker.Data;
 using QuizMaker.Models;
+using QuizMaker.Models.Quiz;
+using QuizMaker.Models.Responses;
 using System;
 using System.Threading.Tasks;
 
@@ -52,13 +54,13 @@ namespace QuizMaker.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task QuizResponse(QuizResponseViewModel quizResponse)
+        public async Task QuizResponse(ResponseViewModel quizResponse)
         {
             await _quizDataContext.UpsertResponseAsync(quizResponse);
             await Clients.Caller.Quiz(QuizViewModel.CreateBlank());
 
             // Submit this response to the reports view
-            var resultsBuilder = new QuizResultsBuilder(_quizDataContext);
+            var resultsBuilder = new QuizResultBuilder(_quizDataContext);
             var results = await resultsBuilder.GetResultsAsync(quizResponse.ID);
 
             await _quizResultsHub.Clients.Group(quizResponse.ID).SendAsync("Results", results);

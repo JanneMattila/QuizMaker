@@ -1,4 +1,5 @@
 ﻿using QuizMaker.Models;
+using QuizMaker.Models.Quiz;
 using System.Threading.Tasks;
 
 namespace QuizMaker.Hubs

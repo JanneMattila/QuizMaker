@@ -1,31 +1,31 @@
-﻿export class QuizQuestionOption {
+﻿export class OptionViewModel {
     optionId: string;
     optionText: string;
 }
 
-export class QuizQuestion {
+export class QuestionViewModel {
     questionId: string;
     questionTitle: string;
 
-    options: Array<QuizQuestionOption>;
+    options: Array<OptionViewModel>;
 
     constructor() {
         this.options = [];
     }
 }
 
-export class Quiz {
+export class QuizViewModel {
     quizId: string;
     quizTitle: string;
 
-    questions: Array<QuizQuestion>;
+    questions: Array<QuestionViewModel>;
 
     constructor() {
         this.questions = [];
     }
 }
 
-export class QuizQuestionResponse {
+export class ResponseQuestionViewModel {
     questionId: string;
     options: Array<string>;
 
@@ -34,11 +34,11 @@ export class QuizQuestionResponse {
     }
 }
 
-export class QuizResponse {
+export class ResponseViewModel {
     quizId: string;
     userId: string;
 
-    responses: Array<QuizQuestionResponse>;
+    responses: Array<ResponseQuestionViewModel>;
 
     constructor() {
         this.responses = [];

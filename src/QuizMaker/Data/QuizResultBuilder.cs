@@ -1,19 +1,20 @@
-﻿using QuizMaker.Models;
+﻿using QuizMaker.Models.Quiz;
+using QuizMaker.Models.Results;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace QuizMaker.Data
 {
-    public class QuizResultsBuilder
+    public class QuizResultBuilder
     {
         private readonly IQuizDataContext _quizDataContext;
 
-        public QuizResultsBuilder(IQuizDataContext quizDataContext)
+        public QuizResultBuilder(IQuizDataContext quizDataContext)
         {
             _quizDataContext = quizDataContext;
         }
 
-        public async Task<QuizResultsViewModel> GetResultsAsync(string id)
+        public async Task<ResultViewModel> GetResultsAsync(string id)
         {
             var quizEntity = await _quizDataContext.GetQuizAsync(id);
             var quiz = QuizViewModel.FromJson(quizEntity.Json);
@@ -37,7 +38,7 @@ namespace QuizMaker.Data
                 }
             }
 
-            var results = new QuizResultsViewModel
+            var results = new ResultViewModel
             {
                 ID = quiz.ID,
                 Title = quiz.Title
@@ -45,13 +46,13 @@ namespace QuizMaker.Data
 
             foreach (var question in quiz.Questions)
             {
-                var list = new List<QuizResultsRowViewModel>();
+                var list = new List<ResultQuestionAnswerViewModel>();
                 foreach (var option in question.Options)
                 {
                     var key = $"{question.ID}={option.OptionId}";
                     var count = responses.ContainsKey(key) ? responses[key] : 0;
 
-                    var row = new QuizResultsRowViewModel()
+                    var row = new ResultQuestionAnswerViewModel()
                     {
                         Name = option.OptionText,
                         Count = count
@@ -60,11 +61,11 @@ namespace QuizMaker.Data
                     list.Add(row);
                 }
 
-                results.Results.Add(new QuizQuestionResultsViewModel()
+                results.Results.Add(new ResultQuestionViewModel()
                 {
                     ID = question.ID,
                     Title = question.Title,
-                    Results = list
+                    Answers = list
                 });
             }
 

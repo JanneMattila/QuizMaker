@@ -1,5 +1,5 @@
 ﻿declare var signalR: typeof import("@aspnet/signalr");
-import { Quiz, QuizResponse, QuizQuestionResponse } from "./quizAppTypes";
+import { QuizViewModel, ResponseViewModel, ResponseQuestionViewModel } from "./quizTypes";
 
 function addMessage(msg: any) {
     console.log(msg);
@@ -46,7 +46,7 @@ let connection = new signalR.HubConnectionBuilder()
     .build();
 
 let quizMandatoryQuestions = Array<string>();
-let quiz: Quiz;
+let quiz: QuizViewModel;
 
 function createHiddenElement(name: string, value: string): HTMLInputElement {
     let hidden = document.createElement("input") as HTMLInputElement;
@@ -78,7 +78,7 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     }
 
     // Submit form
-    let quizResponse = new QuizResponse();
+    let quizResponse = new ResponseViewModel();
     quizResponse.quizId = quiz.quizId;
     quizResponse.userId = userId;
     for (let i = 0; i < quiz.questions.length; i++) {
@@ -86,14 +86,14 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
         let inputElement = document.forms[0].elements[question.questionId] as HTMLInputElement;
         let value = inputElement.value;
 
-        let questionResponse = new QuizQuestionResponse();
+        let questionResponse = new ResponseQuestionViewModel();
         questionResponse.questionId = question.questionId;
         questionResponse.options.push(value);
 
         quizResponse.responses.push(questionResponse);
     }
 
-    connection.invoke<QuizResponse>("QuizResponse", quizResponse)
+    connection.invoke<ResponseViewModel>("QuizResponse", quizResponse)
         .then(function () {
             console.log("QuizResponse submitted");
         })
@@ -178,7 +178,7 @@ connection.on('Disconnected', function (msg: any) {
     addMessage(data);
 });
 
-connection.on('Quiz', function (quizReceived: Quiz) {
+connection.on('Quiz', function (quizReceived: QuizViewModel) {
     let data = "Quiz received: " + new Date().toLocaleTimeString();
     addMessage(data);
     addMessage(quizReceived);

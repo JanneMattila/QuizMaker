@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace QuizMaker.Models
+namespace QuizMaker.Models.Results
 {
-    public class QuizResultsRowViewModel
+    public class ResultQuestionAnswerViewModel
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }

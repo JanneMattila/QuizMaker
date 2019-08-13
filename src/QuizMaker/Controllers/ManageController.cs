@@ -6,6 +6,7 @@ using QuizMaker.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using QuizMaker.Models.Quiz;
 
 namespace QuizMaker.Controllers
 {

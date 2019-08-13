@@ -1,6 +1,6 @@
 ﻿declare var d3: typeof import("d3");
 declare var signalR: typeof import("@aspnet/signalr");
-import { QuizResults, QuizQuestionResults, QuizQuestionResultsRow } from "./quizResultsAppTypes";
+import { ResultViewModel, ResultQuestionViewModel, ResultQuestionAnswerViewModel } from "./resultTypes";
 
 let protocol = new signalR.JsonHubProtocol();
 let hubRoute = "/QuizResultsHub";
@@ -12,10 +12,10 @@ let connection = new signalR.HubConnectionBuilder()
 
 let quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
 
-let results = new QuizResults();
+let results = new ResultViewModel();
 results.quizId = quizId;
 
-connection.on('Results', function (r: QuizResults) {
+connection.on('Results', function (r: ResultViewModel) {
     let data = "Results received: " + new Date().toLocaleTimeString();
     console.log(data);
     console.log(r);
@@ -53,7 +53,7 @@ connection.start()
         console.log(err);
     });
 
-function getQuestionTitle(results: QuizResults) {
+function getQuestionTitle(results: ResultViewModel) {
     let title = "Results";
     if (results.results.length > 0) {
         title = results.results[0].questionTitle;
@@ -61,12 +61,12 @@ function getQuestionTitle(results: QuizResults) {
     return title;
 }
 
-function renderQuizResults(results: QuizResults) {
+function renderQuizResults(results: ResultViewModel) {
 
     let resultsTitleElement = document.getElementById("resultsTitle") as HTMLElement;
     resultsTitleElement.innerText = getQuestionTitle(results);
 
-    let resultQuestion = new QuizQuestionResults();
+    let resultQuestion = new ResultQuestionViewModel();
     if (results.results.length > 0) {
         resultQuestion = results.results[0];
     }
@@ -92,10 +92,10 @@ function renderQuizResults(results: QuizResults) {
     let y = d3.scaleLinear()
         .rangeRound([height, 0]);
 
-    x.domain(resultQuestion.answers.map(function (d: QuizQuestionResultsRow) {
+    x.domain(resultQuestion.answers.map(function (d: ResultQuestionAnswerViewModel) {
         return d.name;
     }));
-    y.domain([0, d3.max(resultQuestion.answers, function (d: QuizQuestionResultsRow) {
+    y.domain([0, d3.max(resultQuestion.answers, function (d: ResultQuestionAnswerViewModel) {
         return Number(d.count);
     })]);
 

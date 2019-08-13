@@ -9,14 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\quizApp.ts" />
-    <Content Remove="wwwroot\js\quizResultsApp.ts" />
+    <Content Remove="wwwroot\js\quiz.ts" />
+    <Content Remove="wwwroot\js\resultApp.ts" />
     <Content Remove="wwwroot\js\site.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Remove="wwwroot\js\quizAppTypes.ts" />
-    <TypeScriptCompile Remove="wwwroot\js\quizResultsAppTypes.ts" />
+    <TypeScriptCompile Remove="wwwroot\js\quizTypes.ts" />
+    <TypeScriptCompile Remove="wwwroot\js\resultTypes.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,8 +45,8 @@
     <Content Update="tsconfig.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\js\quizResultsAppTypes.js">
-      <DependentUpon>quizResultsAppTypes.ts</DependentUpon>
+    <Content Update="wwwroot\js\resultTypes.js">
+      <DependentUpon>resultTypes.ts</DependentUpon>
     </Content>
   </ItemGroup>
 

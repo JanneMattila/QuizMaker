@@ -4,12 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./quizAppTypes"], factory);
+        define(["require", "exports", "./quizTypes"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var quizAppTypes_1 = require("./quizAppTypes");
+    var quizTypes_1 = require("./quizTypes");
     function addMessage(msg) {
         console.log(msg);
     }
@@ -76,14 +76,14 @@
             }
         }
         // Submit form
-        var quizResponse = new quizAppTypes_1.QuizResponse();
+        var quizResponse = new quizTypes_1.ResponseViewModel();
         quizResponse.quizId = quiz.quizId;
         quizResponse.userId = userId;
         for (var i = 0; i < quiz.questions.length; i++) {
             var question = quiz.questions[i];
             var inputElement = document.forms[0].elements[question.questionId];
             var value = inputElement.value;
-            var questionResponse = new quizAppTypes_1.QuizQuestionResponse();
+            var questionResponse = new quizTypes_1.ResponseQuestionViewModel();
             questionResponse.questionId = question.questionId;
             questionResponse.options.push(value);
             quizResponse.responses.push(questionResponse);
@@ -207,4 +207,4 @@
         addMessage(err);
     });
 });
-//# sourceMappingURL=quizApp.js.map
+//# sourceMappingURL=quiz.js.map

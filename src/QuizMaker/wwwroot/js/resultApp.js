@@ -4,12 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./quizResultsAppTypes"], factory);
+        define(["require", "exports", "./resultTypes"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var quizResultsAppTypes_1 = require("./quizResultsAppTypes");
+    var resultTypes_1 = require("./resultTypes");
     var protocol = new signalR.JsonHubProtocol();
     var hubRoute = "/QuizResultsHub";
     var connection = new signalR.HubConnectionBuilder()
@@ -18,7 +18,7 @@
         .withHubProtocol(protocol)
         .build();
     var quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
-    var results = new quizResultsAppTypes_1.QuizResults();
+    var results = new resultTypes_1.ResultViewModel();
     results.quizId = quizId;
     connection.on('Results', function (r) {
         var data = "Results received: " + new Date().toLocaleTimeString();
@@ -62,7 +62,7 @@
     function renderQuizResults(results) {
         var resultsTitleElement = document.getElementById("resultsTitle");
         resultsTitleElement.innerText = getQuestionTitle(results);
-        var resultQuestion = new quizResultsAppTypes_1.QuizQuestionResults();
+        var resultQuestion = new resultTypes_1.ResultQuestionViewModel();
         if (results.results.length > 0) {
             resultQuestion = results.results[0];
         }
@@ -124,4 +124,4 @@
     });
     renderQuizResults(results);
 });
-//# sourceMappingURL=quizResultsApp.js.map
+//# sourceMappingURL=resultApp.js.map

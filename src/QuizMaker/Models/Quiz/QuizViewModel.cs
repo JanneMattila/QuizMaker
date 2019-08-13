@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace QuizMaker.Models
+namespace QuizMaker.Models.Quiz
 {
     public class QuizViewModel
     {

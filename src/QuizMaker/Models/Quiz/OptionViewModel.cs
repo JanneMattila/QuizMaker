@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace QuizMaker.Models
+namespace QuizMaker.Models.Quiz
 {
     public class OptionViewModel
     {

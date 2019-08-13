@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
+using QuizMaker.Models.Responses;
 
 namespace QuizMaker.Data
 {
@@ -94,7 +95,7 @@ namespace QuizMaker.Data
             return retrieveResult.HttpStatusCode == (int)HttpStatusCode.OK;
         }
 
-        public async Task UpsertResponseAsync(QuizResponseViewModel quizResponse)
+        public async Task UpsertResponseAsync(ResponseViewModel quizResponse)
         {
             var quizResponseEntity = new QuizResponseEntity(quizResponse.ID, quizResponse.UserID)
             {

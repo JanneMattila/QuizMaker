@@ -1,24 +1,24 @@
-﻿export class QuizQuestionResultsRow {
+﻿export class ResultQuestionAnswerViewModel {
     name: string;
     count: number;
 }
 
-export class QuizQuestionResults {
+export class ResultQuestionViewModel {
     questionId: string;
     questionTitle: string;
 
-    answers: Array<QuizQuestionResultsRow>;
+    answers: Array<ResultQuestionAnswerViewModel>;
 
     constructor() {
         this.answers = [];
     }
 }
 
-export class QuizResults {
+export class ResultViewModel {
     quizId: string;
     quizTitle: string;
 
-    results: Array<QuizQuestionResults>;
+    results: Array<ResultQuestionViewModel>;
 
     constructor() {
         this.results = [];

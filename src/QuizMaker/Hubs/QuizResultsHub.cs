@@ -33,7 +33,7 @@ namespace QuizMaker.Hubs
         {
             await this.Groups.AddToGroupAsync(this.Context.ConnectionId, id);
 
-            var resultsBuilder = new QuizResultsBuilder(_quizDataContext);
+            var resultsBuilder = new QuizResultBuilder(_quizDataContext);
             var results = await resultsBuilder.GetResultsAsync(id);
 
             await Clients.Caller.SendAsync("Results", results);

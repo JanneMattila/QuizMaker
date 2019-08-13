@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace QuizMaker.Models
+namespace QuizMaker.Models.Results
 {
-    public class QuizResultsViewModel
+    public class ResultViewModel
     {
         [JsonPropertyName("quizId")]
         public string ID { get; set; }
@@ -12,11 +12,11 @@ namespace QuizMaker.Models
         public string Title { get; set; }
 
         [JsonPropertyName("results")]
-        public List<QuizQuestionResultsViewModel> Results { get; set; }
+        public List<ResultQuestionViewModel> Results { get; set; }
 
-        public QuizResultsViewModel()
+        public ResultViewModel()
         {
-            Results = new List<QuizQuestionResultsViewModel>();
+            Results = new List<ResultQuestionViewModel>();
         }
     }
 }
