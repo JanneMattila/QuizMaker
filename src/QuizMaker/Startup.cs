@@ -12,6 +12,8 @@ namespace QuizMaker
 {
     public class Startup
     {
+        private bool _useAzureSignalRService = false;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,10 +33,19 @@ namespace QuizMaker
 
             services.AddApplicationInsightsTelemetry();
 
-            services.AddSignalR();
+            var signalR = services.AddSignalR();
+
+            // If Azure SignalR Service connection is provided 
+            // then use enable it and otherwise just self-host.
+            var signalRConnectionString = Configuration["SignalRConnectionString"];
+            if (!string.IsNullOrEmpty(signalRConnectionString))
+            {
+                signalR.AddAzureSignalR(signalRConnectionString);
+                _useAzureSignalRService = true;
+            }
 
             var storageConnectionString = Configuration["StorageConnectionString"];
-            services.AddSingleton<IQuizDataContext>((services) => 
+            services.AddSingleton<IQuizDataContext>((services) =>
             new QuizDataContext(new QuizDataContextOptions()
             {
                 StorageConnectionString = storageConnectionString
@@ -59,6 +70,14 @@ namespace QuizMaker
                 app.UseHsts();
             }
 
+            if (_useAzureSignalRService)
+            {
+                app.UseAzureSignalR((configure) =>
+                {
+                    configure.MapHub<QuizHub>("/QuizHub");
+                    configure.MapHub<QuizResultsHub>("/QuizResultsHub");
+                });
+            }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
