@@ -30,8 +30,11 @@ namespace QuizMaker.Data
         public void Initialize()
         {
             _usersTable.CreateIfNotExists();
-            _quizzesTable.CreateIfNotExists();
             _quizResponsesTable.CreateIfNotExists();
+            if (_quizzesTable.CreateIfNotExists())
+            {
+                // TODO: Insert example quizzes.
+            }
         }
 
         public async Task<QuizEntity> GetActiveQuizAsync()
