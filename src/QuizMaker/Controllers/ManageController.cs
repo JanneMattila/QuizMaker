@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.SignalR;
 using QuizMaker.Data;
 using QuizMaker.Hubs;
-using QuizMaker.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using QuizMaker.Models.Quiz;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuizMaker.Controllers
 {
@@ -21,6 +20,7 @@ namespace QuizMaker.Controllers
             _quizHub = quizHub;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var list = (await _quizDataContext.GetQuizzesAsync())

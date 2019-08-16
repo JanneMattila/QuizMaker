@@ -95,6 +95,7 @@ input.quiz-submit {
     width: 100%;
     max-width: 500px;
     font-size: x-large;
+    background-color: purple
 }
 
 h1, h2, h3, h4 {
