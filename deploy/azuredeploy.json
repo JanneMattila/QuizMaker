@@ -151,7 +151,9 @@
         "httpsOnly": true,
         "siteConfig": {
           "alwaysOn": true,
-          "webSocketsEnabled": true
+          "webSocketsEnabled": true,
+          "http20Enabled": true,
+          "ftpsState": "Disabled"
         }
       },
       "resources": [
