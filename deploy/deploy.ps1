@@ -6,8 +6,8 @@ Param (
     [string] $Location = "North Europe",
 
     [Parameter(HelpMessage="App Service Plan's Pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/")] 
-    [ValidateSet("F1", "B1", "B2", "B3", "S1", "S2", "S3", "P1", "P2", "P3", "P1v2", "P2v2", "P3v2")]
-    [string] $AppServicePricingTier = "F1",
+    [ValidateSet("B1", "B2", "B3", "S1", "S2", "S3", "P1", "P2", "P3", "P1v2", "P2v2", "P3v2")]
+    [string] $AppServicePricingTier = "B1",
 
     [Parameter(HelpMessage="App Service Plan's instance count")] 
     [ValidateRange(1, 10)]

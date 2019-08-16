@@ -5,7 +5,6 @@
     "appServicePlanPricingTier": {
       "type": "string",
       "allowedValues": [
-        "F1",
         "B1",
         "B2",
         "B3",
@@ -149,7 +148,11 @@
       ],
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "httpsOnly": true
+        "httpsOnly": true,
+        "siteConfig": {
+          "alwaysOn": true,
+          "webSocketsEnabled": true
+        }
       },
       "resources": [
         {
