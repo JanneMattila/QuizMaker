@@ -49,6 +49,7 @@
         .withUrl(hubRoute, { accessTokenFactory: function () { return userId; } })
         .withHubProtocol(protocol)
         .build();
+    var answeredQuestions = Array();
     var quizMandatoryQuestions = Array();
     var quiz;
     function createHiddenElement(name, value) {
@@ -92,7 +93,8 @@
         }
         connection.invoke("QuizResponse", quizResponse)
             .then(function () {
-            console.log("QuizResponse submitted");
+            console.log("QuizResponse submitted: " + quizResponse.quizId);
+            answeredQuestions.push(quizResponse.quizId);
         })
             .catch(function (err) {
             console.log("QuizResponse submission error");
@@ -131,30 +133,6 @@
         var data = "Date received: " + new Date().toLocaleTimeString();
         addMessage(data);
         addMessage(msg);
-        //let quizForm = document.getElementById("quizForm");
-        //quizForm.innerHTML = "";
-        //let question = new QuizQuestion();
-        //question.questionId = "questionId-333";
-        //question.questionTitle = "What's your favorite animal?";
-        //for (let i = 1; i < 5; i++) {
-        //    let option = new QuizQuestionOption();
-        //    option.optionId = i.toString();
-        //    option.optionText = `Text for option ${i}`;
-        //    question.options.push(option);
-        //}
-        //quiz = new Quiz();
-        //quiz.quizId = "111";
-        //quiz.quizTitle = "Animal survey";
-        //quiz.questions.push(question);
-        //quizForm.appendChild(createHiddenElement("quizId", "111"));
-        //quizForm.appendChild(createHiddenElement("userId", "222"));
-        //quizForm.appendChild(createRadioButton("questionId-333", "1", "Text 1 is longer"));
-        //quizForm.appendChild(createRadioButton("questionId-333", "2", "Text 2"));
-        //quizForm.appendChild(createRadioButton("questionId-333", "3", "Text 3"));
-        //quizForm.appendChild(createRadioButton("questionId-333", "4", "Text 4"));
-        //quizMandatoryQuestions.push("questionId-333");
-        //let quizSubmit = document.getElementById("quizSubmit");
-        //quizSubmit.style.display = "";
     });
     connection.on('Disconnected', function (msg) {
         var data = "Disconnected: " + new Date().toLocaleTimeString();
@@ -165,8 +143,14 @@
         addMessage(data);
         addMessage(quizReceived);
         if (quiz != null && quiz.quizId == quizReceived.quizId) {
-            // Do not reprocess same question
+            console.log("Do not reprocess already open quiz");
             return;
+        }
+        if (answeredQuestions.indexOf(quizReceived.quizId) != -1) {
+            console.log("This quiz has been answered already");
+            quizReceived.quizId = "";
+            quizReceived.quizTitle = "Quiz";
+            quizReceived.questions = [];
         }
         quiz = quizReceived;
         var quizForm = document.getElementById("quizForm");
