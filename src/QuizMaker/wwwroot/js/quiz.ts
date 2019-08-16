@@ -64,7 +64,7 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     if (document.cookie.indexOf(".AspNet.Consent=yes") == -1) {
         quizSubmitError.innerHTML = "Quiz requires that you \"Accept\" privacy consent";
         quizSubmitError.scrollIntoView();
-        return false;
+        return;
     }
 
     for (let i = 0; i < quizMandatoryQuestions.length; i++) {
@@ -76,7 +76,7 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
         if (value.length == 0) {
             quizSubmitError.innerHTML = "Please fill the quiz before submitting.";
             quizSubmitError.scrollIntoView();
-            return false;
+            return;
         }
     }
 
@@ -100,6 +100,10 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
         .then(function () {
             console.log("QuizResponse submitted: " + quizResponse.quizId);
             answeredQuestions.push(quizResponse.quizId);
+
+            // Clear quiz
+            quiz = null;
+            quizMandatoryQuestions = [];
         })
         .catch(function (err: any) {
             console.log("QuizResponse submission error");
@@ -107,7 +111,6 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
 
             addMessage(err);
         });
-    return false;
 }
 
 function updateQuizTitle(title: string): HTMLElement {
@@ -156,16 +159,16 @@ connection.on('Quiz', function (quizReceived: QuizViewModel) {
     addMessage(data);
     addMessage(quizReceived);
 
-    if (quiz != null && quiz.quizId == quizReceived.quizId) {
-        console.log("Do not reprocess already open quiz");
-        return;
-    }
-
     if (answeredQuestions.indexOf(quizReceived.quizId) != -1) {
         console.log("This quiz has been answered already");
         quizReceived.quizId = "";
         quizReceived.quizTitle = "Quiz";
         quizReceived.questions = [];
+        quizMandatoryQuestions = [];
+    }
+    else if (quiz != null && quiz.quizId == quizReceived.quizId) {
+        console.log("Do not reprocess already open quiz");
+        return;
     }
 
     quiz = quizReceived;

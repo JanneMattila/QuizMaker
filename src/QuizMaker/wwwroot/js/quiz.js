@@ -65,7 +65,7 @@
         if (document.cookie.indexOf(".AspNet.Consent=yes") == -1) {
             quizSubmitError.innerHTML = "Quiz requires that you \"Accept\" privacy consent";
             quizSubmitError.scrollIntoView();
-            return false;
+            return;
         }
         for (var i = 0; i < quizMandatoryQuestions.length; i++) {
             var q = quizMandatoryQuestions[i];
@@ -75,7 +75,7 @@
             if (value.length == 0) {
                 quizSubmitError.innerHTML = "Please fill the quiz before submitting.";
                 quizSubmitError.scrollIntoView();
-                return false;
+                return;
             }
         }
         // Submit form
@@ -95,13 +95,15 @@
             .then(function () {
             console.log("QuizResponse submitted: " + quizResponse.quizId);
             answeredQuestions.push(quizResponse.quizId);
+            // Clear quiz
+            quiz = null;
+            quizMandatoryQuestions = [];
         })
             .catch(function (err) {
             console.log("QuizResponse submission error");
             console.log(err);
             addMessage(err);
         });
-        return false;
     };
     function updateQuizTitle(title) {
         var titleElement = document.getElementById("homeLink");
@@ -142,15 +144,16 @@
         var data = "Quiz received: " + new Date().toLocaleTimeString();
         addMessage(data);
         addMessage(quizReceived);
-        if (quiz != null && quiz.quizId == quizReceived.quizId) {
-            console.log("Do not reprocess already open quiz");
-            return;
-        }
         if (answeredQuestions.indexOf(quizReceived.quizId) != -1) {
             console.log("This quiz has been answered already");
             quizReceived.quizId = "";
             quizReceived.quizTitle = "Quiz";
             quizReceived.questions = [];
+            quizMandatoryQuestions = [];
+        }
+        else if (quiz != null && quiz.quizId == quizReceived.quizId) {
+            console.log("Do not reprocess already open quiz");
+            return;
         }
         quiz = quizReceived;
         var quizForm = document.getElementById("quizForm");
