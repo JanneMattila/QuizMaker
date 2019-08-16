@@ -105,7 +105,7 @@
         return titleElement;
     }
     function createQuestionTitle(title) {
-        var titleElement = document.createElement("h4");
+        var titleElement = document.createElement("h1");
         titleElement.innerText = title;
         return titleElement;
     }

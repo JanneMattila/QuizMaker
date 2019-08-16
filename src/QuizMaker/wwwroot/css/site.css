@@ -94,13 +94,15 @@ input.quiz-submit {
     margin-top: 25px;
     width: 100%;
     max-width: 500px;
+    font-size: x-large;
 }
 
-h4 {
+h1, h2, h3, h4 {
     text-align: left;
 }
 
 div.quiz-question-option {
+    font-size: x-large;
     max-width: 500px;
     background-color: #e3f9ff;
     display: block;
@@ -109,7 +111,7 @@ div.quiz-question-option {
 }
 
 div.quiz-question-option label {
-    padding: 10px 30px;
+    padding: 10px 60px 20px 10px;
     width: 100%;
     display: block;
     text-align: left;
@@ -149,7 +151,7 @@ div.quiz-question-option label:after {
     border-radius: 50%;
     z-index: 2;
     position: absolute;
-    right: 30px;
+    right: 20px;
     top: 50%;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);

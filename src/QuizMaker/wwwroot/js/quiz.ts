@@ -113,7 +113,7 @@ function updateQuizTitle(title: string): HTMLElement {
 }
 
 function createQuestionTitle(title: string): HTMLElement {
-    let titleElement = document.createElement("h4") as HTMLElement;
+    let titleElement = document.createElement("h1") as HTMLElement;
     titleElement.innerText = title;
     return titleElement;
 }
