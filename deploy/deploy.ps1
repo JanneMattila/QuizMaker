@@ -15,7 +15,7 @@ Param (
 
     [Parameter(HelpMessage="SignalR Pricing tier. Check details at https://azure.microsoft.com/en-us/pricing/details/signalr-service/")] 
     [ValidateSet("Free_F1", "Standard_S1")]
-    [string] $SignalRServicePricingTier = "Free_F1",
+    [string] $SignalRServicePricingTier = "Standard_S1",
 
     [Parameter(HelpMessage="SignalR Service unit count")] 
     [ValidateSet(1, 2, 5, 10, 20, 50, 100)]

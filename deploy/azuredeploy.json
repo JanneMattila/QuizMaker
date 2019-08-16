@@ -148,7 +148,8 @@
         "[resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName'))]"
       ],
       "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]"
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "httpsOnly": true
       },
       "resources": [
         {
