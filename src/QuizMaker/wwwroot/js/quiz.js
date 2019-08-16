@@ -63,6 +63,7 @@
         quizSubmitError.innerHTML = "";
         if (document.cookie.indexOf(".AspNet.Consent=yes") == -1) {
             quizSubmitError.innerHTML = "Quiz requires that you \"Accept\" privacy consent";
+            quizSubmitError.scrollIntoView();
             return false;
         }
         for (var i = 0; i < quizMandatoryQuestions.length; i++) {
@@ -72,6 +73,7 @@
             var value = mandatoryInputElement.value;
             if (value.length == 0) {
                 quizSubmitError.innerHTML = "Please fill the quiz before submitting.";
+                quizSubmitError.scrollIntoView();
                 return false;
             }
         }
