@@ -5,28 +5,35 @@
 }
 
 <div>
-    <h4>Quiz</h4>
+    <h4>Quiz details</h4>
     <hr />
 
-    @*<table class="table">
+    <h3>@Model.Title</h3>
+
+    <table class="table">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>&nbsp;</th>
+                <th>Question</th>
+                <th>Options</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var question in Model.Questions)
             {
-                <tr>
-                    <td>@question.Title</td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { id = question.ID }) |
-                    </td>
-                </tr>
+            <tr>
+                <td>@question.Title</td>
+                <td>
+                    <ul>
+                        @foreach (var option in question.Options)
+                        {
+                            <li>@option.OptionText</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
             }
         </tbody>
-    </table>*@
+    </table>
 
     <dl class="row">
         <dt class="col-sm-2">
@@ -39,5 +46,6 @@
 </div>
 <div>
     @Html.ActionLink("Activate", "Activate", new { id = Model.ID }) |
+    @Html.ActionLink("Results", "Results", new { id = Model.ID }) |
     <a asp-action="Index">Back to List</a>
 </div>

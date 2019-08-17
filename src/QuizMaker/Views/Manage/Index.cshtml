@@ -16,20 +16,29 @@
     <thead>
         <tr>
             <th>Title</th>
-            <th>&nbsp;</th>
+            <th>Questions</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@item.Title</td>
-                <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                    @Html.ActionLink("Results", "Results", new { id = item.ID }) |
-                    @Html.ActionLink("Activate", "Activate", new { id = item.ID }) |
-                </td>
-            </tr>
+        <tr>
+            <td>@item.Title</td>
+            <td>
+                <ul>
+                    @foreach (var question in item.Questions)
+                    {
+                        <li>@question.Title</li>
+                    }
+                </ul>
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Results", "Results", new { id = item.ID }) |
+                @Html.ActionLink("Activate", "Activate", new { id = item.ID }) |
+            </td>
+        </tr>
         }
     </tbody>
 </table>

@@ -4,11 +4,37 @@
     ViewData["Title"] = "Quiz activation";
 }
 
-<div>
-    <h4>Quiz activation</h4>
-    <hr />
-    <p>Quiz "@Model.Title" has been activated.</p>
-</div>
+    <div>
+        <h4>Quiz activation</h4>
+        <hr />
+        <p>
+            Quiz "@Model.Title" has been activated. See @Html.ActionLink("Results", "Results", new { id = Model.ID }).
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var question in Model.Questions)
+                {
+                    <tr>
+                        <td>@question.Title</td>
+                        <td>
+                            <ul>
+                                @foreach (var option in question.Options)
+                                {
+                                    <li>@option.OptionText</li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

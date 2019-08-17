@@ -29,7 +29,9 @@ namespace QuizMaker.Models.Quiz
 
         public static QuizViewModel FromJson(string json)
         {
-            return JsonSerializer.Deserialize<QuizViewModel>(json);
+            var model = JsonSerializer.Deserialize<QuizViewModel>(json);
+            model.Json = json;
+            return model;
         }
 
         public static QuizViewModel CreateBlank()

@@ -54,9 +54,11 @@ namespace QuizMaker.Controllers
             return View();
         }
 
-        public IActionResult Details()
+        public async Task<IActionResult> Details(string id)
         {
-            return View();
+            var quizEntity = await _quizDataContext.GetQuizAsync(id);
+            var quiz = QuizViewModel.FromJson(quizEntity.Json);
+            return View(quiz);
         }
 
         public IActionResult Delete()
