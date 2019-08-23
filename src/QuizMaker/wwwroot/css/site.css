@@ -90,16 +90,17 @@ div.quiz-submit-error {
     vertical-align: middle;
 }
 
+h1, h2, h3, h4 {
+    text-align: left;
+}
+
+/* Quiz */
 input.quiz-submit {
     margin-top: 25px;
     width: 100%;
     max-width: 500px;
     font-size: x-large;
     background-color: purple
-}
-
-h1, h2, h3, h4 {
-    text-align: left;
 }
 
 div.quiz-question-option {
@@ -196,4 +197,8 @@ div.quiz-question-option input {
 
 .quiz-results-bar:hover {
     fill: darkblue;
+}
+
+#resultsTitle {
+    margin-top: 5%;
 }
