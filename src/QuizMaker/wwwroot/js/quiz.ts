@@ -187,6 +187,7 @@ connection.on('Quiz', function (quizReceived: QuizViewModel) {
 
     updateQuizTitle(quiz.quizTitle);
     quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
+    quizMandatoryQuestions = [];
 
     for (let i = 0; i < quiz.questions.length; i++) {
         let question = quiz.questions[i];

@@ -168,6 +168,7 @@
         }
         updateQuizTitle(quiz.quizTitle);
         quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
+        quizMandatoryQuestions = [];
         for (var i = 0; i < quiz.questions.length; i++) {
             var question = quiz.questions[i];
             quizForm.appendChild(createQuestionTitle(question.questionTitle));
