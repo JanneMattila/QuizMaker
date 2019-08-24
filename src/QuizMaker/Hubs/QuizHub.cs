@@ -64,6 +64,7 @@ namespace QuizMaker.Hubs
             var results = await resultsBuilder.GetResultsAsync(quizResponse.ID);
 
             await _quizResultsHub.Clients.Group(quizResponse.ID).SendAsync("Results", results);
+            await _quizResultsHub.Clients.Group("active").SendAsync("Results", results);
         }
 
         private async Task SendActiveQuizAsync()
