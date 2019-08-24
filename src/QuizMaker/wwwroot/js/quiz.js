@@ -81,6 +81,7 @@
         var quizResponse = new quizTypes_1.ResponseViewModel();
         quizResponse.quizId = quiz.quizId;
         quizResponse.userId = userId;
+        var allowMultipleResponses = false;
         for (var i = 0; i < quiz.questions.length; i++) {
             var question = quiz.questions[i];
             var inputElement = document.forms[0].elements[question.questionId];
@@ -99,12 +100,17 @@
                 // Radio
                 questionResponse.options.push(inputElement.value);
             }
+            if (question.parameters.allowMultipleResponses) {
+                allowMultipleResponses = true;
+            }
             quizResponse.responses.push(questionResponse);
         }
         connection.invoke("QuizResponse", quizResponse)
             .then(function () {
             console.log("QuizResponse submitted: " + quizResponse.quizId);
-            answeredQuestions.push(quizResponse.quizId);
+            if (!allowMultipleResponses) {
+                answeredQuestions.push(quizResponse.quizId);
+            }
             // Clear quiz
             quiz = null;
             quizMandatoryQuestions = [];

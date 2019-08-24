@@ -83,6 +83,7 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     let quizResponse = new ResponseViewModel();
     quizResponse.quizId = quiz.quizId;
     quizResponse.userId = userId;
+    let allowMultipleResponses = false;
     for (let i = 0; i < quiz.questions.length; i++) {
         let question = quiz.questions[i];
         let inputElement = document.forms[0].elements[question.questionId] as HTMLInputElement;
@@ -103,13 +104,19 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
             questionResponse.options.push(inputElement.value);
         }
 
+        if (question.parameters.allowMultipleResponses) {
+            allowMultipleResponses = true;
+        }
+
         quizResponse.responses.push(questionResponse);
     }
 
     connection.invoke<ResponseViewModel>("QuizResponse", quizResponse)
         .then(function () {
             console.log("QuizResponse submitted: " + quizResponse.quizId);
-            answeredQuestions.push(quizResponse.quizId);
+            if (!allowMultipleResponses) {
+                answeredQuestions.push(quizResponse.quizId);
+            }
 
             // Clear quiz
             quiz = null;

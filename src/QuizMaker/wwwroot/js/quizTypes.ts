@@ -4,8 +4,9 @@
 }
 
 export class ParametersViewModel {
-    randomizeOrder: boolean;
+    allowMultipleResponses: boolean;
     multiSelect: boolean;
+    randomizeOrder: boolean;
 }
 
 export class QuestionViewModel {
