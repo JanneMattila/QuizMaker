@@ -10,7 +10,8 @@
         <a asp-action="Create">Create New</a>
 </p>*@
 <p>
-        <a asp-action="Deactivate">Deactivate</a>
+    <a asp-action="Deactivate">Deactivate</a> |
+    @Html.ActionLink("Active result page", "Results", new { id = "active" })
 </p>
 <table class="table">
     <thead>
