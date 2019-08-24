@@ -71,7 +71,7 @@ namespace QuizMaker
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                options.ConsentCookie.MaxAge = TimeSpan.FromDays(1);
+                options.ConsentCookie.MaxAge = TimeSpan.FromDays(2);
             });
 
             var signalR = services.AddSignalR();
