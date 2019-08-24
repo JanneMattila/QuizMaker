@@ -69,7 +69,6 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
 
     for (let i = 0; i < quizMandatoryQuestions.length; i++) {
         let q = quizMandatoryQuestions[i];
-        console.log(q);
         let mandatoryInputElement = document.forms[0].elements[q] as HTMLInputElement;
         let value = mandatoryInputElement.value;
 
@@ -87,11 +86,22 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     for (let i = 0; i < quiz.questions.length; i++) {
         let question = quiz.questions[i];
         let inputElement = document.forms[0].elements[question.questionId] as HTMLInputElement;
-        let value = inputElement.value;
-
         let questionResponse = new ResponseQuestionViewModel();
         questionResponse.questionId = question.questionId;
-        questionResponse.options.push(value);
+
+        if (question.parameters.multiSelect) {
+            // Checkbox
+            let list = <HTMLInputElement[]><any>inputElement;
+            for (let j = 0; j < list.length; j++) {
+                if (list[j].checked) {
+                    questionResponse.options.push(list[j].value);
+                }
+            }
+        }
+        else {
+            // Radio
+            questionResponse.options.push(inputElement.value);
+        }
 
         quizResponse.responses.push(questionResponse);
     }
@@ -125,12 +135,12 @@ function createQuestionTitle(title: string): HTMLElement {
     return titleElement;
 }
 
-function createRadioButton(name: string, value: string, text: string): HTMLDivElement {
+function createInput(type: string, name: string, value: string, text: string): HTMLDivElement {
     let id = `${name}-${value}`;
     let div = document.createElement("div") as HTMLDivElement;
     div.className = "quiz-question-option";
     let radioButton = document.createElement("input") as HTMLInputElement;
-    radioButton.type = "radio";
+    radioButton.type = type;
     radioButton.id = id;
     radioButton.name = name;
     radioButton.value = value;
@@ -193,11 +203,14 @@ connection.on('Quiz', function (quizReceived: QuizViewModel) {
         let question = quiz.questions[i];
         quizForm.appendChild(createQuestionTitle(question.questionTitle));
 
-        quizMandatoryQuestions.push(question.questionId);
+        const type = question.parameters.multiSelect ? "checkbox" : "radio";
+        if (!question.parameters.multiSelect) {
+            quizMandatoryQuestions.push(question.questionId);
+        }
 
         for (let j = 0; j < question.options.length; j++) {
             let option = quiz.questions[i].options[j];
-            quizForm.appendChild(createRadioButton(question.questionId, option.optionId, option.optionText));
+            quizForm.appendChild(createInput(type, question.questionId, option.optionId, option.optionText));
         }
     }
 });

@@ -15,9 +15,16 @@
         return OptionViewModel;
     }());
     exports.OptionViewModel = OptionViewModel;
+    var ParametersViewModel = /** @class */ (function () {
+        function ParametersViewModel() {
+        }
+        return ParametersViewModel;
+    }());
+    exports.ParametersViewModel = ParametersViewModel;
     var QuestionViewModel = /** @class */ (function () {
         function QuestionViewModel() {
             this.options = [];
+            this.parameters = new ParametersViewModel();
         }
         return QuestionViewModel;
     }());

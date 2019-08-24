@@ -38,13 +38,21 @@ namespace QuizMaker.Data
                     var userResponses = response.Response.Split(';');
                     foreach (var userResponse in userResponses)
                     {
-                        if (responses.ContainsKey(userResponse))
+                        var userResponseString = userResponse.Split('=');
+                        var key = userResponseString[0];
+                        var options = userResponseString[1].Split(',');
+
+                        foreach (var option in options)
                         {
-                            responses[userResponse]++;
-                        }
-                        else
-                        {
-                            responses[userResponse] = 1;
+                            var answerKey = $"{key}={option}";
+                            if (responses.ContainsKey(answerKey))
+                            {
+                                responses[answerKey]++;
+                            }
+                            else
+                            {
+                                responses[answerKey] = 1;
+                            }
                         }
                     }
                 }

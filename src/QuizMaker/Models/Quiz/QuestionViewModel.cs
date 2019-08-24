@@ -14,9 +14,13 @@ namespace QuizMaker.Models.Quiz
         [JsonPropertyName("options")]
         public List<OptionViewModel> Options { get; set; }
 
+        [JsonPropertyName("parameters")]
+        public ParametersViewModel Parameters { get; set; }
+
         public QuestionViewModel()
         {
             Options = new List<OptionViewModel>();
+            Parameters = new ParametersViewModel();
         }
     }
 }

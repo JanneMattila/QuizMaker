@@ -69,7 +69,6 @@
         }
         for (var i = 0; i < quizMandatoryQuestions.length; i++) {
             var q = quizMandatoryQuestions[i];
-            console.log(q);
             var mandatoryInputElement = document.forms[0].elements[q];
             var value = mandatoryInputElement.value;
             if (value.length == 0) {
@@ -85,10 +84,21 @@
         for (var i = 0; i < quiz.questions.length; i++) {
             var question = quiz.questions[i];
             var inputElement = document.forms[0].elements[question.questionId];
-            var value = inputElement.value;
             var questionResponse = new quizTypes_1.ResponseQuestionViewModel();
             questionResponse.questionId = question.questionId;
-            questionResponse.options.push(value);
+            if (question.parameters.multiSelect) {
+                // Checkbox
+                var list = inputElement;
+                for (var j = 0; j < list.length; j++) {
+                    if (list[j].checked) {
+                        questionResponse.options.push(list[j].value);
+                    }
+                }
+            }
+            else {
+                // Radio
+                questionResponse.options.push(inputElement.value);
+            }
             quizResponse.responses.push(questionResponse);
         }
         connection.invoke("QuizResponse", quizResponse)
@@ -115,12 +125,12 @@
         titleElement.innerText = title;
         return titleElement;
     }
-    function createRadioButton(name, value, text) {
+    function createInput(type, name, value, text) {
         var id = name + "-" + value;
         var div = document.createElement("div");
         div.className = "quiz-question-option";
         var radioButton = document.createElement("input");
-        radioButton.type = "radio";
+        radioButton.type = type;
         radioButton.id = id;
         radioButton.name = name;
         radioButton.value = value;
@@ -172,10 +182,13 @@
         for (var i = 0; i < quiz.questions.length; i++) {
             var question = quiz.questions[i];
             quizForm.appendChild(createQuestionTitle(question.questionTitle));
-            quizMandatoryQuestions.push(question.questionId);
+            var type = question.parameters.multiSelect ? "checkbox" : "radio";
+            if (!question.parameters.multiSelect) {
+                quizMandatoryQuestions.push(question.questionId);
+            }
             for (var j = 0; j < question.options.length; j++) {
                 var option = quiz.questions[i].options[j];
-                quizForm.appendChild(createRadioButton(question.questionId, option.optionId, option.optionText));
+                quizForm.appendChild(createInput(type, question.questionId, option.optionId, option.optionText));
             }
         }
     });

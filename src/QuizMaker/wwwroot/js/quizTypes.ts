@@ -3,14 +3,21 @@
     optionText: string;
 }
 
+export class ParametersViewModel {
+    randomizeOrder: boolean;
+    multiSelect: boolean;
+}
+
 export class QuestionViewModel {
     questionId: string;
     questionTitle: string;
 
     options: Array<OptionViewModel>;
+    parameters: ParametersViewModel;
 
     constructor() {
         this.options = [];
+        this.parameters = new ParametersViewModel();
     }
 }
 
