@@ -1,10 +1,12 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
-using QuizMaker.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
 using QuizMaker.Models.Responses;
+using System.IO;
+using System.Text.Json;
+using QuizMaker.Models.Quiz;
 
 namespace QuizMaker.Data
 {
@@ -33,7 +35,21 @@ namespace QuizMaker.Data
             _quizResponsesTable.CreateIfNotExists();
             if (_quizzesTable.CreateIfNotExists())
             {
-                // TODO: Insert example quizzes.
+                AddExampleQuizzes();
+            }
+        }
+
+        private void AddExampleQuizzes()
+        {
+            var exampleQuizzes = @"Data\Quizzes.json";
+            if (File.Exists(exampleQuizzes))
+            {
+                var json = File.ReadAllText(exampleQuizzes);
+                var quizzes = JsonSerializer.Deserialize<QuizViewModel[]>(json);
+                foreach (var quiz in quizzes)
+                {
+                    UpsertQuiz(quiz);
+                }
             }
         }
 
@@ -106,6 +122,16 @@ namespace QuizMaker.Data
             };
             var upsertOperation = TableOperation.InsertOrReplace(quizResponseEntity);
             var upsertResult = await _quizResponsesTable.ExecuteAsync(upsertOperation);
+        }
+
+        public void UpsertQuiz(QuizViewModel quiz)
+        {
+            var quizEntity = new QuizEntity(Quizzes, quiz.ID)
+            {
+                Json = JsonSerializer.Serialize(quiz)
+            };
+            var upsertOperation = TableOperation.InsertOrReplace(quizEntity);
+            var upsertResult =  _quizzesTable.Execute(upsertOperation);
         }
 
         public async Task<List<QuizEntity>> GetQuizzesAsync()

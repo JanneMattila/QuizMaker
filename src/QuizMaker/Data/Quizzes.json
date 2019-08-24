@@ -1,0 +1,191 @@
+﻿[
+  {
+    "quizId": "common-100",
+    "quizTitle": "Quiz",
+    "questions": [
+      {
+        "questionId": "common-100-1",
+        "questionTitle": "Choose",
+        "options": [
+          {
+            "optionId": "common-101-1-1",
+            "optionText": "👍"
+          },
+          {
+            "optionId": "common-101-1-2",
+            "optionText": "👎"
+          }
+        ],
+        "parameters": {
+          "allowMultipleResponses": true
+        }
+      }
+    ]
+  },
+  {
+    "quizId": "azure-100",
+    "quizTitle": "Azure Quiz",
+    "questions": [
+      {
+        "questionId": "azure-100-1",
+        "questionTitle": "Your Azure skills on scale 0 to 10?",
+        "options": [
+          {
+            "optionId": "azure-100-1-0",
+            "optionText": "0"
+          },
+          {
+            "optionId": "azure-100-1-1",
+            "optionText": "1"
+          },
+          {
+            "optionId": "azure-100-1-2",
+            "optionText": "2"
+          },
+          {
+            "optionId": "azure-100-1-3",
+            "optionText": "3"
+          },
+          {
+            "optionId": "azure-100-1-4",
+            "optionText": "4"
+          },
+          {
+            "optionId": "azure-100-1-5",
+            "optionText": "5"
+          },
+          {
+            "optionId": "azure-100-1-6",
+            "optionText": "6"
+          },
+          {
+            "optionId": "azure-100-1-7",
+            "optionText": "7"
+          },
+          {
+            "optionId": "azure-100-1-8",
+            "optionText": "8"
+          },
+          {
+            "optionId": "azure-100-1-9",
+            "optionText": "9"
+          },
+          {
+            "optionId": "azure-100-1-10",
+            "optionText": "10"
+          }
+        ],
+        "parameters": {
+        }
+      }
+    ]
+  },
+  {
+    "quizId": "azure-101",
+    "quizTitle": "Azure Quiz",
+    "questions": [
+      {
+        "questionId": "azure-101-1",
+        "questionTitle": "How easy is it to keep up with Azure updates?",
+        "options": [
+          {
+            "optionId": "azure-101-1-0",
+            "optionText": "😓"
+          },
+          {
+            "optionId": "azure-101-1-1",
+            "optionText": "😑"
+          },
+          {
+            "optionId": "azure-101-1-2",
+            "optionText": "😐"
+          },
+          {
+            "optionId": "azure-101-1-3",
+            "optionText": "🤨"
+          },
+          {
+            "optionId": "azure-101-1-4",
+            "optionText": "🙂"
+          },
+          {
+            "optionId": "azure-101-1-5",
+            "optionText": "😍"
+          }
+        ],
+        "parameters": {
+          "multiSelect": false
+        }
+      }
+    ]
+  },
+  {
+    "quizId": "azure-devops-100",
+    "quizTitle": "Azure DevOps",
+    "questions": [
+      {
+        "questionId": "azure-devops-100-1",
+        "questionTitle": "Where do you store your source code?",
+        "options": [
+          {
+            "optionId": "azure-devops-100-1-1",
+            "optionText": "Test Plans"
+          },
+          {
+            "optionId": "azure-devops-100-1-2",
+            "optionText": "Boards"
+          },
+          {
+            "optionId": "azure-devops-100-1-3",
+            "optionText": "Repos"
+          },
+          {
+            "optionId": "azure-devops-100-1-4",
+            "optionText": "Artifacts"
+          },
+          {
+            "optionId": "azure-devops-100-1-5",
+            "optionText": "Pipelines"
+          }
+        ],
+        "parameters": {
+          "randomizeOrder": true
+        }
+      }
+    ]
+  },
+  {
+    "quizId": "azure-devops-101",
+    "quizTitle": "Azure DevOps Quiz",
+    "questions": [
+      {
+        "questionId": "azure-devops-101-1",
+        "questionTitle": "How many Microsoft employees are using Azure DevOps?",
+        "options": [
+          {
+            "optionId": "azure-devops-101-1-1",
+            "optionText": "1'000"
+          },
+          {
+            "optionId": "azure-devops-101-1-2",
+            "optionText": "10'000"
+          },
+          {
+            "optionId": "azure-devops-101-1-3",
+            "optionText": "50'000"
+          },
+          {
+            "optionId": "azure-devops-101-1-4",
+            "optionText": "100'000"
+          },
+          {
+            "optionId": "azure-devops-101-1-5",
+            "optionText": "150'000"
+          }
+        ],
+        "parameters": {
+        }
+      }
+    ]
+  }
+]
