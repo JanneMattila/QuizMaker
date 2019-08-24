@@ -23,7 +23,9 @@ Here is example quiz format:
         }
       ],
       "parameters": {
-        "multiSelect": false
+        "allowMultipleResponses": false,
+        "multiSelect": false,
+        "randomizeOrder": false
       }
     }
   ]
