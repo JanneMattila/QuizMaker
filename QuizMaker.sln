@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "release", "release", "{EC9C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizMaker", "src\QuizMaker\QuizMaker.csproj", "{5A14ED66-1CBE-41C7-81E3-BED03D5F2BF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizUserSimulator", "src\QuizUserSimulator\QuizUserSimulator.csproj", "{00905EA6-6706-40FD-AB24-7ACB59963458}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{5A14ED66-1CBE-41C7-81E3-BED03D5F2BF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A14ED66-1CBE-41C7-81E3-BED03D5F2BF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A14ED66-1CBE-41C7-81E3-BED03D5F2BF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00905EA6-6706-40FD-AB24-7ACB59963458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00905EA6-6706-40FD-AB24-7ACB59963458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00905EA6-6706-40FD-AB24-7ACB59963458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00905EA6-6706-40FD-AB24-7ACB59963458}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{7F48B88A-6EC7-4AA2-84C5-CAC112F80102} = {70D80D12-0F5B-4966-9543-5304131A9000}
 		{EC9C2024-7F3E-4C94-B592-9BC6A96AB14E} = {70D80D12-0F5B-4966-9543-5304131A9000}
 		{5A14ED66-1CBE-41C7-81E3-BED03D5F2BF4} = {E74445DD-28F2-4920-961A-C3778DA73664}
+		{00905EA6-6706-40FD-AB24-7ACB59963458} = {E74445DD-28F2-4920-961A-C3778DA73664}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F99521D6-99C8-41D7-83DC-3D5523498EE7}
