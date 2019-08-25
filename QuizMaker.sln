@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{7B2AAD5E-368
 		LICENSE = LICENSE
 		doc\quiz.md = doc\quiz.md
 		README.md = README.md
+		doc\simulator.md = doc\simulator.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{8E178E6A-3786-4105-87DA-7523E146F09C}"
@@ -28,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "release", "release", "{EC9C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizMaker", "src\QuizMaker\QuizMaker.csproj", "{5A14ED66-1CBE-41C7-81E3-BED03D5F2BF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizUserSimulator", "src\QuizUserSimulator\QuizUserSimulator.csproj", "{00905EA6-6706-40FD-AB24-7ACB59963458}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizUserSimulator", "src\QuizUserSimulator\QuizUserSimulator.csproj", "{00905EA6-6706-40FD-AB24-7ACB59963458}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

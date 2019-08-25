@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http.Headers;
 
 namespace QuizMaker.Hubs
 {
@@ -19,10 +21,18 @@ namespace QuizMaker.Hubs
             {
                 return quizUserId;
             }
-            
+
+            var token = context.Request.Query["access_token"];
+            if (string.IsNullOrEmpty(token) &&
+                context.Request.Headers.ContainsKey(HeaderNames.Authorization))
+            {
+                // In case of simulator and .NET client we're receiving bearer token.
+                var authenticationHeader = AuthenticationHeaderValue.Parse(context.Request.Headers[HeaderNames.Authorization]);
+                token = authenticationHeader.Parameter;
+            }
+
             // This handles parsing of the jwt token from
             // Azure SignalR Service and gets the UserId from the claim
-            var token = context.Request.Query["access_token"];
             if (!string.IsNullOrEmpty(token))
             {
                 var handler = new JwtSecurityTokenHandler();

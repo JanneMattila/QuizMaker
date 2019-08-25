@@ -25,19 +25,20 @@ namespace QuizUserSimulator
             };
         }
 
-        public async Task SimulateUserAsync(string quizHub)
+        public async Task SimulateUserAsync(string quizHubEndpoint)
         {
             Console.WriteLine("Starting quiz user simulator");
-            var quizHubUri = new Uri(quizHub);
+            var quizHubUri = new Uri(quizHubEndpoint);
             var connection = new HubConnectionBuilder()
-                .WithUrl(quizHub, options =>
+                .WithUrl(quizHubEndpoint, options =>
                 {
                     options.Cookies.Add(new System.Net.Cookie()
                     {
-                        Name = "QuizUserId", 
+                        Name = "QuizUserId",
                         Value = _userID,
                         Domain = quizHubUri.Host
                     });
+                    options.AccessTokenProvider = () => Task.FromResult(_userID);
                 })
                 .WithAutomaticReconnect()
                 .Build();
