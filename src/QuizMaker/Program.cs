@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +10,7 @@ using QuizMaker.Data;
 
 namespace QuizMaker
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {

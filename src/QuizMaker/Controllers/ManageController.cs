@@ -28,7 +28,7 @@ namespace QuizMaker.Controllers
             return View(list);
         }
 
-        public IActionResult Results(string id)
+        public IActionResult Results()
         {
             return View();
         }

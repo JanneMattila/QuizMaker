@@ -12,7 +12,7 @@ namespace QuizUserSimulator.Interfaces
         public string Title { get; set; }
 
         [JsonPropertyName("options")]
-        public List<Option> Options { get; set; }
+        public List<QuestionOption> Options { get; set; }
 
         [JsonPropertyName("parameters")]
         public Parameters Parameters { get; set; }

@@ -49,7 +49,7 @@ namespace QuizMaker.Hubs
                 }
             }
 
-            throw new ArgumentException();
+            throw new ArgumentException("Parameter does not contain required user identifiers.", nameof(connection));
         }
     }
 }

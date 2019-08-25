@@ -7,7 +7,7 @@ namespace QuizMaker.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index(IFormCollection form)
+        public IActionResult Index()
         {
             return View();
         }

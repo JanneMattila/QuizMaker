@@ -7,8 +7,20 @@
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CA2007;CA2227;CA1822;CA1303;IDE0060;CA1801</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CA2007;CA2227;CA1822;CA1303;IDE0060;CA1801</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0-preview8.19405.7" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.2" />
   </ItemGroup>
 

@@ -2,7 +2,7 @@
 
 namespace QuizUserSimulator.Interfaces
 {
-    public class Option
+    public class QuestionOption
     {
         [JsonPropertyName("optionId")]
         public string OptionId { get; set; }

@@ -7,6 +7,7 @@ using QuizMaker.Models.Responses;
 using System.IO;
 using System.Text.Json;
 using QuizMaker.Models.Quiz;
+using System;
 
 namespace QuizMaker.Data
 {
@@ -22,6 +23,11 @@ namespace QuizMaker.Data
 
         public QuizDataContext(QuizDataContextOptions options)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             _cloudStorageAccount = CloudStorageAccount.Parse(options.StorageConnectionString);
             var tableClient = _cloudStorageAccount.CreateCloudTableClient();
             _usersTable = tableClient.GetTableReference(TableNames.Users);
@@ -92,8 +98,7 @@ namespace QuizMaker.Data
                 // No quiz found so clear the current active quiz
                 var retrieveActiveQuizOperation = TableOperation.Retrieve<QuizEntity>(Active, Active);
                 var activeQuizResult = await _quizzesTable.ExecuteAsync(retrieveActiveQuizOperation);
-                var activeQuiz = activeQuizResult.Result as QuizEntity;
-                if (activeQuiz != null)
+                if (activeQuizResult.Result is QuizEntity activeQuiz)
                 {
                     var deleteOperation = TableOperation.Delete(activeQuiz);
                     await _quizzesTable.ExecuteAsync(deleteOperation);
@@ -116,6 +121,10 @@ namespace QuizMaker.Data
 
         public async Task UpsertResponseAsync(ResponseViewModel quizResponse)
         {
+            if (quizResponse == null)
+            {
+                throw new ArgumentNullException(nameof(quizResponse));
+            }
             var quizResponseEntity = new QuizResponseEntity(quizResponse.ID, quizResponse.UserID)
             {
                 Response = string.Join(';', quizResponse.Responses.Select(r => $"{r.ID}={string.Join(',', r.Options)}"))
@@ -126,12 +135,16 @@ namespace QuizMaker.Data
 
         public void UpsertQuiz(QuizViewModel quiz)
         {
+            if (quiz == null)
+            {
+                throw new ArgumentNullException(nameof(quiz));
+            }
             var quizEntity = new QuizEntity(Quizzes, quiz.ID)
             {
                 Json = JsonSerializer.Serialize(quiz)
             };
             var upsertOperation = TableOperation.InsertOrReplace(quizEntity);
-            var upsertResult =  _quizzesTable.Execute(upsertOperation);
+            _quizzesTable.Execute(upsertOperation);
         }
 
         public async Task<List<QuizEntity>> GetQuizzesAsync()

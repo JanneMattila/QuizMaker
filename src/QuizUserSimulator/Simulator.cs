@@ -2,18 +2,19 @@
 using QuizUserSimulator.Interfaces;
 using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace QuizUserSimulator
 {
-    public class Simulator
+    public class Simulator : IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private ConcurrentQueue<Quiz> _quizzes = new ConcurrentQueue<Quiz>();
+        private readonly ConcurrentQueue<Quiz> _quizzes = new ConcurrentQueue<Quiz>();
+        private readonly string _userID = Guid.NewGuid().ToString("D", CultureInfo.InvariantCulture);
+        private readonly Random _random = new Random();
         private DateTime _responseTime = DateTime.MinValue;
-        private Random _random = new Random();
-        private string _userID = Guid.NewGuid().ToString("B");
 
         public Simulator()
         {
@@ -86,6 +87,23 @@ namespace QuizUserSimulator
             Console.WriteLine($"Quiz received: '{quiz.Title}'");
             _quizzes.Enqueue(quiz);
             _responseTime = DateTime.Now.AddMilliseconds(_random.Next(100, 4000));
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose managed resources
+                _cancellationTokenSource.Dispose();
+            }
+
+            // Free native resources
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

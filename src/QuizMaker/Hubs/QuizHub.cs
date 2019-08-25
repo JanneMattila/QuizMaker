@@ -56,6 +56,11 @@ namespace QuizMaker.Hubs
 
         public async Task QuizResponse(ResponseViewModel quizResponse)
         {
+            if (quizResponse == null)
+            {
+                throw new ArgumentNullException(nameof(quizResponse));
+            }
+
             await _quizDataContext.UpsertResponseAsync(quizResponse);
             await Clients.Caller.Quiz(QuizViewModel.CreateBlank());
 
@@ -65,16 +70,6 @@ namespace QuizMaker.Hubs
 
             await _quizResultsHub.Clients.Group(quizResponse.ID).SendAsync("Results", results);
             await _quizResultsHub.Clients.Group("active").SendAsync("Results", results);
-        }
-
-        private async Task SendActiveQuizAsync()
-        {
-            var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
-            if (activeQuiz != null)
-            {
-                var quiz = QuizViewModel.FromJson(activeQuiz.Json);
-                await Clients.All.Quiz(quiz);
-            }
         }
     }
 }
