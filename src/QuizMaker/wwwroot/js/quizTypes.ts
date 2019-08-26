@@ -33,6 +33,10 @@ export class QuizViewModel {
     }
 }
 
+export class ConnectionViewModel {
+    counter: number;
+}
+
 export class ResponseQuestionViewModel {
     questionId: string;
     options: Array<string>;

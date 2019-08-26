@@ -147,14 +147,15 @@
         div.appendChild(label);
         return div;
     }
-    connection.on('Connected', function (msg) {
-        var data = "Date received: " + new Date().toLocaleTimeString();
-        addMessage(data);
-        addMessage(msg);
+    function updateUserCount(connection) {
+        var usersElement = document.getElementById("users");
+        usersElement.innerHTML = connection.counter + " \uD83D\uDC65";
+    }
+    connection.on('Connected', function (connection) {
+        updateUserCount(connection);
     });
-    connection.on('Disconnected', function (msg) {
-        var data = "Disconnected: " + new Date().toLocaleTimeString();
-        addMessage(data);
+    connection.on('Disconnected', function (connection) {
+        updateUserCount(connection);
     });
     connection.on('Quiz', function (quizReceived) {
         var data = "Quiz received: " + new Date().toLocaleTimeString();

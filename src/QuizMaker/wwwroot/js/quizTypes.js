@@ -36,6 +36,12 @@
         return QuizViewModel;
     }());
     exports.QuizViewModel = QuizViewModel;
+    var ConnectionViewModel = /** @class */ (function () {
+        function ConnectionViewModel() {
+        }
+        return ConnectionViewModel;
+    }());
+    exports.ConnectionViewModel = ConnectionViewModel;
     var ResponseQuestionViewModel = /** @class */ (function () {
         function ResponseQuestionViewModel() {
             this.options = [];

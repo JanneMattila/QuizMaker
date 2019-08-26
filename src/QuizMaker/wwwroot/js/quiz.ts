@@ -1,5 +1,5 @@
 ﻿declare var signalR: typeof import("@aspnet/signalr");
-import { QuizViewModel, ResponseViewModel, ResponseQuestionViewModel } from "./quizTypes";
+import { QuizViewModel, ResponseViewModel, ResponseQuestionViewModel, ConnectionViewModel } from "./quizTypes";
 
 function addMessage(msg: any) {
     console.log(msg);
@@ -160,15 +160,17 @@ function createInput(type: string, name: string, value: string, text: string): H
     return div;
 }
 
-connection.on('Connected', function (msg: any) {
-    let data = "Date received: " + new Date().toLocaleTimeString();
-    addMessage(data);
-    addMessage(msg);
+function updateUserCount(connection: ConnectionViewModel) {
+    let usersElement = document.getElementById("users");
+    usersElement.innerHTML = `${connection.counter} 👥`;
+}
+
+connection.on('Connected', function (connection: ConnectionViewModel) {
+    updateUserCount(connection);
 });
 
-connection.on('Disconnected', function (msg: any) {
-    let data = "Disconnected: " + new Date().toLocaleTimeString();
-    addMessage(data);
+connection.on('Disconnected', function (connection: ConnectionViewModel) {
+    updateUserCount(connection);
 });
 
 connection.on('Quiz', function (quizReceived: QuizViewModel) {
