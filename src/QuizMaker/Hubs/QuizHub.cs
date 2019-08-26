@@ -21,8 +21,7 @@ namespace QuizMaker.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            // TODO: Central counter management
-            var counter = 2;
+            var counter = await _quizDataContext.UpsertUserAsync(Context.ConnectionId);
             await Clients.All.Connected(new ConnectionViewModel()
             {
                 Counter = counter
@@ -44,8 +43,7 @@ namespace QuizMaker.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            // TODO: Central counter management
-            var counter = 1;
+            var counter = await _quizDataContext.DeleteUserAsync(Context.ConnectionId);
             await Clients.All.Disconnected(new ConnectionViewModel()
             {
                 Counter = counter

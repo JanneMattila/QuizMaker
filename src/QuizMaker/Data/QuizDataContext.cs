@@ -14,6 +14,7 @@ namespace QuizMaker.Data
     public class QuizDataContext : IQuizDataContext
     {
         private const string Active = "active";
+        private const string Users = "users";
         private const string Quizzes = "quizzes";
 
         private readonly CloudStorageAccount _cloudStorageAccount;
@@ -150,16 +151,52 @@ namespace QuizMaker.Data
         public async Task<List<QuizEntity>> GetQuizzesAsync()
         {
             var list = new List<QuizEntity>();
-            var query = new TableQuery<QuizEntity>();
+            var query = new TableQuery<QuizEntity>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Quizzes)); 
             TableContinuationToken token = null;
 
             do
             {
                 var result = await _quizzesTable.ExecuteQuerySegmentedAsync<QuizEntity>(query, token);
-                list.AddRange(result.Where(r => r.PartitionKey != Active));
+                list.AddRange(result);
             } while (token != null);
 
             return list;
+        }
+
+        public async Task<int> UpsertUserAsync(string connectionId)
+        {
+            var userEntity = new UserEntity(Users, connectionId);
+            var upsertOperation = TableOperation.InsertOrReplace(userEntity);
+            await _usersTable.ExecuteAsync(upsertOperation);
+            return await GetUserCountAsync();
+        }
+
+        public async Task<int> DeleteUserAsync(string connectionId)
+        {
+            var userEntity = new UserEntity(Users, connectionId)
+            {
+                ETag = "*"
+            };
+            var deleteOperation = TableOperation.Delete(userEntity);
+            await _usersTable.ExecuteAsync(deleteOperation);
+            return await GetUserCountAsync();
+        }
+
+        public async Task<int> GetUserCountAsync()
+        {
+            var query = new TableQuery<UserEntity>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Users))
+                .Select(new List<string> { "PartitionKey", "RowKey", "Timestamp" });
+            TableContinuationToken token = null;
+            var count = 0;
+            do
+            {
+                var result = await _usersTable.ExecuteQuerySegmentedAsync(query, token);
+                count += result.Count();
+            } while (token != null);
+
+            return count;
         }
     }
 }

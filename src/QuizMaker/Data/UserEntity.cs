@@ -8,7 +8,7 @@ namespace QuizMaker.Data
         {
         }
 
-        public UserEntity(string userKey) : base(userKey, userKey)
+        public UserEntity(string partitionKey, string userKey) : base(partitionKey, userKey)
         {
         }
     }
