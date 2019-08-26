@@ -89,6 +89,11 @@ Deploy published image to [Azure Container Services (AKS)](https://docs.microsof
 Create `quizsim.yaml`:
 
 ```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: quiz
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -102,7 +107,8 @@ spec:
         app: quizsim
     spec:
       containers:
-      - image: jannemattila/quizsim:latest
+      - image: quizsim:latest
+        imagePullPolicy: IfNotPresent
         name: quizsim
         env:
           - name: Endpoint
