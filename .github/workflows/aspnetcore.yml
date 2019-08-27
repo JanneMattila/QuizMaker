@@ -13,17 +13,16 @@ jobs:
       uses: actions/setup-node@master
       with:
         version: 10.x
-
-    - name: npm version
-      run: npm version
-
+        
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.0.100-preview8-013656
 
     - name: npm install
-      run: npm install
+      run: |
+        cd src/QuizMaker
+        npm install
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
