@@ -19,7 +19,7 @@ jobs:
         cd src/QuizMaker
         ls
         npm install
-        ls node_modules
+        ls
         
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
