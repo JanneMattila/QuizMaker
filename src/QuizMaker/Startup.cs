@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using QuizMaker.Data;
 using QuizMaker.Hubs;
+using QuizMaker.Services;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -91,7 +92,9 @@ namespace QuizMaker
                 StorageConnectionString = storageConnectionString
             }));
 
+            services.AddSingleton<ConnectionStorage>();
             services.AddSingleton<IUserIdProvider, UniqueIdentifierUserIdProvider>();
+            services.AddSingleton<IHostedService, ConnectionBackgroundService>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

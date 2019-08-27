@@ -14,11 +14,11 @@ namespace QuizMaker.Data
     public class QuizDataContext : IQuizDataContext
     {
         private const string Active = "active";
-        private const string Users = "users";
+        private const string Connections = "connections";
         private const string Quizzes = "quizzes";
 
         private readonly CloudStorageAccount _cloudStorageAccount;
-        private readonly CloudTable _usersTable;
+        private readonly CloudTable _connectionsTable;
         private readonly CloudTable _quizzesTable;
         private readonly CloudTable _quizResponsesTable;
 
@@ -31,14 +31,14 @@ namespace QuizMaker.Data
 
             _cloudStorageAccount = CloudStorageAccount.Parse(options.StorageConnectionString);
             var tableClient = _cloudStorageAccount.CreateCloudTableClient();
-            _usersTable = tableClient.GetTableReference(TableNames.Users);
+            _connectionsTable = tableClient.GetTableReference(TableNames.Connections);
             _quizzesTable = tableClient.GetTableReference(TableNames.Quizzes);
             _quizResponsesTable = tableClient.GetTableReference(TableNames.QuizResponses);
         }
 
         public void Initialize()
         {
-            _usersTable.CreateIfNotExists();
+            _connectionsTable.CreateIfNotExists();
             _quizResponsesTable.CreateIfNotExists();
             if (_quizzesTable.CreateIfNotExists())
             {
@@ -164,36 +164,71 @@ namespace QuizMaker.Data
             return list;
         }
 
-        public async Task<int> UpsertUserAsync(string connectionId)
+        public async Task<int> UpsertServerConnectionsAsync(int count)
         {
-            var userEntity = new UserEntity(Users, connectionId);
-            var upsertOperation = TableOperation.InsertOrReplace(userEntity);
-            await _usersTable.ExecuteAsync(upsertOperation);
-            return await GetUserCountAsync();
+            var entity = new ConnectionEntity(Connections, Environment.MachineName)
+            {
+                Count = count
+            };
+            var upsertOperation = TableOperation.InsertOrReplace(entity);
+            await _connectionsTable.ExecuteAsync(upsertOperation);
+            return await GetConnectionCountAsync();
         }
 
-        public async Task<int> DeleteUserAsync(string connectionId)
+        public async Task<int> DeleteServerConnectionsAsync()
         {
-            var userEntity = new UserEntity(Users, connectionId)
+            var entity = new ConnectionEntity(Connections, Environment.MachineName)
             {
                 ETag = "*"
             };
-            var deleteOperation = TableOperation.Delete(userEntity);
-            await _usersTable.ExecuteAsync(deleteOperation);
-            return await GetUserCountAsync();
+            var deleteOperation = TableOperation.Delete(entity);
+
+            try
+            {
+                await _connectionsTable.ExecuteAsync(deleteOperation);
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode != 404)
+                {
+                    throw;
+                }
+            }
+            return await GetConnectionCountAsync();
         }
 
-        public async Task<int> GetUserCountAsync()
+        public async Task<int> GetConnectionCountAsync()
         {
-            var query = new TableQuery<UserEntity>()
-                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Users))
-                .Select(new List<string> { "PartitionKey", "RowKey", "Timestamp" });
+            var query = new TableQuery<ConnectionEntity>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Connections));
             TableContinuationToken token = null;
             var count = 0;
             do
             {
-                var result = await _usersTable.ExecuteQuerySegmentedAsync(query, token);
-                count += result.Count();
+                var result = await _connectionsTable.ExecuteQuerySegmentedAsync(query, token);
+                foreach (var entity in result)
+                {
+                    if (entity.Timestamp < DateTime.UtcNow.AddMinutes(-2))
+                    {
+                        var deleteOperation = TableOperation.Delete(entity);
+
+                        try
+                        {
+                            await _connectionsTable.ExecuteAsync(deleteOperation);
+                        }
+                        catch (StorageException ex)
+                        {
+                            if (ex.RequestInformation.HttpStatusCode != 404)
+                            {
+                                throw;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        count += entity.Count;
+                    }
+                }
             } while (token != null);
 
             return count;

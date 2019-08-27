@@ -12,16 +12,19 @@ namespace QuizMaker.Hubs
     {
         private readonly IQuizDataContext _quizDataContext;
         private readonly IHubContext<QuizResultsHub> _quizResultsHub;
+        private readonly ConnectionStorage _connectionStorage;
 
-        public QuizHub(IQuizDataContext quizDataContext, IHubContext<QuizResultsHub> quizResultsHub)
+        public QuizHub(IQuizDataContext quizDataContext, IHubContext<QuizResultsHub> quizResultsHub, ConnectionStorage connectionStorage)
         {
             _quizDataContext = quizDataContext;
             _quizResultsHub = quizResultsHub;
+            _connectionStorage = connectionStorage;
         }
 
         public override async Task OnConnectedAsync()
         {
-            var counter = await _quizDataContext.UpsertUserAsync(Context.ConnectionId);
+            var count = _connectionStorage.Increment();
+            var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);
             await Clients.All.Connected(new ConnectionViewModel()
             {
                 Counter = counter
@@ -43,7 +46,8 @@ namespace QuizMaker.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var counter = await _quizDataContext.DeleteUserAsync(Context.ConnectionId);
+            var count = _connectionStorage.Decrement();
+            var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);
             await Clients.All.Disconnected(new ConnectionViewModel()
             {
                 Counter = counter

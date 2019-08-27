@@ -8,13 +8,13 @@ namespace QuizMaker.Data
     public interface IQuizDataContext
     {
         Task<QuizEntity> ActivateQuizAsync(string id);
-        Task<int> DeleteUserAsync(string connectionId);
+        Task<int> DeleteServerConnectionsAsync();
         Task<QuizEntity> GetActiveQuizAsync();
         Task<QuizEntity> GetQuizAsync(string id);
         Task<List<QuizResponseEntity>> GetQuizResponsesAsync(string id);
         void Initialize();
         Task<bool> UserHasResponseAsync(string quizID, string userID);
-        Task<int> UpsertUserAsync(string connectionId);
+        Task<int> UpsertServerConnectionsAsync(int count);
         Task UpsertResponseAsync(ResponseViewModel quizResponse);
         Task<List<QuizEntity>> GetQuizzesAsync();
     }
