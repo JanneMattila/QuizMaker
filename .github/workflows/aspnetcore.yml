@@ -20,6 +20,9 @@ jobs:
         ls
         npm install
         ls
+        cd ..
+        cd ..
+        ls
         
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
