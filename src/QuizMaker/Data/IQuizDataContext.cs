@@ -10,6 +10,7 @@ namespace QuizMaker.Data
         Task<QuizEntity> ActivateQuizAsync(string id);
         Task<int> DeleteServerConnectionsAsync();
         Task<QuizEntity> GetActiveQuizAsync();
+        Task<int> GetConnectionCountAsync();
         Task<QuizEntity> GetQuizAsync(string id);
         Task<List<QuizResponseEntity>> GetQuizResponsesAsync(string id);
         void Initialize();

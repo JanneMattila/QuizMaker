@@ -18,6 +18,8 @@ export class ResultViewModel {
     quizId: string;
     quizTitle: string;
 
+    responses: number;
+
     results: Array<ResultQuestionViewModel>;
 
     constructor() {

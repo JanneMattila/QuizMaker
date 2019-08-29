@@ -1,5 +1,6 @@
 ﻿declare var d3: typeof import("d3");
 declare var signalR: typeof import("@aspnet/signalr");
+import { ConnectionViewModel } from "./quizTypes";
 import { ResultViewModel, ResultQuestionViewModel, ResultQuestionAnswerViewModel } from "./resultTypes";
 
 let protocol = new signalR.JsonHubProtocol();
@@ -14,6 +15,19 @@ let quizId = document.location.href.split('/')[document.location.href.split('/')
 
 let results = new ResultViewModel();
 results.quizId = quizId;
+
+function updateUserCount(connection: ConnectionViewModel) {
+    let usersElement = document.getElementById("users");
+    usersElement.innerHTML = `${connection.counter} 👥`;
+}
+
+connection.on('Connected', function (connection: ConnectionViewModel) {
+    updateUserCount(connection);
+});
+
+connection.on('Disconnected', function (connection: ConnectionViewModel) {
+    updateUserCount(connection);
+});
 
 connection.on('Results', function (r: ResultViewModel) {
     let data = "Results received: " + new Date().toLocaleTimeString();
@@ -70,6 +84,9 @@ function renderQuizResults(results: ResultViewModel) {
     if (results.results.length > 0) {
         resultQuestion = results.results[0];
     }
+
+    let responsesElement = document.getElementById("responses");
+    responsesElement.innerHTML = `${results.responses} 📝`;
 
     let svg = d3.select("svg");
     svg.selectAll("*").remove();

@@ -81,6 +81,8 @@ namespace QuizMaker.Data
                         Answers = list
                     });
                 }
+
+                results.Responses = quizResponses.Count;
             }
 
             return results;

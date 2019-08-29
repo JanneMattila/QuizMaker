@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using QuizMaker.Data;
 using QuizMaker.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using QuizMaker.Models.Quiz;
 using System.Threading.Tasks;
 
 namespace QuizMaker.Hubs
@@ -18,25 +15,32 @@ namespace QuizMaker.Hubs
             _quizDataContext = quizDataContext;
         }
 
-        public override async Task OnConnectedAsync()
-        {
-            await base.OnConnectedAsync();
-        }
-
-        public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            await base.OnDisconnectedAsync(exception);
-        }
-
         [HubMethodName("GetResults")]
         public async Task GetResultsAsync(string id)
         {
-            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, id);
+            if (id == HubConstants.Active)
+            {
+                var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
+                if (activeQuiz != null)
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, HubConstants.Active);
+                    var quiz = QuizViewModel.FromJson(activeQuiz.Json);
+                    id = quiz.ID;
+
+                    var counter = await _quizDataContext.GetConnectionCountAsync();
+                    await Clients.Caller.SendAsync(HubConstants.ConnectedMethod, new ConnectionViewModel()
+                    {
+                        Counter = counter
+                    }); 
+                }
+            }
+
+            await Groups.AddToGroupAsync(this.Context.ConnectionId, id);
 
             var resultsBuilder = new QuizResultBuilder(_quizDataContext);
             var results = await resultsBuilder.GetResultsAsync(id);
 
-            await Clients.Caller.SendAsync("Results", results);
+            await Clients.Caller.SendAsync(HubConstants.ResultsMethod, results);
         }
     }
 }

@@ -13,11 +13,14 @@ namespace QuizMaker.Controllers
     {
         private readonly IQuizDataContext _quizDataContext;
         private readonly IHubContext<QuizHub, IQuizHub> _quizHub;
+        private readonly IHubContext<QuizResultsHub> _quizResultsHub;
 
-        public ManageController(IQuizDataContext quizDataContext, IHubContext<QuizHub, IQuizHub> quizHub)
+        public ManageController(IQuizDataContext quizDataContext, 
+            IHubContext<QuizHub, IQuizHub> quizHub, IHubContext<QuizResultsHub> quizResultsHub)
         {
             _quizDataContext = quizDataContext;
             _quizHub = quizHub;
+            _quizResultsHub = quizResultsHub;
         }
 
         [Authorize]
@@ -41,6 +44,15 @@ namespace QuizMaker.Controllers
                 QuizViewModel.CreateBlank();
 
             await _quizHub.Clients.All.Quiz(quiz);
+
+            if (activeQuiz != null)
+            {
+                var resultsBuilder = new QuizResultBuilder(_quizDataContext);
+                var results = await resultsBuilder.GetResultsAsync(quiz.ID);
+
+                await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.ResultsMethod, results);
+            }
+
             return View(quiz);
         }
 

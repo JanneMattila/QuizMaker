@@ -25,10 +25,13 @@ namespace QuizMaker.Hubs
         {
             var count = _connectionStorage.Increment();
             var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);
-            await Clients.All.Connected(new ConnectionViewModel()
+            var connection = new ConnectionViewModel()
             {
                 Counter = counter
-            });
+            };
+
+            await Clients.All.Connected(connection);
+            await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.ConnectedMethod, connection);
 
             var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
             if (activeQuiz != null)
@@ -48,10 +51,13 @@ namespace QuizMaker.Hubs
         {
             var count = _connectionStorage.Decrement();
             var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);
-            await Clients.All.Disconnected(new ConnectionViewModel()
+            var connection = new ConnectionViewModel()
             {
                 Counter = counter
-            });
+            };
+
+            await Clients.All.Disconnected(connection);
+            await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.DisconnectedMethod, connection);
 
             await base.OnDisconnectedAsync(exception);
         }
@@ -70,8 +76,8 @@ namespace QuizMaker.Hubs
             var resultsBuilder = new QuizResultBuilder(_quizDataContext);
             var results = await resultsBuilder.GetResultsAsync(quizResponse.ID);
 
-            await _quizResultsHub.Clients.Group(quizResponse.ID).SendAsync("Results", results);
-            await _quizResultsHub.Clients.Group("active").SendAsync("Results", results);
+            await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.ResultsMethod, results);
+            await _quizResultsHub.Clients.Group(quizResponse.ID).SendAsync(HubConstants.ResultsMethod, results);
         }
     }
 }

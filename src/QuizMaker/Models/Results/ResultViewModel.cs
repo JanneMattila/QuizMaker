@@ -11,6 +11,9 @@ namespace QuizMaker.Models.Results
         [JsonPropertyName("quizTitle")]
         public string Title { get; set; }
 
+        [JsonPropertyName("responses")]
+        public int Responses { get; set; }
+
         [JsonPropertyName("results")]
         public List<ResultQuestionViewModel> Results { get; set; }
 

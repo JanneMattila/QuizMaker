@@ -20,6 +20,16 @@
     var quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
     var results = new resultTypes_1.ResultViewModel();
     results.quizId = quizId;
+    function updateUserCount(connection) {
+        var usersElement = document.getElementById("users");
+        usersElement.innerHTML = connection.counter + " \uD83D\uDC65";
+    }
+    connection.on('Connected', function (connection) {
+        updateUserCount(connection);
+    });
+    connection.on('Disconnected', function (connection) {
+        updateUserCount(connection);
+    });
     connection.on('Results', function (r) {
         var data = "Results received: " + new Date().toLocaleTimeString();
         console.log(data);
@@ -66,6 +76,8 @@
         if (results.results.length > 0) {
             resultQuestion = results.results[0];
         }
+        var responsesElement = document.getElementById("responses");
+        responsesElement.innerHTML = results.responses + " \uD83D\uDCDD";
         var svg = d3.select("svg");
         svg.selectAll("*").remove();
         var containerElement = document.getElementById("containerElement");
