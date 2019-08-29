@@ -45,6 +45,8 @@ namespace QuizUserSimulator
                 .Build();
 
             connection.On<Quiz>("Quiz", QuizReceived);
+            connection.On<Connection>("Connected", ConnectionHandler);
+            connection.On<Connection>("Disconnected", ConnectionHandler);
 
             await connection.StartAsync(_cancellationTokenSource.Token);
             while (!_cancellationTokenSource.IsCancellationRequested)
@@ -80,6 +82,10 @@ namespace QuizUserSimulator
 
                 await Task.Delay(500, _cancellationTokenSource.Token);
             }
+        }
+
+        private void ConnectionHandler(Connection connection)
+        {
         }
 
         private void QuizReceived(Quiz quiz)
