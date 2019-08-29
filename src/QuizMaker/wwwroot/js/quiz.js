@@ -193,9 +193,22 @@
             if (!question.parameters.multiSelect) {
                 quizMandatoryQuestions.push(question.questionId);
             }
-            for (var j = 0; j < question.options.length; j++) {
-                var option = quiz.questions[i].options[j];
-                quizForm.appendChild(createInput(type, question.questionId, option.optionId, option.optionText));
+            var inputElements = new Array();
+            for (var j_1 = 0; j_1 < question.options.length; j_1++) {
+                var option = quiz.questions[i].options[j_1];
+                inputElements.push(createInput(type, question.questionId, option.optionId, option.optionText));
+            }
+            if (question.parameters.randomizeOrder) {
+                for (var j_2 = 0; j_2 < inputElements.length; j_2++) {
+                    var k = Math.floor(Math.random() * inputElements.length);
+                    var a = inputElements[j_2];
+                    var b = inputElements[k];
+                    inputElements[j_2] = b;
+                    inputElements[k] = a;
+                }
+            }
+            for (var j = 0; j < inputElements.length; j++) {
+                quizForm.appendChild(inputElements[j]);
             }
         }
     });

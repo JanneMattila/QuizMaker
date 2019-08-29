@@ -217,9 +217,24 @@ connection.on('Quiz', function (quizReceived: QuizViewModel) {
             quizMandatoryQuestions.push(question.questionId);
         }
 
+        let inputElements = new Array<HTMLDivElement>();
         for (let j = 0; j < question.options.length; j++) {
             let option = quiz.questions[i].options[j];
-            quizForm.appendChild(createInput(type, question.questionId, option.optionId, option.optionText));
+            inputElements.push(createInput(type, question.questionId, option.optionId, option.optionText));
+        }
+
+        if (question.parameters.randomizeOrder) {
+            for (let j = 0; j < inputElements.length; j++) {
+                let k = Math.floor(Math.random() * inputElements.length);
+                let a = inputElements[j];
+                let b = inputElements[k];
+                inputElements[j] = b;
+                inputElements[k] = a;
+            }
+        }
+
+        for (var j = 0; j < inputElements.length; j++) {
+            quizForm.appendChild(inputElements[j]);
         }
     }
 });

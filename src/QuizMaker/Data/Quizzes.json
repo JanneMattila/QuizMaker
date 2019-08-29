@@ -224,5 +224,28 @@
         }
       }
     ]
+  },
+  {
+    "quizId": "azure-devops-repos-100",
+    "quizTitle": "Repository",
+    "questions": [
+      {
+        "questionId": "azure-devops-repos-100-1",
+        "questionTitle": "Do you know projects that are working without source control?",
+        "options": [
+          {
+            "optionId": "azure-devops-repos-100-1-1",
+            "optionText": "Yes"
+          },
+          {
+            "optionId": "azure-devops-repos-100-1-2",
+            "optionText": "No"
+          }
+        ],
+        "parameters": {
+          "randomizeOrder":  true
+        }
+      }
+    ]
   }
 ]
