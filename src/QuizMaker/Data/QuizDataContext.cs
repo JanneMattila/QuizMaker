@@ -107,6 +107,12 @@ namespace QuizMaker.Data
                 return null;
             }
 
+            var entity = QuizViewModel.FromJson(quizEntity.Json);
+            if (entity.Questions.Any(q => q.Parameters.ClearOnActivation))
+            {
+                await DeleteResponsesAsync(entity.ID);
+            }
+
             quizEntity.PartitionKey = quizEntity.RowKey = Active;
             var upsertOperation = TableOperation.InsertOrReplace(quizEntity);
             var upsertResult = await _quizzesTable.ExecuteAsync(upsertOperation);
@@ -232,6 +238,29 @@ namespace QuizMaker.Data
             } while (token != null);
 
             return count;
+        }
+
+        public async Task DeleteResponsesAsync(string id)
+        {
+            var query = new TableQuery<QuizResponseEntity>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, id));
+            TableContinuationToken token = null;
+
+            do
+            {
+                var result = await _quizResponsesTable.ExecuteQuerySegmentedAsync(query, token);
+                var tableBatchOperation = new TableBatchOperation();
+                foreach (var entity in result)
+                {
+                    var deleteOperation = TableOperation.Delete(entity);
+                    tableBatchOperation.Add(deleteOperation);
+                }
+
+                if (tableBatchOperation.Any())
+                {
+                    await _quizResponsesTable.ExecuteBatchAsync(tableBatchOperation);
+                }
+            } while (token != null);
         }
     }
 }

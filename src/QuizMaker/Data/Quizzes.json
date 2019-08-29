@@ -17,7 +17,44 @@
           }
         ],
         "parameters": {
-          "allowMultipleResponses": true
+          "allowMultipleResponses": true,
+          "clearOnActivation": true
+        }
+      }
+    ]
+  },
+  {
+    "quizId": "common-101",
+    "quizTitle": "Quiz",
+    "questions": [
+      {
+        "questionId": "common-101-1",
+        "questionTitle": "Mood",
+        "options": [
+          {
+            "optionId": "common-101-1-1",
+            "optionText": "1"
+          },
+          {
+            "optionId": "common-101-1-2",
+            "optionText": "2"
+          },
+          {
+            "optionId": "common-101-1-3",
+            "optionText": "3"
+          },
+          {
+            "optionId": "common-101-1-4",
+            "optionText": "4"
+          },
+          {
+            "optionId": "common-101-1-5",
+            "optionText": "5"
+          }
+        ],
+        "parameters": {
+          "allowMultipleResponses": true,
+          "clearOnActivation": true
         }
       }
     ]

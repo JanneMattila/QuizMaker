@@ -22,5 +22,12 @@ namespace QuizMaker.Models.Quiz
         /// </summary>
         [JsonPropertyName("randomizeOrder")]
         public bool RandomizeOrder { get; set; }
+
+        /// <summary>
+        /// Flag indicating that should the previous answers be 
+        /// cleared when this question is activated.
+        /// </summary>
+        [JsonPropertyName("clearOnActivation")]
+        public bool ClearOnActivation { get; set; }
     }
 }
