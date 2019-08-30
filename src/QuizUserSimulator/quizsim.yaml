@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: quiz
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: quizsim
+  namespace: quiz
+spec:
+  replicas: 0
+  template:
+    metadata:
+      labels:
+        app: quizsim
+    spec:
+      containers:
+      - image: quizsim:latest
+        imagePullPolicy: IfNotPresent
+        name: quizsim
+        env:
+          - name: Endpoint
+            value: "https://yourserver/QuizHub"
