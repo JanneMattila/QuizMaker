@@ -5,6 +5,12 @@ Param (
     [Parameter(HelpMessage="Deployment target resource group location")] 
     [string] $Location = "North Europe",
 
+    [Parameter(Mandatory=$true,HelpMessage="Tenant name (e.g. 'tenantname.onmicrosoft.com').")] 
+    [string] $TenantName,
+
+    [Parameter(HelpMessage="DisplayName of AzureAD application")] 
+    [string] $AzureADAppName = "Quiz LOCAL",
+
     [Parameter(HelpMessage="App Service Plan's Pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/")] 
     [ValidateSet("B1", "B2", "B3", "S1", "S2", "S3", "P1", "P2", "P3", "P1v2", "P2v2", "P3v2")]
     [string] $AppServicePricingTier = "B1",
@@ -49,12 +55,42 @@ if ((Get-AzResourceGroup -Name $ResourceGroupName -Location $Location -ErrorActi
     New-AzResourceGroup -Name $ResourceGroupName -Location $Location -Verbose
 }
 
+# AzureAD app creation:
+$identifierUri = "https://" + $AzureADAppName.ToLower().Replace(" ", "") + "." + $TenantName
+
+$app = Get-AzADApplication -IdentifierUri  $identifierUri
+$quizApp = $null
+
+if ($app.length -eq 1)
+{
+    $quizApp = $app[0]
+}
+else
+{
+    #
+    # Note: "New-AzADApplication" does not yet support
+    # setting up "signInAudience" to "AzureADandPersonalMicrosoftAccount"
+    # 
+    Write-Host "Creating new AAD App: $identifierUri"
+    $aadApp = New-AzADApplication `
+        -AvailableToOtherTenants $true `
+        -DisplayName $AzureADAppName `
+        -ReplyUrls "http://localhost/signin-oidc" `
+        -IdentifierUris $identifierUri
+    
+    New-AzADServicePrincipal -ApplicationId $aadApp.ApplicationId
+    $quizApp = $aadApp
+}
+
 # Additional parameters that we pass to the template deployment
 $additionalParameters = New-Object -TypeName hashtable
 $additionalParameters['appServicePlanPricingTier'] = $AppServicePricingTier
 $additionalParameters['appServicePlanInstances'] = $AppServiceInstances
+
 $additionalParameters['signalRServicePricingTier'] = $SignalRServicePricingTier
 $additionalParameters['signalRServiceUnits'] = $SignalRServiceUnits
+
+$additionalParameters['aadClientId'] = $quizApp.ApplicationId
 
 $result = New-AzResourceGroupDeployment `
     -DeploymentName $deploymentName `
@@ -79,3 +115,11 @@ $webAppUri = $result.Outputs.webAppUri.value
 # can be used in follow-up tasks such as application deployment
 Write-Host "##vso[task.setvariable variable=Custom.WebAppName;]$webAppName"
 Write-Host "##vso[task.setvariable variable=Custom.WebAppUri;]$webAppUri"
+
+$replyUrls = [array]$quizApp.ReplyUrls
+if ($replyUrls.length -eq 0 -or
+    $replyUrls[0].StartsWith($webAppUri) -eq $false)
+{
+    # Update ReplyUrls to the AzureAD application
+    Set-AzADApplication -ObjectId $quizApp.ObjectId -ReplyUrls "$webAppUri/signin-oidc"
+}

@@ -55,6 +55,12 @@
         "description": "SignalR Service unit count"
       }
     },
+    "aadClientId": {
+      "type": "string",
+      "metadata": {
+        "description": "ClientId of the AzureAD application used for authentication."
+      }
+    },
     "storageType": {
       "type": "string",
       "defaultValue": "Standard_LRS",
@@ -106,6 +112,7 @@
       "type": "Microsoft.Web/serverfarms",
       "location": "[parameters('location')]",
       "apiVersion": "2018-02-01",
+      "kind": "linux",
       "sku": {
         "name": "[parameters('appServicePlanPricingTier')]",
         "capacity": "[parameters('appServicePlanInstances')]"
@@ -166,7 +173,8 @@
           ],
           "properties": {
             "StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('appStorageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName')), '2015-05-01-preview').key1)]",
-            "SignalRConnectionString": "[listKeys(resourceId('Microsoft.SignalRService/SignalR', variables('appSignalRName')),'2018-10-01').primaryConnectionString]"
+            "SignalRConnectionString": "[listKeys(resourceId('Microsoft.SignalRService/SignalR', variables('appSignalRName')),'2018-10-01').primaryConnectionString]",
+            "AzureAD:ClientId": "[parameters('aadClientId')]"
           }
         }
       ]
@@ -179,7 +187,7 @@
     },
     "webAppUri": {
       "type": "string",
-      "value": "[concat('http://',reference(resourceId('Microsoft.Web/sites', variables('appServiceName'))).hostNames[0])]"
+      "value": "[concat('https://',reference(resourceId('Microsoft.Web/sites', variables('appServiceName'))).hostNames[0])]"
     }
   }
 }
