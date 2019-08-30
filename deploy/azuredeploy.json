@@ -61,6 +61,12 @@
         "description": "ClientId of the AzureAD application used for authentication."
       }
     },
+    "linuxFxVersion": {
+      "type": "string",
+      "metadata": {
+        "description": "Linux App Framework and version. E.g. 'DOCKER|jannemattila/quizmaker:latest'"
+      }
+    },
     "storageType": {
       "type": "string",
       "defaultValue": "Standard_LRS",
@@ -116,6 +122,9 @@
       "sku": {
         "name": "[parameters('appServicePlanPricingTier')]",
         "capacity": "[parameters('appServicePlanInstances')]"
+      },
+      "properties": {
+        "reserved": true
       }
     },
     {
@@ -148,7 +157,10 @@
       "name": "[variables('appServiceName')]",
       "type": "Microsoft.Web/sites",
       "location": "[parameters('location')]",
-      "apiVersion": "2018-02-01",
+      "apiVersion": "2018-11-01",
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName'))]"
@@ -160,21 +172,24 @@
           "alwaysOn": true,
           "webSocketsEnabled": true,
           "http20Enabled": true,
-          "ftpsState": "Disabled"
+          "clientAffinityEnabled": false,
+          "ftpsState": "Disabled",
+          "linuxFxVersion": "[parameters('linuxFxVersion')]"
         }
       },
       "resources": [
         {
           "name": "appsettings",
           "type": "config",
-          "apiVersion": "2018-02-01",
+          "apiVersion": "2018-11-01",
           "dependsOn": [
             "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
           ],
           "properties": {
             "StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('appStorageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName')), '2015-05-01-preview').key1)]",
             "SignalRConnectionString": "[listKeys(resourceId('Microsoft.SignalRService/SignalR', variables('appSignalRName')),'2018-10-01').primaryConnectionString]",
-            "AzureAD:ClientId": "[parameters('aadClientId')]"
+            "AzureAD__ClientId": "[parameters('aadClientId')]",
+            "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false"
           }
         }
       ]

@@ -27,7 +27,11 @@ Param (
     [ValidateSet(1, 2, 5, 10, 20, 50, 100)]
     [int] $SignalRServiceUnits = 1,
 
-    [string] $Template = "$PSScriptRoot\azuredeploy.json"
+    [Parameter(HelpMessage="Docker image to use from Docker Hub.")] 
+    [string] $DockerImage = "nginx",
+
+    [string] $Template = "$PSScriptRoot\azuredeploy.json",
+    [string] $TemplateParameters = "$PSScriptRoot\azuredeploy.parameters.json"
 )
 
 $ErrorActionPreference = "Stop"
@@ -92,10 +96,13 @@ $additionalParameters['signalRServiceUnits'] = $SignalRServiceUnits
 
 $additionalParameters['aadClientId'] = $quizApp.ApplicationId
 
+$additionalParameters['linuxFxVersion'] = "DOCKER|$DockerImage"
+
 $result = New-AzResourceGroupDeployment `
     -DeploymentName $deploymentName `
     -ResourceGroupName $ResourceGroupName `
     -TemplateFile $Template `
+    -TemplateParameterFile $TemplateParameters `
     @additionalParameters `
     -Mode Complete -Force `
     -Verbose
