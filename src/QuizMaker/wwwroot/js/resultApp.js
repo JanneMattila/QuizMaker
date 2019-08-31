@@ -106,9 +106,11 @@
             })]);
         g.append("g")
             .attr("transform", "translate(0," + height + ")")
+            .style("font-size", "16px")
             .call(d3.axisBottom(x));
         g.append("g")
             .call(d3.axisLeft(y))
+            .style("font-size", "16px")
             .append("text")
             .attr("fill", "#000")
             .attr("transform", "rotate(-90)")
