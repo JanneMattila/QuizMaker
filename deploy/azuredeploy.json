@@ -176,24 +176,22 @@
           "ftpsState": "Disabled",
           "linuxFxVersion": "[parameters('linuxFxVersion')]"
         }
-      },
-      "resources": [
-        {
-          "name": "appsettings",
-          "type": "config",
-          "apiVersion": "2018-11-01",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
-          ],
-          "properties": {
-            "StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('appStorageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName')), '2015-05-01-preview').key1)]",
-            "SignalRConnectionString": "[listKeys(resourceId('Microsoft.SignalRService/SignalR', variables('appSignalRName')),'2018-10-01').primaryConnectionString]",
-            "AzureAD__ClientId": "[parameters('aadClientId')]",
-            "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
-            "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
-          }
-        }
-      ]
+      }
+    },
+    {
+      "name": "[concat(variables('appServiceName'), '/appsettings')]",
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2018-11-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
+      ],
+      "properties": {
+        "StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('appStorageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName')), '2015-05-01-preview').key1)]",
+        "SignalRConnectionString": "[listKeys(resourceId('Microsoft.SignalRService/SignalR', variables('appSignalRName')),'2018-10-01').primaryConnectionString]",
+        "AzureAD__ClientId": "[parameters('aadClientId')]",
+        "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
+      }
     }
   ],
   "outputs": {
