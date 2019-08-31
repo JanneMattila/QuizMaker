@@ -189,7 +189,8 @@
             "StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('appStorageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName')), '2015-05-01-preview').key1)]",
             "SignalRConnectionString": "[listKeys(resourceId('Microsoft.SignalRService/SignalR', variables('appSignalRName')),'2018-10-01').primaryConnectionString]",
             "AzureAD__ClientId": "[parameters('aadClientId')]",
-            "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false"
+            "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+            "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
           }
         }
       ]
