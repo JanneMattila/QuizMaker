@@ -27,8 +27,8 @@ Param (
     [ValidateSet(1, 2, 5, 10, 20, 50, 100)]
     [int] $SignalRServiceUnits = 1,
 
-    [Parameter(HelpMessage="Docker image to use from Docker Hub.")] 
-    [string] $DockerImage = "nginx",
+    [Parameter(HelpMessage="Docker image to use from Docker Hub. Defaults to latest development image.")] 
+    [string] $DockerImage = "jannemattila/quizmaker:latest",
 
     [string] $Template = "$PSScriptRoot\azuredeploy.json",
     [string] $TemplateParameters = "$PSScriptRoot\azuredeploy.parameters.json"
