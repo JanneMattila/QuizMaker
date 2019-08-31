@@ -48,7 +48,7 @@ namespace QuizMaker.Data
 
         private void AddExampleQuizzes()
         {
-            var exampleQuizzes = @"Data\Quizzes.json";
+            var exampleQuizzes = Path.Combine("Data", "Quizzes.json");
             if (File.Exists(exampleQuizzes))
             {
                 var json = File.ReadAllText(exampleQuizzes);
