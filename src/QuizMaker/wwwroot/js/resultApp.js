@@ -20,6 +20,7 @@
     var quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
     var results = new resultTypes_1.ResultViewModel();
     results.quizId = quizId;
+    results.responses = 0;
     function updateUserCount(connection) {
         var usersElement = document.getElementById("users");
         usersElement.innerHTML = connection.counter + " \uD83D\uDC65";

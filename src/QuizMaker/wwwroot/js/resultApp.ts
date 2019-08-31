@@ -15,6 +15,7 @@ let quizId = document.location.href.split('/')[document.location.href.split('/')
 
 let results = new ResultViewModel();
 results.quizId = quizId;
+results.responses = 0;
 
 function updateUserCount(connection: ConnectionViewModel) {
     let usersElement = document.getElementById("users");
