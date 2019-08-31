@@ -4,11 +4,23 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
+
+WORKDIR /node
+ENV NODE_VERSION 12.9.1
+RUN apt-get update -qq && \
+    apt-get dist-upgrade --no-install-recommends -y && \
+    apt-get install -y --no-install-recommends xz-utils
+
+RUN curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz"
+RUN tar -xf "/node/node-v$NODE_VERSION-linux-x64.tar.xz"
+ENV PATH=$PATH:/node/node-v$NODE_VERSION-linux-x64/bin
+
 WORKDIR /src
-COPY ["src/QuizMaker/QuizMaker.csproj", "src/QuizMaker/"]
-RUN dotnet restore "src/QuizMaker/QuizMaker.csproj"
+RUN node --version
+
+COPY "QuizMaker.csproj" .
+RUN dotnet restore "QuizMaker.csproj"
 COPY . .
-WORKDIR "/src/src/QuizMaker"
 RUN dotnet build "QuizMaker.csproj" -c Release -o /app
 
 FROM build AS publish
