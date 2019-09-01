@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{7B2AAD5E-368
 		doc\acknowledgements.md = doc\acknowledgements.md
 		LICENSE = LICENSE
 		doc\quiz.md = doc\quiz.md
+		doc\quizmaker.md = doc\quizmaker.md
 		README.md = README.md
 		doc\simulator.md = doc\simulator.md
 	EndProjectSection
