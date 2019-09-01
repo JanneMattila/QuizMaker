@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace QuizMaker.Controllers
 {
+    [Authorize]
     public class ManageController : Controller
     {
         private readonly IQuizDataContext _quizDataContext;
@@ -23,7 +24,6 @@ namespace QuizMaker.Controllers
             _quizResultsHub = quizResultsHub;
         }
 
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             var list = (await _quizDataContext.GetQuizzesAsync())
