@@ -202,3 +202,8 @@ div.quiz-question-option input {
 #resultsTitle {
     margin-top: 5%;
 }
+
+/* Quiz Manage: */
+.table {
+    margin-top: 30px;
+}

@@ -5,15 +5,15 @@
     ViewData["EnableManagementLink"] = true;
 }
 
-<h1>Available Quizzes</h1>
+<h1>Manage Quizzes</h1>
 
-@*<p>
-        <a asp-action="Create">Create New</a>
-</p>*@
-<p>
+<div>
+    <a asp-action="Create">Create New</a> |
     <a asp-action="Deactivate">Deactivate</a> |
-    @Html.ActionLink("Active result page", "Results", new { id = "active" })
-</p>
+    @Html.ActionLink("Active result page", "Results", new { id = "active" }) |
+    <a asp-action="DeleteAllResponses">Delete responses</a>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -28,17 +28,15 @@
         <tr>
             <td>@item.Title</td>
             <td>
-                <ul>
-                    @foreach (var question in item.Questions)
-                    {
-                        <li>@question.Title</li>
-                    }
-                </ul>
+                @foreach (var question in item.Questions)
+                {
+                    @question.Title<br />
+                }
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { id = item.ID }) |
                 @Html.ActionLink("Results", "Results", new { id = item.ID }) |
-                @Html.ActionLink("Activate", "Activate", new { id = item.ID }) |
+                @Html.ActionLink("Activate", "Activate", new { id = item.ID })
             </td>
         </tr>
         }

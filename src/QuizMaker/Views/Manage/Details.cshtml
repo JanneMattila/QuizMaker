@@ -5,46 +5,48 @@
     ViewData["EnableManagementLink"] = true;
 }
 
-<div>
-    <h4>Quiz details</h4>
-    <hr />
+    <div>
+        <h4>@Model.Title</h4>
 
-    <h3>@Model.Title</h3>
+        <div>
+            @Html.ActionLink("Delete quiz", "DeleteQuiz", new { id = Model.ID }) |
+            @Html.ActionLink("Delete quiz responses", "DeleteQuizResponses", new { id = Model.ID })
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Question</th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var question in Model.Questions)
-            {
-            <tr>
-                <td>@question.Title</td>
-                <td>
-                    <ul>
-                        @foreach (var option in question.Options)
-                        {
-                            <li>@option.OptionText</li>
-                        }
-                    </ul>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var question in Model.Questions)
+                {
+                    <tr>
+                        <td>@question.Title</td>
+                        <td>
+                            <ul>
+                                @foreach (var option in question.Options)
+                                {
+                                    <li>@option.OptionText</li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Json)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Json)
-        </dd>
-    </dl>
-</div>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Json)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Json)
+            </dd>
+        </dl>
+    </div>
 <div>
     @Html.ActionLink("Activate", "Activate", new { id = Model.ID }) |
     @Html.ActionLink("Results", "Results", new { id = Model.ID }) |

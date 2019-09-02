@@ -1,4 +1,4 @@
-﻿using QuizMaker.Models;
+﻿using QuizMaker.Models.Quiz;
 using QuizMaker.Models.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +8,9 @@ namespace QuizMaker.Data
     public interface IQuizDataContext
     {
         Task<QuizEntity> ActivateQuizAsync(string id);
+        Task CreateQuizAsync(QuizViewModel quiz);
+        Task DeleteAllResponsesAsync();
+        Task DeleteResponsesAsync(string id);
         Task<int> DeleteServerConnectionsAsync();
         Task<QuizEntity> GetActiveQuizAsync();
         Task<int> GetConnectionCountAsync();

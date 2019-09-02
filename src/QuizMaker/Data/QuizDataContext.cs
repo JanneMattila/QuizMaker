@@ -239,6 +239,26 @@ namespace QuizMaker.Data
 
             return count;
         }
+        
+        public async Task CreateQuizAsync(QuizViewModel quiz)
+        {
+            if (quiz == null)
+            {
+                throw new ArgumentNullException(nameof(quiz));
+            }
+            var quizEntity = new QuizEntity(Quizzes, quiz.ID)
+            {
+                Json = JsonSerializer.Serialize(quiz)
+            };
+            var upsertOperation = TableOperation.Insert(quizEntity);
+            await _quizzesTable.ExecuteAsync(upsertOperation);
+        }
+
+        public async Task DeleteAllResponsesAsync()
+        {
+            await _quizResponsesTable.DeleteAsync();
+            await _quizResponsesTable.CreateIfNotExistsAsync();
+        }
 
         public async Task DeleteResponsesAsync(string id)
         {

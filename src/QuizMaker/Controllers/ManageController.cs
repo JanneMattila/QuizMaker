@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using QuizMaker.Models.Quiz;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace QuizMaker.Controllers
 {
@@ -26,6 +28,7 @@ namespace QuizMaker.Controllers
 
         public async Task<IActionResult> Index()
         {
+            _quizDataContext.Initialize();
             var list = (await _quizDataContext.GetQuizzesAsync())
                 .Select(entity => QuizViewModel.FromJson(entity.Json));
             return View(list);
@@ -68,9 +71,83 @@ namespace QuizMaker.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
+            var quiz = await GetQuizAsync(id);
+            return View(quiz);
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            var quiz = await GetQuizAsync(id);
+            return View(quiz);
+        }
+
+        private async Task<QuizViewModel> GetQuizAsync(string id)
+        {
             var quizEntity = await _quizDataContext.GetQuizAsync(id);
             var quiz = QuizViewModel.FromJson(quizEntity.Json);
+            return quiz;
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(QuizViewModel model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _quizDataContext.CreateQuizAsync(model);
+                return RedirectToAction("Details", new { id = model.ID });
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteAllResponses()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAllResponses(IFormCollection form)
+        {
+            if (ModelState.IsValid)
+            {
+                await _quizDataContext.DeleteAllResponsesAsync();
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> DeleteQuiz(string id)
+        {
+            var quiz = await GetQuizAsync(id);
             return View(quiz);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteQuizResponses(string id)
+        {
+            var quiz = await GetQuizAsync(id);
+            return View(quiz);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteQuizResponses(string id, IFormCollection form)
+        {
+            await _quizDataContext.DeleteResponsesAsync(id);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Delete()
