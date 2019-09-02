@@ -147,7 +147,7 @@ namespace QuizMaker.Controllers
         public async Task<IActionResult> DeleteQuizResponses(string id, IFormCollection form)
         {
             await _quizDataContext.DeleteResponsesAsync(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id });
         }
 
         public IActionResult Delete()

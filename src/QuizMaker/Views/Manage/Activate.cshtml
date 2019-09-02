@@ -11,6 +11,7 @@
         <p>
             Quiz "@Model.Title" has been activated. See @Html.ActionLink("Results", "Results", new { id = Model.ID }).
         </p>
+
         <table class="table">
             <thead>
                 <tr>
@@ -36,6 +37,7 @@
             </tbody>
         </table>
     </div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        @Html.ActionLink("Results", "Results", new { id = Model.ID }) |
+        <a asp-action="Index">Back to List</a>
+    </div>
