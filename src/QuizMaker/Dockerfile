@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-preview9-alpine AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-preview9-buster AS build
 
 WORKDIR /node
 ENV NODE_VERSION 12.9.1
@@ -16,9 +16,10 @@ RUN tar -xf "/node/node-v$NODE_VERSION-linux-x64.tar.xz"
 ENV PATH=$PATH:/node/node-v$NODE_VERSION-linux-x64/bin
 
 WORKDIR /src
-RUN node --version
-
 COPY "QuizMaker.csproj" .
+COPY "package-lock.json" .
+COPY "package.json" .
+RUN npm install
 RUN dotnet restore "QuizMaker.csproj"
 COPY . .
 RUN dotnet build "QuizMaker.csproj" -c Release -o /app
