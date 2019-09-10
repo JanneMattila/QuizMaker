@@ -27,8 +27,11 @@ Param (
     [ValidateSet(1, 2, 5, 10, 20, 50, 100)]
     [int] $SignalRServiceUnits = 1,
 
-    [Parameter(HelpMessage="Docker image to use from Docker Hub. Defaults to latest development image.")] 
-    [string] $DockerImage = "jannemattila/quizmaker:latest",
+    [Parameter(HelpMessage="Docker image to use from Docker Hub.")] 
+    [string] $DockerImage = "jannemattila/quizmaker",
+
+    [Parameter(HelpMessage="Docker image tag to use from Docker Hub. Defaults to latest development image.")] 
+    [string] $DockerImageTag = "latest",
 
     [string] $Template = "$PSScriptRoot\azuredeploy.json",
     [string] $TemplateParameters = "$PSScriptRoot\azuredeploy.parameters.json"
@@ -96,7 +99,7 @@ $additionalParameters['signalRServiceUnits'] = $SignalRServiceUnits
 
 $additionalParameters['aadClientId'] = $quizApp.ApplicationId
 
-$additionalParameters['linuxFxVersion'] = "DOCKER|$DockerImage"
+$additionalParameters['linuxFxVersion'] = "DOCKER|$DockerImage:$DockerImageTag"
 
 $result = New-AzResourceGroupDeployment `
     -DeploymentName $deploymentName `
