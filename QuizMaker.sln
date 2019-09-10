@@ -9,13 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{7B2AAD5E-368
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		doc\acknowledgements.md = doc\acknowledgements.md
 		azure-pipelines.yml = azure-pipelines.yml
 		LICENSE = LICENSE
-		doc\quiz.md = doc\quiz.md
-		doc\quizmaker.md = doc\quizmaker.md
 		README.md = README.md
-		doc\simulator.md = doc\simulator.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{8E178E6A-3786-4105-87DA-7523E146F09C}"
@@ -40,6 +36,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{687BED3D-9EF7-438F-95F4-188C32736656}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ci.yml = .github\workflows\ci.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{C28B4796-8A82-4D04-BC53-9939F765F074}"
+	ProjectSection(SolutionItems) = preProject
+		doc\acknowledgements.md = doc\acknowledgements.md
+		doc\quiz.md = doc\quiz.md
+		doc\quizmaker.md = doc\quizmaker.md
+		doc\simulator.md = doc\simulator.md
 	EndProjectSection
 EndProject
 Global
@@ -67,6 +71,7 @@ Global
 		{00905EA6-6706-40FD-AB24-7ACB59963458} = {E74445DD-28F2-4920-961A-C3778DA73664}
 		{CF6F0494-7921-43CC-B697-F46800AB4B6C} = {7B2AAD5E-368D-44EC-9215-418C718128CD}
 		{687BED3D-9EF7-438F-95F4-188C32736656} = {CF6F0494-7921-43CC-B697-F46800AB4B6C}
+		{C28B4796-8A82-4D04-BC53-9939F765F074} = {7B2AAD5E-368D-44EC-9215-418C718128CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F99521D6-99C8-41D7-83DC-3D5523498EE7}
