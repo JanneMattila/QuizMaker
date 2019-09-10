@@ -60,6 +60,64 @@
     ]
   },
   {
+    "quizId": "common-102",
+    "quizTitle": "Feedback",
+    "questions": [
+      {
+        "questionId": "common-102-1",
+        "questionTitle": "How likely are you to recommend this session to a friend or colleague?",
+        "options": [
+          {
+            "optionId": "common-102-1-0",
+            "optionText": "0"
+          },
+          {
+            "optionId": "common-102-1-1",
+            "optionText": "1"
+          },
+          {
+            "optionId": "common-102-2",
+            "optionText": "2"
+          },
+          {
+            "optionId": "common-102-3",
+            "optionText": "3"
+          },
+          {
+            "optionId": "common-102-4",
+            "optionText": "4"
+          },
+          {
+            "optionId": "common-102-5",
+            "optionText": "5"
+          },
+          {
+            "optionId": "common-102-6",
+            "optionText": "6"
+          },
+          {
+            "optionId": "common-102-7",
+            "optionText": "7"
+          },
+          {
+            "optionId": "common-102-8",
+            "optionText": "8"
+          },
+          {
+            "optionId": "common-102-9",
+            "optionText": "9"
+          },
+          {
+            "optionId": "common-102-10",
+            "optionText": "10"
+          }
+        ],
+        "parameters": {
+        }
+      }
+    ]
+  },
+  {
     "quizId": "azure-100",
     "quizTitle": "Azure Quiz",
     "questions": [
@@ -243,7 +301,7 @@
           }
         ],
         "parameters": {
-          "randomizeOrder":  true
+          "randomizeOrder": true
         }
       }
     ]
