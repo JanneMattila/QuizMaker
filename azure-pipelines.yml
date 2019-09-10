@@ -19,4 +19,4 @@ steps:
     dockerRegistryEndpoint: DockerHub
     command: 'Push an image'
     imageName: $(imageName)
-    includeLatestTag: true
+    includeSourceTags: true
