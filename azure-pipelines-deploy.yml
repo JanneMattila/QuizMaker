@@ -25,7 +25,7 @@ stages:
               artifactName: deploy
               downloadPath: '$(System.DefaultWorkingDirectory)'
           
-          - task: AzurePowerShell@3
+          - task: AzurePowerShell@4
             displayName: 'Azure PowerShell script: FilePath'
             inputs:
               azureSubscription: AzureDevSubscription
