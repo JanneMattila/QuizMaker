@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using QuizMaker.Data;
 using QuizMaker.Models;
 using QuizMaker.Models.Quiz;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace QuizMaker.Hubs
 {
+    [Authorize]
     public class QuizResultsHub : Hub
     {
         private readonly IQuizDataContext _quizDataContext;

@@ -84,8 +84,9 @@ namespace QuizMaker.Controllers
         private async Task<QuizViewModel> GetQuizAsync(string id)
         {
             var quizEntity = await _quizDataContext.GetQuizAsync(id);
-            var quiz = QuizViewModel.FromJson(quizEntity.Json);
-            return quiz;
+            return quizEntity != null ?
+                QuizViewModel.FromJson(quizEntity.Json) :
+                QuizViewModel.CreateBlank();
         }
 
         [HttpGet]

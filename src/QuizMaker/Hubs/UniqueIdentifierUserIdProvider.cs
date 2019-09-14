@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,9 +10,22 @@ namespace QuizMaker.Hubs
 {
     public class UniqueIdentifierUserIdProvider : IUserIdProvider
     {
+        private static readonly PathString QuizResultsHub = new PathString("/QuizResultsHub");
+
         public string GetUserId(HubConnectionContext connection)
         {
             var context = connection.GetHttpContext();
+
+            if (context.Request.Path.StartsWithSegments(QuizResultsHub, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var email = context.User?.Identity?.Name;
+                if (!string.IsNullOrEmpty(email))
+                {
+                    // This is QuizResultsHub with real authenticated user.
+                    return email;
+                }
+                throw new ArgumentException("User has not authenticated.", nameof(connection));
+            }
 
             // This handles following scenarios:
             // 1. First request of Azure SignalR Service (before returning with token)

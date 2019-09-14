@@ -8,19 +8,19 @@ namespace QuizMaker.Models.Quiz
     public class QuizViewModel
     {
         [JsonPropertyName("quizId")]
-        public string ID { get; set; }
+        public string ID { get; set; } = string.Empty;
 
         [JsonPropertyName("quizTitle")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [JsonPropertyName("userId")]
-        public string UserID { get; set; }
+        public string UserID { get; set; } = string.Empty;
 
         [JsonPropertyName("questions")]
         public List<QuestionViewModel> Questions { get; set; }
 
         [JsonIgnore]
-        public string Json { get; set; }
+        public string Json { get; set; } = string.Empty;
 
         public QuizViewModel()
         {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Hosting;
 using QuizMaker.Data;
 
@@ -11,7 +10,7 @@ namespace QuizMaker.Services
     {
         private readonly IQuizDataContext _quizDataContext;
         private readonly ConnectionStorage _connectionStorage;
-        private Timer _timer;
+        private Timer? _timer;
         private int _previousCount = 0;
 
         public ConnectionBackgroundService(IQuizDataContext quizDataContext, ConnectionStorage connectionStorage)
@@ -26,7 +25,7 @@ namespace QuizMaker.Services
             return Task.CompletedTask;
         }
 
-        public async void UpdateAsync(object state)
+        public async void UpdateAsync(object? state)
         {
             var count = _connectionStorage.Count();
             if (count > 0)

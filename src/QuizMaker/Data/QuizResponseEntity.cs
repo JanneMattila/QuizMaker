@@ -12,6 +12,6 @@ namespace QuizMaker.Data
         {
         }
 
-        public string Response { get; set; }
+        public string Response { get; set; } = string.Empty;
     }
 }

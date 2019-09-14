@@ -2,6 +2,6 @@
 {
     public class QuizDataContextOptions
     {
-        public string StorageConnectionString { get; set; }
+        public string StorageConnectionString { get; set; } = string.Empty;
     }
 }

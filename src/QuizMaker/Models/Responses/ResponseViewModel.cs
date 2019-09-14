@@ -6,10 +6,10 @@ namespace QuizMaker.Models.Responses
     public class ResponseViewModel
     {
         [JsonPropertyName("quizId")]
-        public string ID { get; set; }
+        public string ID { get; set; } = string.Empty;
 
         [JsonPropertyName("userId")]
-        public string UserID { get; set; }
+        public string UserID { get; set; } = string.Empty;
 
         [JsonPropertyName("responses")]
         public List<ResponseQuestionViewModel> Responses { get; set; }

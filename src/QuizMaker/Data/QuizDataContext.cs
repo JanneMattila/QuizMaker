@@ -60,14 +60,14 @@ namespace QuizMaker.Data
             }
         }
 
-        public async Task<QuizEntity> GetActiveQuizAsync()
+        public async Task<QuizEntity?> GetActiveQuizAsync()
         {
             var retrieveUserOperation = TableOperation.Retrieve<QuizEntity>(Active, Active);
             var result = await _quizzesTable.ExecuteAsync(retrieveUserOperation);
             return result.Result as QuizEntity;
         }
 
-        public async Task<QuizEntity> GetQuizAsync(string id)
+        public async Task<QuizEntity?> GetQuizAsync(string id)
         {
             var retrieveOperation = TableOperation.Retrieve<QuizEntity>(Quizzes, id);
             var result = await _quizzesTable.ExecuteAsync(retrieveOperation);
@@ -79,18 +79,19 @@ namespace QuizMaker.Data
             var list = new List<QuizResponseEntity>();
             var query = new TableQuery<QuizResponseEntity>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, id));
-            TableContinuationToken token = null;
+            var token = new TableContinuationToken();
 
             do
             {
                 var result = await _quizResponsesTable.ExecuteQuerySegmentedAsync<QuizResponseEntity>(query, token);
                 list.AddRange(result);
+                token = result.ContinuationToken;
             } while (token != null);
 
             return list;
         }
 
-        public async Task<QuizEntity> ActivateQuizAsync(string id)
+        public async Task<QuizEntity?> ActivateQuizAsync(string id)
         {
             var retrieveOperation = TableOperation.Retrieve<QuizEntity>(Quizzes, id);
             var result = await _quizzesTable.ExecuteAsync(retrieveOperation);
@@ -159,12 +160,13 @@ namespace QuizMaker.Data
             var list = new List<QuizEntity>();
             var query = new TableQuery<QuizEntity>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Quizzes)); 
-            TableContinuationToken token = null;
+            var token = new TableContinuationToken();
 
             do
             {
                 var result = await _quizzesTable.ExecuteQuerySegmentedAsync<QuizEntity>(query, token);
                 list.AddRange(result);
+                token = result.ContinuationToken;
             } while (token != null);
 
             return list;
@@ -207,7 +209,7 @@ namespace QuizMaker.Data
         {
             var query = new TableQuery<ConnectionEntity>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Connections));
-            TableContinuationToken token = null;
+            var token = new TableContinuationToken();
             var count = 0;
             do
             {
@@ -235,6 +237,8 @@ namespace QuizMaker.Data
                         count += entity.Count;
                     }
                 }
+
+                token = result.ContinuationToken;
             } while (token != null);
 
             return count;
@@ -264,7 +268,7 @@ namespace QuizMaker.Data
         {
             var query = new TableQuery<QuizResponseEntity>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, id));
-            TableContinuationToken token = null;
+            var token = new TableContinuationToken();
 
             do
             {
@@ -280,6 +284,8 @@ namespace QuizMaker.Data
                 {
                     await _quizResponsesTable.ExecuteBatchAsync(tableBatchOperation);
                 }
+
+                token = result.ContinuationToken;
             } while (token != null);
         }
     }

@@ -6,6 +6,7 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
     <TypeScriptToolsVersion>3.5</TypeScriptToolsVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +34,8 @@
 
   <PropertyGroup>
     <NoWarn>1701;1702;CA2007;CA2227;CA1822;CA1303;IDE0060;CA1801</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
 
 </Project>

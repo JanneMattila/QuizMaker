@@ -6,7 +6,7 @@ namespace QuizMaker.Models.Responses
     public class ResponseQuestionViewModel
     {
         [JsonPropertyName("questionId")]
-        public string ID { get; set; }
+        public string ID { get; set; } = string.Empty;
 
         [JsonPropertyName("options")]
         public List<string> Options { get; set; }
