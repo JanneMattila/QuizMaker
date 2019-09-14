@@ -34,5 +34,6 @@ stages:
   parameters:
     environtName: 'Dev'
     appName: 'Quiz DEV'
+    tenantName: $(TenantName)
     resourceGroupName: 'quizmaker-dev-rg'
     dockerImageTag: '$(Build.BuildNumber)'

@@ -1,6 +1,7 @@
 parameters:
   environtName: 'default'
   appName: 'Quiz DEFAULT'
+  tenantName: 'tenantname.onmicrosoft.com'
   resourceGroupName: 'quizmaker-default-rg'
   dockerImageTag: 'latest'
 
@@ -29,5 +30,5 @@ stages:
             inputs:
               azureSubscription: AzureDevSubscription
               ScriptPath: '$(System.DefaultWorkingDirectory)/deploy/deploy.ps1'
-              ScriptArguments: '-ResourceGroupName ${{ parameters.resourceGroupName }} -Location "northeurope" -AzureADAppName "${{ parameters.appName }}" -DockerImageTag "${{ parameters.dockerImageTag }}"'
+              ScriptArguments: '-ResourceGroupName ${{ parameters.resourceGroupName }} -Location "northeurope" -AzureADAppName "${{ parameters.appName }}" -TenantName "${{ parameters.tenantname }}" -DockerImageTag "${{ parameters.dockerImageTag }}"'
               azurePowerShellVersion: LatestVersion
