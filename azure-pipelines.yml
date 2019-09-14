@@ -7,7 +7,7 @@ stages:
   jobs:
   - job: Build
     pool:
-      name: 'Ubuntu 16.04'
+      name: Ubuntu 16.04
     steps:
     - task: Docker@1
       displayName: 'Build an image'
