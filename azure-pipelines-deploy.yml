@@ -1,0 +1,33 @@
+parameters:
+  environtName: 'default'
+  appName: 'Quiz DEFAULT'
+  resourceGroupName: 'quizmaker-default-rg'
+  dockerImageTag: 'latest'
+
+stages:
+- stage: ${{ parameters.environtName }}
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy job
+    pool:
+      name: 'Hosted Windows 2019 with VS2019'
+    environment: ${{ parameters.environtName }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifacts'
+            inputs:
+              artifactName: deploy
+              downloadPath: '$(System.DefaultWorkingDirectory)'
+          
+          - task: AzurePowerShell@3
+            displayName: 'Azure PowerShell script: FilePath'
+            inputs:
+              azureSubscription: AzureDevSubscription
+              ScriptPath: '$(System.DefaultWorkingDirectory)/deploy/deploy.ps1'
+              ScriptArguments: '-ResourceGroupName ${{ parameters.resourceGroupName }} -Location "northeurope" -AzureADAppName "${{ parameters.appName }}" -DockerImageTag "${{ parameters.dockerImageTag }}"'
+              azurePowerShellVersion: LatestVersion

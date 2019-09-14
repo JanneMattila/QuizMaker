@@ -20,3 +20,16 @@ steps:
     command: 'Push an image'
     imageName: $(imageName)
     includeSourceTags: true
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: deploy'
+    inputs:
+      PathtoPublish: deploy
+      ArtifactName: deploy
+
+- template: azure-pipelines-deploy.yml
+  parameters:
+    environtName: 'Dev'
+    appName: 'Quiz DEV'
+    resourceGroupName: 'quizmaker-dev-rg'
+    dockerImageTag: '$(Build.BuildNumber)'
