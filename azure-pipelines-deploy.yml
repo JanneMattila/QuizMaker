@@ -30,5 +30,5 @@ stages:
             inputs:
               azureSubscription: AzureDevSubscription
               ScriptPath: '$(System.DefaultWorkingDirectory)/deploy/deploy.ps1'
-              ScriptArguments: '-ResourceGroupName ${{ parameters.resourceGroupName }} -Location "northeurope" -AzureADAppName "${{ parameters.appName }}" -TenantName "${{ parameters.tenantname }}" -DockerImageTag "${{ parameters.dockerImageTag }}"'
+              ScriptArguments: '-ResourceGroupName ${{ parameters.resourceGroupName }} -Location "northeurope" -AzureADAppName "${{ parameters.appName }}" -TenantName "${{ parameters.tenantname }}" -SignalRServicePricingTier "Free_F1" -DockerImageTag "${{ parameters.dockerImageTag }}"'
               azurePowerShellVersion: LatestVersion
