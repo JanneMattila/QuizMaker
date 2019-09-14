@@ -1,31 +1,34 @@
-pool:
-  vmImage: 'Ubuntu 16.04'
-
 variables:
   imageName: 'jannemattila/quizmaker:$(Build.BuildNumber)'
 
 name: 1.0.$(Rev:r)
-steps:
-- task: Docker@1
-  displayName: 'Build an image'
-  inputs:
-    imageName: $(imageName)
-    includeLatestTag: true
-
-- task: Docker@1
-  displayName: 'Push an image'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: DockerHub
-    command: 'Push an image'
-    imageName: $(imageName)
-    includeSourceTags: true
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: deploy'
-  inputs:
-    PathtoPublish: deploy
-    ArtifactName: deploy
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      name: 'Ubuntu 16.04'
+    steps:
+    - task: Docker@1
+      displayName: 'Build an image'
+      inputs:
+        imageName: $(imageName)
+        includeLatestTag: true
+    
+    - task: Docker@1
+      displayName: 'Push an image'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: DockerHub
+        command: 'Push an image'
+        imageName: $(imageName)
+        includeSourceTags: true
+    
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: deploy'
+      inputs:
+        PathtoPublish: deploy
+        ArtifactName: deploy
 
 - template: azure-pipelines-deploy.yml
   parameters:
