@@ -13,7 +13,7 @@ stages:
   - deployment: Deploy
     displayName: Deploy job
     pool:
-      name: 'Hosted Windows 2019 with VS2019'
+      vmImage: ubuntu-16.04
     environment: ${{ parameters.environtName }}
     strategy:
       runOnce:
