@@ -99,7 +99,7 @@ $additionalParameters['signalRServiceUnits'] = $SignalRServiceUnits
 
 $additionalParameters['aadClientId'] = $quizApp.ApplicationId
 
-$additionalParameters['linuxFxVersion'] = "DOCKER|$DockerImage:$DockerImageTag"
+$additionalParameters['linuxFxVersion'] = "DOCKER|${$DockerImage}:$DockerImageTag"
 
 $result = New-AzResourceGroupDeployment `
     -DeploymentName $deploymentName `
