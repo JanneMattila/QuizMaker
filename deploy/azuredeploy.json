@@ -88,12 +88,28 @@
   },
   "variables": {
     "appName": "quiz",
+    "appInsightsName": "[concat(variables('appName'), 'AppInsights')]",
     "appSignalRName": "[concat('qm', uniqueString(resourceGroup().id))]",
     "appStorageName": "[concat('qm', uniqueString(resourceGroup().id))]",
     "appServiceName": "[concat(variables('appName'), uniqueString(resourceGroup().id))]",
     "appServicePlanName": "[concat(variables('appName'), 'AppServicePlan')]"
   },
   "resources": [
+    {
+      "name": "[variables('appInsightsName')]",
+      "type": "Microsoft.Insights/components",
+      "location": "[parameters('location')]",
+      "apiVersion": "2015-05-01",
+      "kind": "web",
+      "dependsOn": [],
+      "tags": {
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('appServiceName'))]": "Resource"
+      },
+      "properties": {
+        "Application_Type": "web",
+        "applicationId": "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
+      }
+    },
     {
       "name": "[variables('appSignalRName')]",
       "type": "Microsoft.SignalRService/SignalR",
@@ -163,7 +179,8 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
       ],
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
@@ -190,7 +207,8 @@
         "SignalRConnectionString": "[listKeys(resourceId('Microsoft.SignalRService/SignalR', variables('appSignalRName')),'2018-10-01').primaryConnectionString]",
         "AzureAD__ClientId": "[parameters('aadClientId')]",
         "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
-        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2015-05-01').InstrumentationKey]"
       }
     }
   ],
