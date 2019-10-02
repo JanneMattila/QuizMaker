@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.SignalR;
 using QuizMaker.Data;
 using QuizMaker.Hubs;
 using System.Threading.Tasks;
-using System.Linq;
 using QuizMaker.Models.Quiz;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 
 namespace QuizMaker.Controllers
 {
@@ -29,8 +29,11 @@ namespace QuizMaker.Controllers
         public async Task<IActionResult> Index()
         {
             _quizDataContext.Initialize();
-            var list = (await _quizDataContext.GetQuizzesAsync())
-                .Select(entity => QuizViewModel.FromJson(entity.Json));
+            var list = new List<QuizViewModel>();
+            await foreach (var item in _quizDataContext.GetQuizzesAsync())
+            {
+                list.Add(item);
+            }
             return View(list);
         }
 
@@ -41,14 +44,12 @@ namespace QuizMaker.Controllers
 
         public async Task<IActionResult> Activate(string id)
         {
-            var activeQuiz = await _quizDataContext.ActivateQuizAsync(id);
-            var quiz = activeQuiz != null ?
-                QuizViewModel.FromJson(activeQuiz.Json) :
-                QuizViewModel.CreateBlank();
+            var quiz = await _quizDataContext.ActivateQuizAsync(id);
+            quiz ??= QuizViewModel.CreateBlank();
 
             await _quizHub.Clients.All.Quiz(quiz);
 
-            if (activeQuiz != null)
+            if (quiz != null)
             {
                 var resultsBuilder = new QuizResultBuilder(_quizDataContext);
                 var results = await resultsBuilder.GetResultsAsync(quiz.ID);
@@ -83,10 +84,8 @@ namespace QuizMaker.Controllers
 
         private async Task<QuizViewModel> GetQuizAsync(string id)
         {
-            var quizEntity = await _quizDataContext.GetQuizAsync(id);
-            return quizEntity != null ?
-                QuizViewModel.FromJson(quizEntity.Json) :
-                QuizViewModel.CreateBlank();
+            var quiz = await _quizDataContext.GetQuizAsync(id);
+            return quiz ?? QuizViewModel.CreateBlank();
         }
 
         [HttpGet]

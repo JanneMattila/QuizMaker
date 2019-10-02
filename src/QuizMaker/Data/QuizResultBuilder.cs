@@ -30,12 +30,13 @@ namespace QuizMaker.Data
 
             if (quizEntity != null)
             {
+                var responseCount = 0;
                 var responses = new Dictionary<string, int>();
-                var quizResponses = await _quizDataContext.GetQuizResponsesAsync(id);
-                foreach (var response in quizResponses)
+                await foreach (var response in _quizDataContext.GetQuizResponsesAsync(id))
                 {
                     // Process: "q1=option1,option2;q2=optionA"
-                    var userResponses = response.Response.Split(';');
+                    responseCount++;
+                    var userResponses = response.Split(';');
                     foreach (var userResponse in userResponses)
                     {
                         var userResponseString = userResponse.Split('=');
@@ -82,7 +83,7 @@ namespace QuizMaker.Data
                     });
                 }
 
-                results.Responses = quizResponses.Count;
+                results.Responses = responseCount;
             }
 
             return results;

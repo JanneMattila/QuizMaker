@@ -97,7 +97,9 @@ namespace QuizMaker
             services.AddSingleton<ConnectionStorage>();
             services.AddSingleton<IUserIdProvider, UniqueIdentifierUserIdProvider>();
             services.AddSingleton<IHostedService, ConnectionBackgroundService>();
-            services.AddControllersWithViews();
+            services
+                .AddControllersWithViews()
+                .AddControllersAsServices();
             services.AddRazorPages();
         }
 

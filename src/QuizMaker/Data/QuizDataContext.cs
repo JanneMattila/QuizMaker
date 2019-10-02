@@ -60,23 +60,22 @@ namespace QuizMaker.Data
             }
         }
 
-        public async Task<QuizEntity?> GetActiveQuizAsync()
+        public async Task<QuizViewModel?> GetActiveQuizAsync()
         {
             var retrieveUserOperation = TableOperation.Retrieve<QuizEntity>(Active, Active);
             var result = await _quizzesTable.ExecuteAsync(retrieveUserOperation);
-            return result.Result as QuizEntity;
+            return result.Result is QuizEntity entity ? QuizViewModel.FromJson(entity.Json) : null;
         }
 
-        public async Task<QuizEntity?> GetQuizAsync(string id)
+        public async Task<QuizViewModel?> GetQuizAsync(string id)
         {
             var retrieveOperation = TableOperation.Retrieve<QuizEntity>(Quizzes, id);
             var result = await _quizzesTable.ExecuteAsync(retrieveOperation);
-            return result.Result as QuizEntity;
+            return result.Result is QuizEntity entity ? QuizViewModel.FromJson(entity.Json) : null;
         }
 
-        public async Task<List<QuizResponseEntity>> GetQuizResponsesAsync(string id)
+        public async IAsyncEnumerable<string> GetQuizResponsesAsync(string id)
         {
-            var list = new List<QuizResponseEntity>();
             var query = new TableQuery<QuizResponseEntity>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, id));
             var token = new TableContinuationToken();
@@ -84,14 +83,15 @@ namespace QuizMaker.Data
             do
             {
                 var result = await _quizResponsesTable.ExecuteQuerySegmentedAsync<QuizResponseEntity>(query, token);
-                list.AddRange(result);
+                foreach (var item in result)
+                {
+                    yield return item.Response;
+                }
                 token = result.ContinuationToken;
             } while (token != null);
-
-            return list;
         }
 
-        public async Task<QuizEntity?> ActivateQuizAsync(string id)
+        public async Task<QuizViewModel?> ActivateQuizAsync(string id)
         {
             var retrieveOperation = TableOperation.Retrieve<QuizEntity>(Quizzes, id);
             var result = await _quizzesTable.ExecuteAsync(retrieveOperation);
@@ -108,16 +108,16 @@ namespace QuizMaker.Data
                 return null;
             }
 
-            var entity = QuizViewModel.FromJson(quizEntity.Json);
-            if (entity.Questions.Any(q => q.Parameters.ClearOnActivation))
+            var quiz = QuizViewModel.FromJson(quizEntity.Json);
+            if (quiz.Questions.Any(q => q.Parameters.ClearOnActivation))
             {
-                await DeleteResponsesAsync(entity.ID);
+                await DeleteResponsesAsync(quiz.ID);
             }
 
             quizEntity.PartitionKey = quizEntity.RowKey = Active;
             var upsertOperation = TableOperation.InsertOrReplace(quizEntity);
             var upsertResult = await _quizzesTable.ExecuteAsync(upsertOperation);
-            return upsertResult.Result as QuizEntity;
+            return quiz;
         }
 
         public async Task<bool> UserHasResponseAsync(string quizID, string userID)
@@ -155,9 +155,8 @@ namespace QuizMaker.Data
             _quizzesTable.Execute(upsertOperation);
         }
 
-        public async Task<List<QuizEntity>> GetQuizzesAsync()
+        public async IAsyncEnumerable<QuizViewModel> GetQuizzesAsync()
         {
-            var list = new List<QuizEntity>();
             var query = new TableQuery<QuizEntity>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Quizzes)); 
             var token = new TableContinuationToken();
@@ -165,11 +164,12 @@ namespace QuizMaker.Data
             do
             {
                 var result = await _quizzesTable.ExecuteQuerySegmentedAsync<QuizEntity>(query, token);
-                list.AddRange(result);
+                foreach (var item in result)
+                {
+                    yield return QuizViewModel.FromJson(item.Json);
+                }
                 token = result.ContinuationToken;
             } while (token != null);
-
-            return list;
         }
 
         public async Task<int> UpsertServerConnectionsAsync(int count)
