@@ -18,10 +18,10 @@ jobs:
       run: |
         cd src/QuizMaker
         docker build . --file Dockerfile --tag docker.pkg.github.com/jannemattila/quizmaker/quizmaker:${image_tag}
-        # docker push docker.pkg.github.com/jannemattila/quizmaker/quizmaker:${image_tag}
+        docker push docker.pkg.github.com/jannemattila/quizmaker/quizmaker:${image_tag}
         
     - name: Build the QuizUserSimulator Docker image
       run: |
         cd src/QuizUserSimulator
         docker build . --file Dockerfile --tag docker.pkg.github.com/jannemattila/quizmaker/quizsim:${image_tag}
-        # docker push docker.pkg.github.com/jannemattila/quizmaker/quizsim:${image_tag}
+        docker push docker.pkg.github.com/jannemattila/quizmaker/quizsim:${image_tag}
