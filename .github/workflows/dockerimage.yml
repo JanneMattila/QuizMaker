@@ -1,20 +1,27 @@
 name: Docker Image CI
 
 on: [push]
+env:
+  image_tag: $(date +%s)
 
 jobs:
-
   build:
- 
     runs-on: ubuntu-16.04
  
     steps:
     - uses: actions/checkout@v1
+    - name: Login to GitHub Package Registry
+      run: |
+        docker login docker.pkg.github.com -u jannemattila -p ${{ secrets.github_package_registry }}
+        
     - name: Build the QuizMaker Docker image
       run: |
         cd src/QuizMaker
-        docker build . --file Dockerfile --tag quizmaker:$(date +%s)
+        docker build . --file Dockerfile --tag docker.pkg.github.com/jannemattila/quizmaker/quizmaker:$(image_tag)
+        # docker push docker.pkg.github.com/jannemattila/quizmaker/quizmaker:$(image_tag)
+        
     - name: Build the QuizUserSimulator Docker image
       run: |
         cd src/QuizUserSimulator
-        docker build . --file Dockerfile --tag quizsim:$(date +%s)
+        docker build . --file Dockerfile --tag docker.pkg.github.com/jannemattila/quizmaker/quizsim:$(image_tag)
+        # docker push docker.pkg.github.com/jannemattila/quizmaker/quizsim:$(image_tag)
