@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on: [push]
 env:
-  image_tag: $(date +%s)
+  image_tag: ${date +%s}
 
 jobs:
   build:
