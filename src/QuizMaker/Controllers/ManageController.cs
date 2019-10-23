@@ -42,6 +42,11 @@ namespace QuizMaker.Controllers
             return View();
         }
 
+        public IActionResult Results2()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Activate(string id)
         {
             var quiz = await _quizDataContext.ActivateQuizAsync(id);
