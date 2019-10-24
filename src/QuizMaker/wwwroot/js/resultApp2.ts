@@ -130,8 +130,14 @@ function renderQuizResults(results: ResultViewModel, forceDraw: boolean) {
                     display: false
                 },
                 scales: {
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 16
+                        }
+                    }],
                     yAxes: [{
                         ticks: {
+                            fontSize: 16,
                             suggestedMin: 0,
                             suggestedMax: 5,
                             stepSize: 1
