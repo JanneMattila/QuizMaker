@@ -36,7 +36,7 @@
         console.log(data);
         console.log(r);
         results = r;
-        renderQuizResults(results, false);
+        renderQuizResults(results);
     });
     connection.onclose(function (e) {
         if (e) {
@@ -70,77 +70,73 @@
         }
         return title;
     }
-    var labels = new Array();
-    var values = new Array();
-    var data = {
-        labels: [],
-        datasets: [{
-                backgroundColor: "blue",
-                borderColor: "blue",
-                data: []
-            }]
-    };
-    function renderQuizResults(results, forceDraw) {
+    function renderQuizResults(results) {
         var resultsTitleElement = document.getElementById("resultsTitle");
         resultsTitleElement.innerText = getQuestionTitle(results);
-        data.labels = [];
-        data.datasets[0].data = [];
         var resultQuestion = new resultTypes_1.ResultQuestionViewModel();
         if (results.results.length > 0) {
             resultQuestion = results.results[0];
-            for (var i = 0; i < resultQuestion.answers.length; i++) {
-                var answer = resultQuestion.answers[i];
-                data.labels.push(answer.name);
-                data.datasets[0].data.push(answer.count);
-            }
         }
         var responsesElement = document.getElementById("responses");
         responsesElement.innerHTML = results.responses + " \uD83D\uDCDD";
-        console.log(labels);
-        console.log(forceDraw);
-        console.log(data);
-        if (forceDraw) {
-            var canvas = document.getElementById('quizChart');
-            var containerElement = document.getElementById("containerElement");
-            canvas.width = Math.min(containerElement.clientWidth, window.innerWidth * 0.8);
-            canvas.height = Math.min(containerElement.clientHeight, window.innerHeight * 0.8);
-            var context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            var config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: false,
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        xAxes: [{
-                                ticks: {
-                                    fontSize: 16
-                                }
-                            }],
-                        yAxes: [{
-                                ticks: {
-                                    fontSize: 16,
-                                    suggestedMin: 0,
-                                    suggestedMax: 5,
-                                    stepSize: 1
-                                }
-                            }]
-                    }
-                }
-            };
-            window.resultChart = new Chart.Chart(context, config);
-        }
-        else {
-            window.resultChart.update();
-        }
+        var svg = d3.select("svg");
+        svg.selectAll("*").remove();
+        var containerElement = document.getElementById("containerElement");
+        svg.attr("width", Math.min(containerElement.clientWidth, window.innerWidth * 0.8));
+        svg.attr("height", Math.min(containerElement.clientHeight, window.innerHeight * 0.8));
+        var margin = {
+            top: 20,
+            right: 20,
+            bottom: 30,
+            left: 50
+        };
+        var width = +svg.attr("width") - margin.left - margin.right;
+        var height = +svg.attr("height") - margin.top - margin.bottom;
+        var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        var x = d3.scaleBand()
+            .rangeRound([0, width])
+            .padding(0.1);
+        var y = d3.scaleLinear()
+            .rangeRound([height, 0]);
+        x.domain(resultQuestion.answers.map(function (d) {
+            return d.name;
+        }));
+        y.domain([0, d3.max(resultQuestion.answers, function (d) {
+                return Number(d.count);
+            })]);
+        g.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .style("font-size", "16px")
+            .call(d3.axisBottom(x));
+        g.append("g")
+            .call(d3.axisLeft(y))
+            .style("font-size", "16px")
+            .append("text")
+            .attr("fill", "#000")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "0.71em")
+            .attr("text-anchor", "end")
+            .text("Count");
+        g.selectAll(".quiz-results-bar")
+            .data(resultQuestion.answers)
+            .enter().append("rect")
+            .attr("class", "quiz-results-bar")
+            .attr("x", function (d) {
+            return x(d.name);
+        })
+            .attr("y", function (d) {
+            return y(Number(d.count));
+        })
+            .attr("width", x.bandwidth())
+            .attr("height", function (d) {
+            return height - y(Number(d.count));
+        });
     }
     window.addEventListener('resize', function () {
         console.log("resize");
-        renderQuizResults(results, true);
+        renderQuizResults(results);
     });
-    renderQuizResults(results, true);
+    renderQuizResults(results);
 });
 //# sourceMappingURL=resultApp2.js.map

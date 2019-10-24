@@ -6,10 +6,10 @@
 
 <h3 id="resultsTitle">Results</h3>
 
-<canvas id="quizChart" width="1024" height="800" class="quiz-results-canvas"></canvas>
+<svg id="quizChart" width="1024" height="800"></svg>
 <div><text id="users"></text> <text id="responses"></text></div>
 
 @section Scripts {
-    <script src="~/lib/chartjs/Chart.min.js"></script>
+    <script src="~/lib/d3js/d3.v5.min.js"></script>
     <script src="~/lib/requirejs/require.js" data-main="/js/resultApp2.js"></script>
 }
