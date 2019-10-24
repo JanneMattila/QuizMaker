@@ -203,6 +203,12 @@ div.quiz-question-option input {
     margin-top: 5%;
 }
 
+.quiz-results-canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
 /* Quiz Manage: */
 .table {
     margin-top: 30px;

@@ -1,12 +1,15 @@
 {
   "name": "quizmaker",
   "version": "1.0.0",
-  "description": "",
+  "description": "Enhance your presentations or talks with interactive quizzes. QuizMaker solves just that!",
+  "repository": "https://github.com/JanneMattila/QuizMaker",
   "main": "index.js",
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
+    "@types/chart.js": "^2.8.9",
     "@types/d3": "^5.7.2",
-    "@types/node": "^12.6.2"
+    "@types/node": "^12.11.6",
+    "chart.js": "^2.8.0"
   },
   "devDependencies": {},
   "scripts": {
