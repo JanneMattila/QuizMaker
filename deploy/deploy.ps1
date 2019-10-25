@@ -1,6 +1,6 @@
 Param (
     [Parameter(HelpMessage="Deployment target resource group")] 
-    [string] $ResourceGroupName = "quizmaker-local-rg",
+    [string] $ResourceGroupName = "quiz-local-rg",
 
     [Parameter(HelpMessage="Deployment target resource group location")] 
     [string] $Location = "North Europe",
