@@ -61,12 +61,6 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     let quizSubmitError = document.getElementById("quizSubmitError");
     quizSubmitError.innerHTML = "";
 
-    if (document.cookie.indexOf(".AspNet.Consent=yes") == -1) {
-        quizSubmitError.innerHTML = "Quiz requires that you \"Accept\" privacy consent";
-        quizSubmitError.scrollIntoView();
-        return;
-    }
-
     for (let i = 0; i < quizMandatoryQuestions.length; i++) {
         let q = quizMandatoryQuestions[i];
         let mandatoryInputElement = document.forms[0].elements[q] as HTMLInputElement;
