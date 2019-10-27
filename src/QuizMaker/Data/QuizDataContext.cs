@@ -260,8 +260,35 @@ namespace QuizMaker.Data
 
         public async Task DeleteAllResponsesAsync()
         {
-            await _quizResponsesTable.DeleteAsync();
-            await _quizResponsesTable.CreateIfNotExistsAsync();
+            var query = new TableQuery<QuizResponseEntity>();
+            var token = new TableContinuationToken();
+
+            do
+            {
+                var result = await _quizResponsesTable.ExecuteQuerySegmentedAsync(query, token);
+                var tableBatchOperation = new TableBatchOperation();
+                var partitionKey = result.FirstOrDefault()?.PartitionKey;
+                foreach (var entity in result)
+                {
+                    var deleteOperation = TableOperation.Delete(entity);
+                    if (entity.PartitionKey != partitionKey)
+                    {
+                        // Batch can only delete items inside same partition
+                        await _quizResponsesTable.ExecuteBatchAsync(tableBatchOperation);
+                        tableBatchOperation = new TableBatchOperation();
+                        partitionKey = entity.PartitionKey;
+                    }
+                     
+                    tableBatchOperation.Add(deleteOperation);
+                }
+
+                if (tableBatchOperation.Any())
+                {
+                    await _quizResponsesTable.ExecuteBatchAsync(tableBatchOperation);
+                }
+
+                token = result.ContinuationToken;
+            } while (token != null);
         }
 
         public async Task DeleteResponsesAsync(string id)
