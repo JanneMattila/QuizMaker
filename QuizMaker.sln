@@ -48,6 +48,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{C28B4796-8A8
 		doc\simulator.md = doc\simulator.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".devcontainer", ".devcontainer", "{05B34AD6-E6F6-4E12-B628-0271E7DCA275}"
+	ProjectSection(SolutionItems) = preProject
+		.devcontainer\devcontainer.json = .devcontainer\devcontainer.json
+		.devcontainer\Dockerfile = .devcontainer\Dockerfile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".vscode", ".vscode", "{CB311C4B-77FC-4407-A2D5-B0E46A7A3AE0}"
+	ProjectSection(SolutionItems) = preProject
+		.vscode\launch.json = .vscode\launch.json
+		.vscode\tasks.json = .vscode\tasks.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +86,8 @@ Global
 		{CF6F0494-7921-43CC-B697-F46800AB4B6C} = {7B2AAD5E-368D-44EC-9215-418C718128CD}
 		{687BED3D-9EF7-438F-95F4-188C32736656} = {CF6F0494-7921-43CC-B697-F46800AB4B6C}
 		{C28B4796-8A82-4D04-BC53-9939F765F074} = {7B2AAD5E-368D-44EC-9215-418C718128CD}
+		{05B34AD6-E6F6-4E12-B628-0271E7DCA275} = {7B2AAD5E-368D-44EC-9215-418C718128CD}
+		{CB311C4B-77FC-4407-A2D5-B0E46A7A3AE0} = {7B2AAD5E-368D-44EC-9215-418C718128CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F99521D6-99C8-41D7-83DC-3D5523498EE7}
