@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/QuizMaker/QuizMaker.csproj"
+                "${workspaceFolder}/QuizMaker.sln"
             ],
             "problemMatcher": "$tsc"
         },

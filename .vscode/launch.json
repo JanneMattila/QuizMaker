@@ -11,13 +11,17 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/QuizMaker/bin/Debug/netcoreapp3.0/QuizMaker.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/src/QuizMaker",
             "stopAtEntry": false,
-            "launchBrowser": {
-                "enabled": false
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/src/QuizMaker/Views"
             }
         }
     ]
