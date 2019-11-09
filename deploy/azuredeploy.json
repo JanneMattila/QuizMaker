@@ -1,7 +1,13 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "appServiceCustomDomain": {
+      "type": "string",
+      "metadata": {
+        "description": "App Service custom domain name."
+      }
+    },
     "appServicePlanPricingTier": {
       "type": "string",
       "allowedValues": [
@@ -96,6 +102,17 @@
   },
   "resources": [
     {
+      "name": "[parameters('appServiceCustomDomain')]",
+      "type": "Microsoft.Web/certificates",
+      "apiVersion": "2019-08-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "hostNames": [
+          "[parameters('appServiceCustomDomain')]"
+        ]
+      }
+    },
+    {
       "name": "[variables('appInsightsName')]",
       "type": "Microsoft.Insights/components",
       "location": "[parameters('location')]",
@@ -178,6 +195,7 @@
         "type": "SystemAssigned"
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain'))]",
         "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName'))]",
         "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
@@ -192,7 +210,32 @@
           "clientAffinityEnabled": false,
           "ftpsState": "Disabled",
           "linuxFxVersion": "[parameters('linuxFxVersion')]"
-        }
+        },
+        "hostNameSslStates": [
+          {
+            "name": "[parameters('appServiceCustomDomain')]",
+            "sslState": "SniEnabled",
+            "hostType": "Standard",
+            "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain')), '2019-08-01').thumbprint]"
+          }
+        ]
+      }
+    },
+    {
+      "name": "[concat(variables('appServiceName'), '/', parameters('appServiceCustomDomain'))]",
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "apiVersion": "2019-08-01",
+      "kind": "string",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain'))]",
+        "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
+      ],
+      "properties": {
+        "siteName": "[variables('appServiceName')]",
+        "customHostNameDnsRecordType": "CName",
+        "hostNameType": "Verified",
+        "sslState": "SniEnabled",
+        "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain')), '2019-08-01').thumbprint]"
       }
     },
     {

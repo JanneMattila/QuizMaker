@@ -5,6 +5,9 @@ Param (
     [Parameter(HelpMessage="Deployment target resource group location")] 
     [string] $Location = "North Europe",
 
+    [Parameter(Mandatory=$true,HelpMessage="App Service custom domain name.")] 
+    [string] $AppServiceCustomDomain,
+
     [Parameter(Mandatory=$true,HelpMessage="Tenant name (e.g. 'tenantname.onmicrosoft.com').")] 
     [string] $TenantName,
 
@@ -91,6 +94,8 @@ else
 
 # Additional parameters that we pass to the template deployment
 $additionalParameters = New-Object -TypeName hashtable
+$additionalParameters['appServiceCustomDomain'] = $AppServiceCustomDomain
+
 $additionalParameters['appServicePlanPricingTier'] = $AppServicePricingTier
 $additionalParameters['appServicePlanInstances'] = $AppServiceInstances
 
