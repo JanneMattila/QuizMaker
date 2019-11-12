@@ -102,14 +102,17 @@
   },
   "resources": [
     {
-      "name": "[parameters('appServiceCustomDomain')]",
-      "type": "Microsoft.Web/certificates",
-      "apiVersion": "2019-08-01",
+      "name": "[variables('appServicePlanName')]",
+      "type": "Microsoft.Web/serverfarms",
       "location": "[parameters('location')]",
+      "apiVersion": "2018-02-01",
+      "kind": "linux",
+      "sku": {
+        "name": "[parameters('appServicePlanPricingTier')]",
+        "capacity": "[parameters('appServicePlanInstances')]"
+      },
       "properties": {
-        "hostNames": [
-          "[parameters('appServiceCustomDomain')]"
-        ]
+        "reserved": true
       }
     },
     {
@@ -147,20 +150,6 @@
       }
     },
     {
-      "name": "[variables('appServicePlanName')]",
-      "type": "Microsoft.Web/serverfarms",
-      "location": "[parameters('location')]",
-      "apiVersion": "2018-02-01",
-      "kind": "linux",
-      "sku": {
-        "name": "[parameters('appServicePlanPricingTier')]",
-        "capacity": "[parameters('appServicePlanInstances')]"
-      },
-      "properties": {
-        "reserved": true
-      }
-    },
-    {
       "name": "[variables('appStorageName')]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[parameters('location')]",
@@ -195,7 +184,6 @@
         "type": "SystemAssigned"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain'))]",
         "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('appStorageName'))]",
         "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
@@ -210,15 +198,16 @@
           "clientAffinityEnabled": false,
           "ftpsState": "Disabled",
           "linuxFxVersion": "[parameters('linuxFxVersion')]"
-        },
-        "hostNameSslStates": [
-          {
-            "name": "[parameters('appServiceCustomDomain')]",
-            "sslState": "SniEnabled",
-            "hostType": "Standard",
-            "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain')), '2019-08-01').thumbprint]"
-          }
-        ]
+        }
+        //,
+        //"hostNameSslStates": [
+        //  {
+        //    "name": "[parameters('appServiceCustomDomain')]",
+        //    "sslState": "SniEnabled",
+        //    "hostType": "Standard",
+        //    "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain')), '2019-08-01').thumbprint]"
+        //  }
+        //]
       }
     },
     {
@@ -227,15 +216,63 @@
       "apiVersion": "2019-08-01",
       "kind": "string",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain'))]",
         "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
       ],
       "properties": {
         "siteName": "[variables('appServiceName')]",
         "customHostNameDnsRecordType": "CName",
-        "hostNameType": "Verified",
-        "sslState": "SniEnabled",
-        "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain')), '2019-08-01').thumbprint]"
+        "hostNameType": "Verified"
+        //"sslState": "SniEnabled",
+        //"thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain')), '2019-08-01').thumbprint]"
+      }
+    },
+    {
+      "name": "[parameters('appServiceCustomDomain')]",
+      "type": "Microsoft.Web/certificates",
+      "apiVersion": "2019-08-01",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        //"[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        //"[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
+        "[resourceId('Microsoft.Web/sites/hostNameBindings',variables('appServiceName'), parameters('appServiceCustomDomain'))]"
+      ],
+      "properties": {
+        "canonicalName": "[parameters('appServiceCustomDomain')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', variables('appServicePlanName'))]"
+      }
+    },
+    {
+      "name": "nestedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2018-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "name": "[variables('appServiceName')]",
+              "type": "Microsoft.Web/sites",
+              "location": "[parameters('location')]",
+              "apiVersion": "2018-11-01",
+              "properties": {
+                "name": "[variables('appServiceName')]",
+                "hostNameSslStates": [
+                  {
+                    "name": "[parameters('appServiceCustomDomain')]",
+                    "sslState": "SniEnabled",
+                    "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('appServiceCustomDomain')), '2019-08-01').thumbprint]",
+                    "toUpdate": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
       }
     },
     {
