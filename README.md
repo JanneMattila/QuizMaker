@@ -31,6 +31,14 @@ for data storage during development.
 You can clone this repository into [Visual Studio Online](https://online.visualstudio.com/environments/new?name=quizmaker&repo=JanneMattila/QuizMaker)
 to start developing this directly in your browser.
 
+**Note**: For now you need execute following commands to get compilation working correctly:
+
+```bash
+sudo apt-get install dotnet-sdk-3.0
+
+cd src/QuizMaker; npm install
+```
+
 ### Develop locally
 
 First clone this to your local machine:
