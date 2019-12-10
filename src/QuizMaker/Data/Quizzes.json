@@ -303,6 +303,50 @@
     ]
   },
   {
+    "quizId": "azure-103",
+    "quizTitle": "Azure Quiz",
+    "questions": [
+      {
+        "questionId": "azure-103-1",
+        "questionTitle": "Do you have Azure subscription?",
+        "options": [
+          {
+            "optionId": "azure-103-1-0",
+            "optionText": "Yes"
+          },
+          {
+            "optionId": "azure-103-1-1",
+            "optionText": "No"
+          }
+        ],
+        "parameters": {
+        }
+      }
+    ]
+  },
+  {
+    "quizId": "azure-104",
+    "quizTitle": "Azure Quiz",
+    "questions": [
+      {
+        "questionId": "azure-104-1",
+        "questionTitle": "Have you used Azure CLI?",
+        "options": [
+          {
+            "optionId": "azure-104-1-0",
+            "optionText": "Yes"
+          },
+          {
+            "optionId": "azure-104-1-1",
+            "optionText": "No"
+          }
+        ],
+        "parameters": {
+        }
+      }
+    ]
+  },
+  {
     "quizId": "azure-devops-100",
     "quizTitle": "Azure DevOps",
     "questions": [
