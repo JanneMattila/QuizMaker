@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:3.0.0-alpine3.9 AS base
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1.0-alpine3.10 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.100-buster AS build
 WORKDIR /src
 COPY "QuizUserSimulator.csproj" .
 RUN dotnet restore "QuizUserSimulator.csproj"
