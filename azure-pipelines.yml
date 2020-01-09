@@ -1,5 +1,5 @@
 variables:
-  imageName: 'jannemattila/quizmaker:$(Build.BuildNumber)'
+  repository: 'jannemattila/quizmaker'
 
 trigger:
 - master
@@ -13,21 +13,16 @@ stages:
     pool:
       vmImage: ubuntu-16.04
     steps:
-    - task: Docker@1
-      displayName: 'Build an image'
+    - task: Docker@2
       inputs:
-        imageName: $(imageName)
-        includeLatestTag: true
-    
-    - task: Docker@1
-      displayName: 'Push an image'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: DockerHub
-        command: 'Push an image'
-        imageName: $(imageName)
-        includeSourceTags: true
-    
+        containerRegistry: 'DockerHub'
+        repository: $(repository)
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(Build.BuildNumber)
+          latest    
+
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: deploy'
       inputs:
