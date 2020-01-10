@@ -148,6 +148,44 @@
     ]
   },
   {
+    "quizId": "common-103",
+    "quizTitle": "General",
+    "questions": [
+      {
+        "questionId": "common-103-1",
+        "questionTitle": "What is your role?",
+        "options": [
+          {
+            "optionId": "common-103-1-0",
+            "optionText": "Architect"
+          },
+          {
+            "optionId": "common-103-1-1",
+            "optionText": "Dev (e.g. Front end, back-end developer)"
+          },
+          {
+            "optionId": "common-103-2",
+            "optionText": "Ops (e.g. Operations, Infrastructure)"
+          },
+          {
+            "optionId": "common-103-3",
+            "optionText": "Manager (e.g. Project manager, team lead, service manager)"
+          },
+          {
+            "optionId": "common-103-4",
+            "optionText": "Database (e.g. DBA)"
+          },
+          {
+            "optionId": "common-103-5",
+            "optionText": "Test (e.g. Test manager, tester)"
+          }
+        ],
+        "parameters": {
+        }
+      }
+    ]
+  },
+  {
     "quizId": "azure-100",
     "quizTitle": "Azure Quiz",
     "questions": [
@@ -342,6 +380,69 @@
           }
         ],
         "parameters": {
+        }
+      }
+    ]
+  },
+  {
+    "quizId": "azure-105",
+    "quizTitle": "Azure Quiz",
+    "questions": [
+      {
+        "questionId": "azure-105-1",
+        "questionTitle": "Infrastructure-as-Code experience?",
+        "options": [
+          {
+            "optionId": "azure-105-1-0",
+            "optionText": "Terraform"
+          },
+          {
+            "optionId": "azure-105-1-1",
+            "optionText": "ARM Templates"
+          },
+          {
+            "optionId": "azure-105-1-2",
+            "optionText": "Pulumi"
+          },
+          {
+            "optionId": "azure-105-1-3",
+            "optionText": "Azure CLI"
+          },
+          {
+            "optionId": "azure-105-1-4",
+            "optionText": "Azure Management libraries"
+          },
+          {
+            "optionId": "azure-105-1-5",
+            "optionText": "PowerShell scripts"
+          },
+          {
+            "optionId": "azure-105-1-6",
+            "optionText": "PowerShell DSC"
+          },
+          {
+            "optionId": "azure-105-1-7",
+            "optionText": "Chef"
+          },
+          {
+            "optionId": "azure-105-1-8",
+            "optionText": "Puppet"
+          },
+          {
+            "optionId": "azure-105-1-9",
+            "optionText": "Ansible"
+          },
+          {
+            "optionId": "azure-105-1-10",
+            "optionText": "Others"
+          },
+          {
+            "optionId": "azure-105-1-11",
+            "optionText": "None"
+          }
+        ],
+        "parameters": {
+          "multiSelect": true
         }
       }
     ]
