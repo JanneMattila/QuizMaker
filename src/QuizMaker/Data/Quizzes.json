@@ -517,6 +517,44 @@
     ]
   },
   {
+    "quizId": "azure-devops-102",
+    "quizTitle": "Azure DevOps",
+    "questions": [
+      {
+        "questionId": "azure-devops-102-1",
+        "questionTitle": "How familiar are you with Azure DevOps?",
+        "options": [
+          {
+            "optionId": "azure-devops-102-1-0",
+            "optionText": "0"
+          },
+          {
+            "optionId": "azure-devops-102-1-1",
+            "optionText": "1"
+          },
+          {
+            "optionId": "azure-devops-102-1-2",
+            "optionText": "2"
+          },
+          {
+            "optionId": "azure-devops-102-1-3",
+            "optionText": "3"
+          },
+          {
+            "optionId": "azure-devops-102-1-4",
+            "optionText": "4"
+          },
+          {
+            "optionId": "azure-devops-102-1-5",
+            "optionText": "5"
+          }
+        ],
+        "parameters": {
+        }
+      }
+    ]
+  },
+  {
     "quizId": "azure-devops-repos-100",
     "quizTitle": "Repository",
     "questions": [
@@ -535,6 +573,44 @@
         ],
         "parameters": {
           "randomizeOrder": true
+        }
+      }
+    ]
+  },
+  {
+    "quizId": "azure-devops-repos-101",
+    "quizTitle": "Repository",
+    "questions": [
+      {
+        "questionId": "azure-devops-repos-101-1",
+        "questionTitle": "How familiar are you with git?",
+        "options": [
+          {
+            "optionId": "azure-devops-repos-101-1-0",
+            "optionText": "0"
+          },
+          {
+            "optionId": "azure-devops-repos-101-1-1",
+            "optionText": "1"
+          },
+          {
+            "optionId": "azure-devops-repos-101-1-2",
+            "optionText": "2"
+          },
+          {
+            "optionId": "azure-devops-repos-101-1-3",
+            "optionText": "3"
+          },
+          {
+            "optionId": "azure-devops-repos-101-1-4",
+            "optionText": "4"
+          },
+          {
+            "optionId": "azure-devops-repos-101-1-5",
+            "optionText": "5"
+          }
+        ],
+        "parameters": {
         }
       }
     ]
