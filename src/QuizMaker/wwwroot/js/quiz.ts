@@ -1,5 +1,5 @@
 ﻿declare const signalR: typeof import("@aspnet/signalr");
-import { QuizViewModel, ResponseViewModel, ResponseQuestionViewModel, ConnectionViewModel } from "./quizTypes";
+import { QuizViewModel, ResponseViewModel, ResponseQuestionViewModel, ConnectionViewModel } from "./quizTypes.js";
 
 function addMessage(msg) {
     console.log(msg);

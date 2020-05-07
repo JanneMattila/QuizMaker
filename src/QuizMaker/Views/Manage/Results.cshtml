@@ -11,5 +11,6 @@
 
 @section Scripts {
     <script src="~/lib/chartjs/Chart.min.js"></script>
-    <script src="~/lib/requirejs/require.js" data-main="/js/resultApp.js"></script>
+    <script src="~/lib/systemjs/system.min.js"></script>
+    <script>System.import("/js/resultApp.js");</script>
 }

@@ -17,5 +17,6 @@
 </div>
 
 @section Scripts {
-    <script src="~/lib/requirejs/require.js" data-main="/js/quiz.js"></script>
+    <script src="~/lib/systemjs/system.min.js"></script>
+    <script>System.import("/js/quiz.js");</script>
 }

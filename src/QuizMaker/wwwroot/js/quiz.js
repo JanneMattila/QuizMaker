@@ -1,6 +1,7 @@
-define(["require", "exports", "./quizTypes"], function (require, exports, quizTypes_1) {
+System.register(["./quizTypes.js"], function (exports_1, context_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    var quizTypes_js_1, userId, protocol, hubRoute, connection, answeredQuestions, quizMandatoryQuestions, quiz;
+    var __moduleName = context_1 && context_1.id;
     function addMessage(msg) {
         console.log(msg);
     }
@@ -32,17 +33,6 @@ define(["require", "exports", "./quizTypes"], function (require, exports, quizTy
         }
         return id;
     }
-    var userId = getUserId();
-    var protocol = new signalR.JsonHubProtocol();
-    var hubRoute = "/QuizHub";
-    var connection = new signalR.HubConnectionBuilder()
-        .configureLogging(signalR.LogLevel.Information)
-        .withUrl(hubRoute, { accessTokenFactory: function () { return userId; } })
-        .withHubProtocol(protocol)
-        .build();
-    var answeredQuestions = Array();
-    var quizMandatoryQuestions = Array();
-    var quiz;
     function createHiddenElement(name, value) {
         var hidden = document.createElement("input");
         hidden.type = "hidden";
@@ -50,63 +40,6 @@ define(["require", "exports", "./quizTypes"], function (require, exports, quizTy
         hidden.value = value;
         return hidden;
     }
-    window.formSubmitCheck = function () {
-        var quizSubmitError = document.getElementById("quizSubmitError");
-        quizSubmitError.innerHTML = "";
-        for (var i = 0; i < quizMandatoryQuestions.length; i++) {
-            var q = quizMandatoryQuestions[i];
-            var mandatoryInputElement = document.forms[0].elements[q];
-            var value = mandatoryInputElement.value;
-            if (value.length === 0) {
-                quizSubmitError.innerHTML = "Please fill the quiz before submitting.";
-                quizSubmitError.scrollIntoView();
-                return;
-            }
-        }
-        // Submit form
-        var quizResponse = new quizTypes_1.ResponseViewModel();
-        quizResponse.quizId = quiz.quizId;
-        quizResponse.userId = userId;
-        var allowMultipleResponses = false;
-        for (var i = 0; i < quiz.questions.length; i++) {
-            var question = quiz.questions[i];
-            var inputElement = document.forms[0].elements[question.questionId];
-            var questionResponse = new quizTypes_1.ResponseQuestionViewModel();
-            questionResponse.questionId = question.questionId;
-            if (question.parameters.multiSelect) {
-                // Checkbox
-                var list = inputElement;
-                for (var j = 0; j < list.length; j++) {
-                    if (list[j].checked) {
-                        questionResponse.options.push(list[j].value);
-                    }
-                }
-            }
-            else {
-                // Radio
-                questionResponse.options.push(inputElement.value);
-            }
-            if (question.parameters.allowMultipleResponses) {
-                allowMultipleResponses = true;
-            }
-            quizResponse.responses.push(questionResponse);
-        }
-        connection.invoke("QuizResponse", quizResponse)
-            .then(function () {
-            console.log("QuizResponse submitted: " + quizResponse.quizId);
-            if (!allowMultipleResponses) {
-                answeredQuestions.push(quizResponse.quizId);
-            }
-            // Clear quiz
-            quiz = undefined;
-            quizMandatoryQuestions = [];
-        })
-            .catch(function (err) {
-            console.log("QuizResponse submission error");
-            console.log(err);
-            addMessage(err);
-        });
-    };
     function updateQuizTitle(title) {
         var titleElement = document.getElementById("homeLink");
         titleElement.innerHTML = title;
@@ -137,83 +70,159 @@ define(["require", "exports", "./quizTypes"], function (require, exports, quizTy
         var usersElement = document.getElementById("users");
         usersElement.innerHTML = connection.counter + " \uD83D\uDC65";
     }
-    connection.on('Connected', function (connection) {
-        updateUserCount(connection);
-    });
-    connection.on('Disconnected', function (connection) {
-        updateUserCount(connection);
-    });
-    connection.on('Quiz', function (quizReceived) {
-        var data = "Quiz received: " + new Date().toLocaleTimeString();
-        addMessage(data);
-        addMessage(quizReceived);
-        if (answeredQuestions.indexOf(quizReceived.quizId) !== -1) {
-            console.log("This quiz has been answered already");
-            quizReceived.quizId = "";
-            quizReceived.quizTitle = "Quiz";
-            quizReceived.questions = [];
-            quizMandatoryQuestions = [];
-        }
-        else if (quiz !== undefined && quiz.quizId === quizReceived.quizId) {
-            console.log("Do not reprocess already open quiz");
-            return;
-        }
-        quiz = quizReceived;
-        var quizForm = document.getElementById("quizForm");
-        var quizSubmit = document.getElementById("quizSubmit");
-        if (quiz.questions.length === 0) {
-            quizSubmit.style.display = "none";
-            quizForm.innerHTML = "Waiting for available quiz...";
-        }
-        else {
-            quizSubmit.style.display = "";
-            quizForm.innerHTML = "";
-        }
-        updateQuizTitle(quiz.quizTitle);
-        quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
-        quizMandatoryQuestions = [];
-        for (var i = 0; i < quiz.questions.length; i++) {
-            var question = quiz.questions[i];
-            quizForm.appendChild(createQuestionTitle(question.questionTitle));
-            var type = question.parameters.multiSelect ? "checkbox" : "radio";
-            if (!question.parameters.multiSelect) {
-                quizMandatoryQuestions.push(question.questionId);
+    return {
+        setters: [
+            function (quizTypes_js_1_1) {
+                quizTypes_js_1 = quizTypes_js_1_1;
             }
-            var inputElements = new Array();
-            for (var j = 0; j < question.options.length; j++) {
-                var option = quiz.questions[i].options[j];
-                inputElements.push(createInput(type, question.questionId, option.optionId, option.optionText));
-            }
-            if (question.parameters.randomizeOrder) {
-                for (var j = 0; j < inputElements.length; j++) {
-                    var k = Math.floor(Math.random() * inputElements.length);
-                    var a = inputElements[j];
-                    var b = inputElements[k];
-                    inputElements[j] = b;
-                    inputElements[k] = a;
+        ],
+        execute: function () {
+            userId = getUserId();
+            protocol = new signalR.JsonHubProtocol();
+            hubRoute = "/QuizHub";
+            connection = new signalR.HubConnectionBuilder()
+                .configureLogging(signalR.LogLevel.Information)
+                .withUrl(hubRoute, { accessTokenFactory: function () { return userId; } })
+                .withHubProtocol(protocol)
+                .build();
+            answeredQuestions = Array();
+            quizMandatoryQuestions = Array();
+            window.formSubmitCheck = function () {
+                var quizSubmitError = document.getElementById("quizSubmitError");
+                quizSubmitError.innerHTML = "";
+                for (var i = 0; i < quizMandatoryQuestions.length; i++) {
+                    var q = quizMandatoryQuestions[i];
+                    var mandatoryInputElement = document.forms[0].elements[q];
+                    var value = mandatoryInputElement.value;
+                    if (value.length === 0) {
+                        quizSubmitError.innerHTML = "Please fill the quiz before submitting.";
+                        quizSubmitError.scrollIntoView();
+                        return;
+                    }
                 }
-            }
-            for (var j = 0; j < inputElements.length; j++) {
-                quizForm.appendChild(inputElements[j]);
-            }
+                // Submit form
+                var quizResponse = new quizTypes_js_1.ResponseViewModel();
+                quizResponse.quizId = quiz.quizId;
+                quizResponse.userId = userId;
+                var allowMultipleResponses = false;
+                for (var i = 0; i < quiz.questions.length; i++) {
+                    var question = quiz.questions[i];
+                    var inputElement = document.forms[0].elements[question.questionId];
+                    var questionResponse = new quizTypes_js_1.ResponseQuestionViewModel();
+                    questionResponse.questionId = question.questionId;
+                    if (question.parameters.multiSelect) {
+                        // Checkbox
+                        var list = inputElement;
+                        for (var j = 0; j < list.length; j++) {
+                            if (list[j].checked) {
+                                questionResponse.options.push(list[j].value);
+                            }
+                        }
+                    }
+                    else {
+                        // Radio
+                        questionResponse.options.push(inputElement.value);
+                    }
+                    if (question.parameters.allowMultipleResponses) {
+                        allowMultipleResponses = true;
+                    }
+                    quizResponse.responses.push(questionResponse);
+                }
+                connection.invoke("QuizResponse", quizResponse)
+                    .then(function () {
+                    console.log("QuizResponse submitted: " + quizResponse.quizId);
+                    if (!allowMultipleResponses) {
+                        answeredQuestions.push(quizResponse.quizId);
+                    }
+                    // Clear quiz
+                    quiz = undefined;
+                    quizMandatoryQuestions = [];
+                })
+                    .catch(function (err) {
+                    console.log("QuizResponse submission error");
+                    console.log(err);
+                    addMessage(err);
+                });
+            };
+            connection.on('Connected', function (connection) {
+                updateUserCount(connection);
+            });
+            connection.on('Disconnected', function (connection) {
+                updateUserCount(connection);
+            });
+            connection.on('Quiz', function (quizReceived) {
+                var data = "Quiz received: " + new Date().toLocaleTimeString();
+                addMessage(data);
+                addMessage(quizReceived);
+                if (answeredQuestions.indexOf(quizReceived.quizId) !== -1) {
+                    console.log("This quiz has been answered already");
+                    quizReceived.quizId = "";
+                    quizReceived.quizTitle = "Quiz";
+                    quizReceived.questions = [];
+                    quizMandatoryQuestions = [];
+                }
+                else if (quiz !== undefined && quiz.quizId === quizReceived.quizId) {
+                    console.log("Do not reprocess already open quiz");
+                    return;
+                }
+                quiz = quizReceived;
+                var quizForm = document.getElementById("quizForm");
+                var quizSubmit = document.getElementById("quizSubmit");
+                if (quiz.questions.length === 0) {
+                    quizSubmit.style.display = "none";
+                    quizForm.innerHTML = "Waiting for available quiz...";
+                }
+                else {
+                    quizSubmit.style.display = "";
+                    quizForm.innerHTML = "";
+                }
+                updateQuizTitle(quiz.quizTitle);
+                quizForm.appendChild(createHiddenElement("quizId", quiz.quizId));
+                quizMandatoryQuestions = [];
+                for (var i = 0; i < quiz.questions.length; i++) {
+                    var question = quiz.questions[i];
+                    quizForm.appendChild(createQuestionTitle(question.questionTitle));
+                    var type = question.parameters.multiSelect ? "checkbox" : "radio";
+                    if (!question.parameters.multiSelect) {
+                        quizMandatoryQuestions.push(question.questionId);
+                    }
+                    var inputElements = new Array();
+                    for (var j = 0; j < question.options.length; j++) {
+                        var option = quiz.questions[i].options[j];
+                        inputElements.push(createInput(type, question.questionId, option.optionId, option.optionText));
+                    }
+                    if (question.parameters.randomizeOrder) {
+                        for (var j = 0; j < inputElements.length; j++) {
+                            var k = Math.floor(Math.random() * inputElements.length);
+                            var a = inputElements[j];
+                            var b = inputElements[k];
+                            inputElements[j] = b;
+                            inputElements[k] = a;
+                        }
+                    }
+                    for (var j = 0; j < inputElements.length; j++) {
+                        quizForm.appendChild(inputElements[j]);
+                    }
+                }
+            });
+            connection.onclose(function (e) {
+                if (e) {
+                    addMessage("Connection closed with error: " + e);
+                }
+                else {
+                    addMessage("Disconnected");
+                }
+            });
+            connection.start()
+                .then(function () {
+                console.log("SignalR connected");
+            })
+                .catch(function (err) {
+                console.log("SignalR error");
+                console.log(err);
+                addMessage(err);
+            });
         }
-    });
-    connection.onclose(function (e) {
-        if (e) {
-            addMessage("Connection closed with error: " + e);
-        }
-        else {
-            addMessage("Disconnected");
-        }
-    });
-    connection.start()
-        .then(function () {
-        console.log("SignalR connected");
-    })
-        .catch(function (err) {
-        console.log("SignalR error");
-        console.log(err);
-        addMessage(err);
-    });
+    };
 });
 //# sourceMappingURL=quiz.js.map

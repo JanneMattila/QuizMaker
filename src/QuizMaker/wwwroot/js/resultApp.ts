@@ -1,7 +1,7 @@
 ﻿declare const Chart: typeof import("chart.js");
 declare const signalR: typeof import("@aspnet/signalr");
-import { ConnectionViewModel } from "./quizTypes";
-import { ResultViewModel, ResultQuestionViewModel } from "./resultTypes";
+import { ConnectionViewModel } from "./quizTypes.js";
+import { ResultViewModel, ResultQuestionViewModel } from "./resultTypes.js";
 
 const protocol = new signalR.JsonHubProtocol();
 const hubRoute = "/QuizResultsHub";

@@ -1,7 +1,7 @@
 ﻿declare const d3: typeof import("d3");
 declare const signalR: typeof import("@aspnet/signalr");
-import { ConnectionViewModel } from "./quizTypes";
-import { ResultViewModel, ResultQuestionViewModel, ResultQuestionAnswerViewModel } from "./resultTypes";
+import { ConnectionViewModel } from "./quizTypes.js";
+import { ResultViewModel, ResultQuestionViewModel, ResultQuestionAnswerViewModel } from "./resultTypes.js";
 
 const protocol = new signalR.JsonHubProtocol();
 const hubRoute = "/QuizResultsHub";

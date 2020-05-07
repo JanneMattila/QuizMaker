@@ -1,25 +1,31 @@
-define(["require", "exports"], function (require, exports) {
+System.register([], function (exports_1, context_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var ResultQuestionAnswerViewModel = /** @class */ (function () {
-        function ResultQuestionAnswerViewModel() {
+    var ResultQuestionAnswerViewModel, ResultQuestionViewModel, ResultViewModel;
+    var __moduleName = context_1 && context_1.id;
+    return {
+        setters: [],
+        execute: function () {
+            ResultQuestionAnswerViewModel = /** @class */ (function () {
+                function ResultQuestionAnswerViewModel() {
+                }
+                return ResultQuestionAnswerViewModel;
+            }());
+            exports_1("ResultQuestionAnswerViewModel", ResultQuestionAnswerViewModel);
+            ResultQuestionViewModel = /** @class */ (function () {
+                function ResultQuestionViewModel() {
+                    this.answers = [];
+                }
+                return ResultQuestionViewModel;
+            }());
+            exports_1("ResultQuestionViewModel", ResultQuestionViewModel);
+            ResultViewModel = /** @class */ (function () {
+                function ResultViewModel() {
+                    this.results = [];
+                }
+                return ResultViewModel;
+            }());
+            exports_1("ResultViewModel", ResultViewModel);
         }
-        return ResultQuestionAnswerViewModel;
-    }());
-    exports.ResultQuestionAnswerViewModel = ResultQuestionAnswerViewModel;
-    var ResultQuestionViewModel = /** @class */ (function () {
-        function ResultQuestionViewModel() {
-            this.answers = [];
-        }
-        return ResultQuestionViewModel;
-    }());
-    exports.ResultQuestionViewModel = ResultQuestionViewModel;
-    var ResultViewModel = /** @class */ (function () {
-        function ResultViewModel() {
-            this.results = [];
-        }
-        return ResultViewModel;
-    }());
-    exports.ResultViewModel = ResultViewModel;
+    };
 });
 //# sourceMappingURL=resultTypes.js.map
