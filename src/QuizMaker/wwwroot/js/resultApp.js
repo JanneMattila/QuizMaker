@@ -21,57 +21,7 @@
     var results = new resultTypes_1.ResultViewModel();
     results.quizId = quizId;
     results.responses = 0;
-    function updateUserCount(connection) {
-        var usersElement = document.getElementById("users");
-        usersElement.innerHTML = connection.counter + " \uD83D\uDC65";
-    }
-    connection.on('Connected', function (connection) {
-        updateUserCount(connection);
-    });
-    connection.on('Disconnected', function (connection) {
-        updateUserCount(connection);
-    });
-    connection.on('Results', function (r) {
-        var data = "Results received: " + new Date().toLocaleTimeString();
-        console.log(data);
-        console.log(r);
-        results = r;
-        renderQuizResults(results, false);
-    });
-    connection.onclose(function (e) {
-        if (e) {
-            console.log("Connection closed with error: " + e);
-        }
-        else {
-            console.log("Disconnected");
-        }
-    });
-    connection.start()
-        .then(function () {
-        console.log("SignalR connected");
-        connection.invoke("GetResults", quizId)
-            .then(function () {
-            console.log("GetResults called");
-        })
-            .catch(function (err) {
-            console.log("GetResults submission error");
-            console.log(err);
-        });
-    })
-        .catch(function (err) {
-        console.log("SignalR error");
-        console.log(err);
-        console.log(err);
-    });
-    function getQuestionTitle(results) {
-        var title = "Results";
-        if (results.results.length > 0) {
-            title = results.results[0].questionTitle;
-        }
-        return title;
-    }
     var labels = new Array();
-    var values = new Array();
     var data = {
         labels: [],
         datasets: [{
@@ -80,6 +30,13 @@
                 data: []
             }]
     };
+    function getQuestionTitle(results) {
+        var title = "Results";
+        if (results.results.length > 0) {
+            title = results.results[0].questionTitle;
+        }
+        return title;
+    }
     function renderQuizResults(results, forceDraw) {
         var resultsTitleElement = document.getElementById("resultsTitle");
         resultsTitleElement.innerText = getQuestionTitle(results);
@@ -137,6 +94,48 @@
             window.resultChart.update();
         }
     }
+    function updateUserCount(connection) {
+        var usersElement = document.getElementById("users");
+        usersElement.innerHTML = connection.counter + " \uD83D\uDC65";
+    }
+    connection.on('Connected', function (connection) {
+        updateUserCount(connection);
+    });
+    connection.on('Disconnected', function (connection) {
+        updateUserCount(connection);
+    });
+    connection.on('Results', function (r) {
+        var data = "Results received: " + new Date().toLocaleTimeString();
+        console.log(data);
+        console.log(r);
+        results = r;
+        renderQuizResults(results, false);
+    });
+    connection.onclose(function (e) {
+        if (e) {
+            console.log("Connection closed with error: " + e);
+        }
+        else {
+            console.log("Disconnected");
+        }
+    });
+    connection.start()
+        .then(function () {
+        console.log("SignalR connected");
+        connection.invoke("GetResults", quizId)
+            .then(function () {
+            console.log("GetResults called");
+        })
+            .catch(function (err) {
+            console.log("GetResults submission error");
+            console.log(err);
+        });
+    })
+        .catch(function (err) {
+        console.log("SignalR error");
+        console.log(err);
+        console.log(err);
+    });
     window.addEventListener('resize', function () {
         console.log("resize");
         renderQuizResults(results, true);

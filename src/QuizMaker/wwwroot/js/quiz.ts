@@ -57,7 +57,7 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     return hidden;
 }
 
-(<any>window).formSubmitCheck = () => {
+(window as any).formSubmitCheck = () => {
     const quizSubmitError = document.getElementById("quizSubmitError");
     quizSubmitError.innerHTML = "";
 

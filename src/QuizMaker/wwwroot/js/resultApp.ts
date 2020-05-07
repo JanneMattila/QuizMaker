@@ -1,72 +1,31 @@
-﻿declare var Chart: typeof import("chart.js");
-declare var signalR: typeof import("@aspnet/signalr");
+﻿declare const Chart: typeof import("chart.js");
+declare const signalR: typeof import("@aspnet/signalr");
 import { ConnectionViewModel } from "./quizTypes";
-import { ResultViewModel, ResultQuestionViewModel, ResultQuestionAnswerViewModel } from "./resultTypes";
+import { ResultViewModel, ResultQuestionViewModel } from "./resultTypes";
 
-let protocol = new signalR.JsonHubProtocol();
-let hubRoute = "/QuizResultsHub";
-let connection = new signalR.HubConnectionBuilder()
+const protocol = new signalR.JsonHubProtocol();
+const hubRoute = "/QuizResultsHub";
+const connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Information)
     .withUrl(hubRoute)
     .withHubProtocol(protocol)
     .build();
 
-let quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
+const quizId = document.location.href.split('/')[document.location.href.split('/').length - 1];
 
 let results = new ResultViewModel();
 results.quizId = quizId;
 results.responses = 0;
 
-function updateUserCount(connection: ConnectionViewModel) {
-    let usersElement = document.getElementById("users");
-    usersElement.innerHTML = `${connection.counter} 👥`;
-}
-
-connection.on('Connected', function (connection: ConnectionViewModel) {
-    updateUserCount(connection);
-});
-
-connection.on('Disconnected', function (connection: ConnectionViewModel) {
-    updateUserCount(connection);
-});
-
-connection.on('Results', function (r: ResultViewModel) {
-    let data = "Results received: " + new Date().toLocaleTimeString();
-    console.log(data);
-    console.log(r);
-
-    results = r;
-    renderQuizResults(results, false);
-});
-
-connection.onclose(function (e: any) {
-    if (e) {
-        console.log("Connection closed with error: " + e);
-    }
-    else {
-        console.log("Disconnected");
-    }
-});
-
-connection.start()
-    .then(function () {
-        console.log("SignalR connected");
-
-        connection.invoke<string>("GetResults", quizId)
-            .then(function () {
-                console.log("GetResults called");
-            })
-            .catch(function (err: any) {
-                console.log("GetResults submission error");
-                console.log(err);
-            });
-    })
-    .catch(function (err: any) {
-        console.log("SignalR error");
-        console.log(err);
-
-        console.log(err);
-    });
+const labels = new Array<string>();
+const data = {
+    labels: [],
+    datasets: [{
+        backgroundColor: "blue",
+        borderColor: "blue",
+        data: []
+    }]
+};
 
 function getQuestionTitle(results: ResultViewModel) {
     let title = "Results";
@@ -76,20 +35,9 @@ function getQuestionTitle(results: ResultViewModel) {
     return title;
 }
 
-let labels = new Array<string>();
-let values = new Array<number>();
-let data = {
-    labels: [],
-    datasets: [{
-        backgroundColor: "blue",
-        borderColor: "blue",
-        data: []
-    }]
-};
-
 function renderQuizResults(results: ResultViewModel, forceDraw: boolean) {
 
-    let resultsTitleElement = document.getElementById("resultsTitle") as HTMLElement;
+    const resultsTitleElement = document.getElementById("resultsTitle") as HTMLElement;
     resultsTitleElement.innerText = getQuestionTitle(results);
 
     data.labels = [];
@@ -105,7 +53,7 @@ function renderQuizResults(results: ResultViewModel, forceDraw: boolean) {
         }
     }
 
-    let responsesElement = document.getElementById("responses");
+    const responsesElement = document.getElementById("responses");
     responsesElement.innerHTML = `${results.responses} 📝`;
 
     console.log(labels);
@@ -113,7 +61,7 @@ function renderQuizResults(results: ResultViewModel, forceDraw: boolean) {
     console.log(data);
 
     if (forceDraw) {
-        let canvas = <HTMLCanvasElement>document.getElementById('quizChart');
+        const canvas = document.getElementById('quizChart') as HTMLCanvasElement;
         const containerElement = document.getElementById("containerElement") as HTMLDivElement;
         canvas.width = Math.min(containerElement.clientWidth, window.innerWidth * 0.8);
         canvas.height = Math.min(containerElement.clientHeight, window.innerHeight * 0.8);
@@ -121,7 +69,7 @@ function renderQuizResults(results: ResultViewModel, forceDraw: boolean) {
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        var config = {
+        const config = {
             type: 'bar',
             data: data,
             options: {
@@ -153,6 +101,57 @@ function renderQuizResults(results: ResultViewModel, forceDraw: boolean) {
         (<any>window).resultChart.update();
     }
 }
+
+function updateUserCount(connection: ConnectionViewModel) {
+    const usersElement = document.getElementById("users");
+    usersElement.innerHTML = `${connection.counter} 👥`;
+}
+
+connection.on('Connected', function (connection: ConnectionViewModel) {
+    updateUserCount(connection);
+});
+
+connection.on('Disconnected', function (connection: ConnectionViewModel) {
+    updateUserCount(connection);
+});
+
+connection.on('Results', function (r: ResultViewModel) {
+    const data = "Results received: " + new Date().toLocaleTimeString();
+    console.log(data);
+    console.log(r);
+
+    results = r;
+    renderQuizResults(results, false);
+});
+
+connection.onclose(function (e) {
+    if (e) {
+        console.log("Connection closed with error: " + e);
+    }
+    else {
+        console.log("Disconnected");
+    }
+});
+
+connection.start()
+    .then(function () {
+        console.log("SignalR connected");
+
+        connection.invoke<string>("GetResults", quizId)
+            .then(function () {
+                console.log("GetResults called");
+            })
+            .catch(function (err) {
+                console.log("GetResults submission error");
+                console.log(err);
+            });
+    })
+    .catch(function (err) {
+        console.log("SignalR error");
+        console.log(err);
+
+        console.log(err);
+    });
 
 window.addEventListener('resize', () => {
     console.log("resize");
