@@ -18,7 +18,7 @@
         var QuizUserId = "QuizUserId";
         var searchText = QuizUserId + "=";
         var startIndex = document.cookie.indexOf(searchText);
-        if (startIndex == -1) {
+        if (startIndex === -1) {
             try {
                 var random = window.crypto.getRandomValues(new Uint32Array(4));
                 id = random[0].toString(16) + "-" + random[1].toString(16) + "-" + random[2].toString(16) + "-" + random[3].toString(16);
@@ -32,7 +32,7 @@
         else {
             startIndex = startIndex + searchText.length;
             var endIndex = document.cookie.indexOf(";", startIndex);
-            if (endIndex == -1) {
+            if (endIndex === -1) {
                 id = document.cookie.substr(startIndex);
             }
             else {
@@ -66,7 +66,7 @@
             var q = quizMandatoryQuestions[i];
             var mandatoryInputElement = document.forms[0].elements[q];
             var value = mandatoryInputElement.value;
-            if (value.length == 0) {
+            if (value.length === 0) {
                 quizSubmitError.innerHTML = "Please fill the quiz before submitting.";
                 quizSubmitError.scrollIntoView();
                 return;
@@ -107,7 +107,7 @@
                 answeredQuestions.push(quizResponse.quizId);
             }
             // Clear quiz
-            quiz = null;
+            quiz = undefined;
             quizMandatoryQuestions = [];
         })
             .catch(function (err) {
@@ -156,14 +156,14 @@
         var data = "Quiz received: " + new Date().toLocaleTimeString();
         addMessage(data);
         addMessage(quizReceived);
-        if (answeredQuestions.indexOf(quizReceived.quizId) != -1) {
+        if (answeredQuestions.indexOf(quizReceived.quizId) !== -1) {
             console.log("This quiz has been answered already");
             quizReceived.quizId = "";
             quizReceived.quizTitle = "Quiz";
             quizReceived.questions = [];
             quizMandatoryQuestions = [];
         }
-        else if (quiz != null && quiz.quizId == quizReceived.quizId) {
+        else if (quiz !== undefined && quiz.quizId === quizReceived.quizId) {
             console.log("Do not reprocess already open quiz");
             return;
         }
@@ -189,16 +189,16 @@
                 quizMandatoryQuestions.push(question.questionId);
             }
             var inputElements = new Array();
-            for (var j_1 = 0; j_1 < question.options.length; j_1++) {
-                var option = quiz.questions[i].options[j_1];
+            for (var j = 0; j < question.options.length; j++) {
+                var option = quiz.questions[i].options[j];
                 inputElements.push(createInput(type, question.questionId, option.optionId, option.optionText));
             }
             if (question.parameters.randomizeOrder) {
-                for (var j_2 = 0; j_2 < inputElements.length; j_2++) {
+                for (var j = 0; j < inputElements.length; j++) {
                     var k = Math.floor(Math.random() * inputElements.length);
-                    var a = inputElements[j_2];
+                    var a = inputElements[j];
                     var b = inputElements[k];
-                    inputElements[j_2] = b;
+                    inputElements[j] = b;
                     inputElements[k] = a;
                 }
             }

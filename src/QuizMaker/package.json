@@ -6,10 +6,10 @@
   "main": "index.js",
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
-    "@types/chart.js": "^2.8.9",
+    "@types/chart.js": "^2.9.20",
     "@types/d3": "^5.7.2",
-    "@types/node": "^12.11.6",
-    "chart.js": "^2.8.0"
+    "@types/node": "^12.12.38",
+    "chart.js": "^2.9.3"
   },
   "devDependencies": {},
   "scripts": {

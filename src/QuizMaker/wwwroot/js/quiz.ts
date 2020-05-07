@@ -1,7 +1,7 @@
-﻿declare var signalR: typeof import("@aspnet/signalr");
+﻿declare const signalR: typeof import("@aspnet/signalr");
 import { QuizViewModel, ResponseViewModel, ResponseQuestionViewModel, ConnectionViewModel } from "./quizTypes";
 
-function addMessage(msg: any) {
+function addMessage(msg) {
     console.log(msg);
 }
 
@@ -10,21 +10,21 @@ function getUserId() {
     const QuizUserId = "QuizUserId";
     const searchText = `${QuizUserId}=`;
     let startIndex = document.cookie.indexOf(searchText);
-    if (startIndex == -1) {
+    if (startIndex === -1) {
         try {
-            let random = window.crypto.getRandomValues(new Uint32Array(4));
+            const random = window.crypto.getRandomValues(new Uint32Array(4));
             id = random[0].toString(16) + "-" + random[1].toString(16) + "-" + random[2].toString(16) + "-" + random[3].toString(16);
         } catch (e) {
             console.log("Secure random number generation is not supported.");
             id = Math.floor(Math.random() * 10000000000).toString();
         }
 
-        document.cookie = `${QuizUserId}=${id}; max-age=${3600*12}; secure; samesite=strict`;
+        document.cookie = `${QuizUserId}=${id}; max-age=${3600 * 12}; secure; samesite=strict`;
     }
     else {
         startIndex = startIndex + searchText.length;
-        let endIndex = document.cookie.indexOf(";", startIndex);
-        if (endIndex == -1) {
+        const endIndex = document.cookie.indexOf(";", startIndex);
+        if (endIndex === -1) {
             id = document.cookie.substr(startIndex);
         }
         else {
@@ -35,22 +35,22 @@ function getUserId() {
     return id;
 }
 
-let userId = getUserId();
+const userId = getUserId();
 
-let protocol = new signalR.JsonHubProtocol();
-let hubRoute = "/QuizHub";
-let connection = new signalR.HubConnectionBuilder()
+const protocol = new signalR.JsonHubProtocol();
+const hubRoute = "/QuizHub";
+const connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Information)
-    .withUrl(hubRoute, { accessTokenFactory: () => { return userId; }})
+    .withUrl(hubRoute, { accessTokenFactory: () => { return userId; } })
     .withHubProtocol(protocol)
     .build();
 
-let answeredQuestions = Array<string>();
+const answeredQuestions = Array<string>();
 let quizMandatoryQuestions = Array<string>();
 let quiz: QuizViewModel;
 
 function createHiddenElement(name: string, value: string): HTMLInputElement {
-    let hidden = document.createElement("input") as HTMLInputElement;
+    const hidden = document.createElement("input") as HTMLInputElement;
     hidden.type = "hidden";
     hidden.name = name;
     hidden.value = value;
@@ -58,15 +58,15 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
 }
 
 (<any>window).formSubmitCheck = () => {
-    let quizSubmitError = document.getElementById("quizSubmitError");
+    const quizSubmitError = document.getElementById("quizSubmitError");
     quizSubmitError.innerHTML = "";
 
     for (let i = 0; i < quizMandatoryQuestions.length; i++) {
-        let q = quizMandatoryQuestions[i];
-        let mandatoryInputElement = document.forms[0].elements[q] as HTMLInputElement;
-        let value = mandatoryInputElement.value;
+        const q = quizMandatoryQuestions[i];
+        const mandatoryInputElement = document.forms[0].elements[q] as HTMLInputElement;
+        const value = mandatoryInputElement.value;
 
-        if (value.length == 0) {
+        if (value.length === 0) {
             quizSubmitError.innerHTML = "Please fill the quiz before submitting.";
             quizSubmitError.scrollIntoView();
             return;
@@ -74,19 +74,19 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
     }
 
     // Submit form
-    let quizResponse = new ResponseViewModel();
+    const quizResponse = new ResponseViewModel();
     quizResponse.quizId = quiz.quizId;
     quizResponse.userId = userId;
     let allowMultipleResponses = false;
     for (let i = 0; i < quiz.questions.length; i++) {
-        let question = quiz.questions[i];
-        let inputElement = document.forms[0].elements[question.questionId] as HTMLInputElement;
-        let questionResponse = new ResponseQuestionViewModel();
+        const question = quiz.questions[i];
+        const inputElement = document.forms[0].elements[question.questionId] as HTMLInputElement;
+        const questionResponse = new ResponseQuestionViewModel();
         questionResponse.questionId = question.questionId;
 
         if (question.parameters.multiSelect) {
             // Checkbox
-            let list = <HTMLInputElement[]><any>inputElement;
+            const list = (inputElement as unknown) as HTMLInputElement[];
             for (let j = 0; j < list.length; j++) {
                 if (list[j].checked) {
                     questionResponse.options.push(list[j].value);
@@ -113,10 +113,10 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
             }
 
             // Clear quiz
-            quiz = null;
+            quiz = undefined;
             quizMandatoryQuestions = [];
         })
-        .catch(function (err: any) {
+        .catch(function (err) {
             console.log("QuizResponse submission error");
             console.log(err);
 
@@ -125,28 +125,28 @@ function createHiddenElement(name: string, value: string): HTMLInputElement {
 }
 
 function updateQuizTitle(title: string): HTMLElement {
-    let titleElement = document.getElementById("homeLink");
+    const titleElement = document.getElementById("homeLink");
     titleElement.innerHTML = title;
     return titleElement;
 }
 
 function createQuestionTitle(title: string): HTMLElement {
-    let titleElement = document.createElement("h1") as HTMLElement;
+    const titleElement = document.createElement("h1") as HTMLElement;
     titleElement.innerText = title;
     return titleElement;
 }
 
 function createInput(type: string, name: string, value: string, text: string): HTMLDivElement {
-    let id = `${name}-${value}`;
-    let div = document.createElement("div") as HTMLDivElement;
+    const id = `${name}-${value}`;
+    const div = document.createElement("div") as HTMLDivElement;
     div.className = "quiz-question-option";
-    let radioButton = document.createElement("input") as HTMLInputElement;
+    const radioButton = document.createElement("input") as HTMLInputElement;
     radioButton.type = type;
     radioButton.id = id;
     radioButton.name = name;
     radioButton.value = value;
 
-    let label = document.createElement("label") as HTMLLabelElement;
+    const label = document.createElement("label") as HTMLLabelElement;
     label.htmlFor = id;
     label.innerText = text;
     div.appendChild(radioButton);
@@ -155,7 +155,7 @@ function createInput(type: string, name: string, value: string, text: string): H
 }
 
 function updateUserCount(connection: ConnectionViewModel) {
-    let usersElement = document.getElementById("users");
+    const usersElement = document.getElementById("users");
     usersElement.innerHTML = `${connection.counter} 👥`;
 }
 
@@ -168,26 +168,26 @@ connection.on('Disconnected', function (connection: ConnectionViewModel) {
 });
 
 connection.on('Quiz', function (quizReceived: QuizViewModel) {
-    let data = "Quiz received: " + new Date().toLocaleTimeString();
+    const data = "Quiz received: " + new Date().toLocaleTimeString();
     addMessage(data);
     addMessage(quizReceived);
 
-    if (answeredQuestions.indexOf(quizReceived.quizId) != -1) {
+    if (answeredQuestions.indexOf(quizReceived.quizId) !== -1) {
         console.log("This quiz has been answered already");
         quizReceived.quizId = "";
         quizReceived.quizTitle = "Quiz";
         quizReceived.questions = [];
         quizMandatoryQuestions = [];
     }
-    else if (quiz != null && quiz.quizId == quizReceived.quizId) {
+    else if (quiz !== undefined && quiz.quizId === quizReceived.quizId) {
         console.log("Do not reprocess already open quiz");
         return;
     }
 
     quiz = quizReceived;
 
-    let quizForm = document.getElementById("quizForm");
-    let quizSubmit = document.getElementById("quizSubmit");
+    const quizForm = document.getElementById("quizForm");
+    const quizSubmit = document.getElementById("quizSubmit");
 
     if (quiz.questions.length === 0) {
         quizSubmit.style.display = "none";
@@ -203,7 +203,7 @@ connection.on('Quiz', function (quizReceived: QuizViewModel) {
     quizMandatoryQuestions = [];
 
     for (let i = 0; i < quiz.questions.length; i++) {
-        let question = quiz.questions[i];
+        const question = quiz.questions[i];
         quizForm.appendChild(createQuestionTitle(question.questionTitle));
 
         const type = question.parameters.multiSelect ? "checkbox" : "radio";
@@ -211,29 +211,29 @@ connection.on('Quiz', function (quizReceived: QuizViewModel) {
             quizMandatoryQuestions.push(question.questionId);
         }
 
-        let inputElements = new Array<HTMLDivElement>();
+        const inputElements = new Array<HTMLDivElement>();
         for (let j = 0; j < question.options.length; j++) {
-            let option = quiz.questions[i].options[j];
+            const option = quiz.questions[i].options[j];
             inputElements.push(createInput(type, question.questionId, option.optionId, option.optionText));
         }
 
         if (question.parameters.randomizeOrder) {
             for (let j = 0; j < inputElements.length; j++) {
-                let k = Math.floor(Math.random() * inputElements.length);
-                let a = inputElements[j];
-                let b = inputElements[k];
+                const k = Math.floor(Math.random() * inputElements.length);
+                const a = inputElements[j];
+                const b = inputElements[k];
                 inputElements[j] = b;
                 inputElements[k] = a;
             }
         }
 
-        for (var j = 0; j < inputElements.length; j++) {
+        for (let j = 0; j < inputElements.length; j++) {
             quizForm.appendChild(inputElements[j]);
         }
     }
 });
 
-connection.onclose(function (e: any) {
+connection.onclose(function (e) {
     if (e) {
         addMessage("Connection closed with error: " + e);
     }
@@ -246,7 +246,7 @@ connection.start()
     .then(function () {
         console.log("SignalR connected");
     })
-    .catch(function (err: any) {
+    .catch(function (err) {
         console.log("SignalR error");
         console.log(err);
 
