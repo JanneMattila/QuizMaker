@@ -154,17 +154,17 @@ function createInput(type: string, name: string, value: string, text: string): H
     return div;
 }
 
-function updateUserCount(connection: ConnectionViewModel) {
+function updateUserCount(connectionModel: ConnectionViewModel) {
     const usersElement = document.getElementById("users");
-    usersElement.innerHTML = `${connection.counter} 👥`;
+    usersElement.innerHTML = `${connectionModel.counter} 👥`;
 }
 
-connection.on('Connected', function (connection: ConnectionViewModel) {
-    updateUserCount(connection);
+connection.on('Connected', function (connectionModel: ConnectionViewModel) {
+    updateUserCount(connectionModel);
 });
 
-connection.on('Disconnected', function (connection: ConnectionViewModel) {
-    updateUserCount(connection);
+connection.on('Disconnected', function (connectionModel: ConnectionViewModel) {
+    updateUserCount(connectionModel);
 });
 
 connection.on('Quiz', function (quizReceived: QuizViewModel) {
@@ -236,6 +236,15 @@ connection.on('Quiz', function (quizReceived: QuizViewModel) {
 connection.onclose(function (e) {
     if (e) {
         addMessage("Connection closed with error: " + e);
+
+        setTimeout(() => {
+            console.log("Validating the connection");
+            console.log(connection.state);
+            if (connection.state !== signalR.HubConnectionState.Connected) {
+                console.log("Restarting the connection");
+                connection.start();
+            }
+        }, 1500);
     }
     else {
         addMessage("Disconnected");

@@ -66,9 +66,9 @@ System.register(["./quizTypes.js"], function (exports_1, context_1) {
         div.appendChild(label);
         return div;
     }
-    function updateUserCount(connection) {
+    function updateUserCount(connectionModel) {
         var usersElement = document.getElementById("users");
-        usersElement.innerHTML = connection.counter + " \uD83D\uDC65";
+        usersElement.innerHTML = connectionModel.counter + " \uD83D\uDC65";
     }
     return {
         setters: [
@@ -144,11 +144,11 @@ System.register(["./quizTypes.js"], function (exports_1, context_1) {
                     addMessage(err);
                 });
             };
-            connection.on('Connected', function (connection) {
-                updateUserCount(connection);
+            connection.on('Connected', function (connectionModel) {
+                updateUserCount(connectionModel);
             });
-            connection.on('Disconnected', function (connection) {
-                updateUserCount(connection);
+            connection.on('Disconnected', function (connectionModel) {
+                updateUserCount(connectionModel);
             });
             connection.on('Quiz', function (quizReceived) {
                 var data = "Quiz received: " + new Date().toLocaleTimeString();
@@ -208,6 +208,14 @@ System.register(["./quizTypes.js"], function (exports_1, context_1) {
             connection.onclose(function (e) {
                 if (e) {
                     addMessage("Connection closed with error: " + e);
+                    setTimeout(function () {
+                        console.log("Validating the connection");
+                        console.log(connection.state);
+                        if (connection.state !== signalR.HubConnectionState.Connected) {
+                            console.log("Restarting the connection");
+                            connection.start();
+                        }
+                    }, 1500);
                 }
                 else {
                     addMessage("Disconnected");
