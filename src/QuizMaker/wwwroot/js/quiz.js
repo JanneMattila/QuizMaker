@@ -1,15 +1,6 @@
-(function (factory) {
-    if (typeof module === "object" && typeof module.exports === "object") {
-        var v = factory(require, exports);
-        if (v !== undefined) module.exports = v;
-    }
-    else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./quizTypes"], factory);
-    }
-})(function (require, exports) {
+define(["require", "exports", "./quizTypes"], function (require, exports, quizTypes_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var quizTypes_1 = require("./quizTypes");
     function addMessage(msg) {
         console.log(msg);
     }

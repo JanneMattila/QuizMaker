@@ -3,7 +3,7 @@
   "compilerOptions": {
     "sourceMap": true,
     "declaration": false,
-    "module": "umd",
+    "module": "AMD",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
