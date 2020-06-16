@@ -1,5 +1,6 @@
 variables:
-  repository: 'jannemattila/quizmaker'
+  repositoryQuizMaker: 'jannemattila/quizmaker'
+  repositoryQuizSim: 'jannemattila/quizsim'
 
 trigger:
 - master
@@ -16,12 +17,22 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'DockerHub'
-        repository: $(repository)
+        repository: $(repositoryQuizMaker)
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: 'src/QuizMaker/Dockerfile'
         tags: |
           $(Build.BuildNumber)
           latest    
+
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'DockerHub'
+        repository: $(repositoryQuizSim)
+        command: 'buildAndPush'
+        Dockerfile: 'src/QuizUserSimulator/Dockerfile'
+        tags: |
+          $(Build.BuildNumber)
+          latest
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: deploy'
