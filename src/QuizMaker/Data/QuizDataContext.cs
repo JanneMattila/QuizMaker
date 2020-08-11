@@ -271,9 +271,11 @@ namespace QuizMaker.Data
                 foreach (var entity in result)
                 {
                     var deleteOperation = TableOperation.Delete(entity);
-                    if (entity.PartitionKey != partitionKey)
+                    if (entity.PartitionKey != partitionKey ||
+                        tableBatchOperation.Count == 100)
                     {
-                        // Batch can only delete items inside same partition
+                        // Batch can only delete items inside same partition AND
+                        // single batch can contain max. 100 items.
                         await _quizResponsesTable.ExecuteBatchAsync(tableBatchOperation);
                         tableBatchOperation = new TableBatchOperation();
                         partitionKey = entity.PartitionKey;
