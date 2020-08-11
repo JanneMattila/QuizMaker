@@ -307,6 +307,13 @@ namespace QuizMaker.Data
                 {
                     var deleteOperation = TableOperation.Delete(entity);
                     tableBatchOperation.Add(deleteOperation);
+
+                    if (tableBatchOperation.Count == 100)
+                    {
+                        // Single batch can contain max. 100 items.
+                        await _quizResponsesTable.ExecuteBatchAsync(tableBatchOperation);
+                        tableBatchOperation = new TableBatchOperation();
+                    }
                 }
 
                 if (tableBatchOperation.Any())
