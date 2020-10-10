@@ -2,7 +2,7 @@
 
 ## Build Status
 
-[![Build Status](https://dev.azure.com/jannemattila/jannemattila/_apis/build/status/JanneMattila.QuizMaker?branchName=master&stageName=Build)
+![Build Status](https://dev.azure.com/jannemattila/jannemattila/_apis/build/status/JanneMattila.QuizMaker?branchName=master&stageName=Build)
 [![Actions Status](https://github.com/JanneMattila/QuizMaker/workflows/ASP.NET%20Core%20CI/badge.svg)](https://github.com/JanneMattila/QuizMaker/tree/master/.github/workflows)
 [![Actions Status](https://github.com/JanneMattila/QuizMaker/workflows/Docker%20Image%20CI/badge.svg)](https://github.com/JanneMattila/QuizMaker/tree/master/.github/workflows)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jannemattila/quizmaker?style=plastic)](https://hub.docker.com/r/jannemattila/quizsim)
