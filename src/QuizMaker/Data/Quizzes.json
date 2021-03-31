@@ -186,6 +186,34 @@
     ]
   },
   {
+    "quizId": "common-104",
+    "quizTitle": "Quiz",
+    "questions": [
+      {
+        "questionId": "common-104-1",
+        "questionTitle": "Select",
+        "options": [
+          {
+            "optionId": "common-104-1-1",
+            "optionText": "Yes"
+          },
+          {
+            "optionId": "common-104-1-2",
+            "optionText": "N/A"
+          },
+          {
+            "optionId": "common-104-1-2",
+            "optionText": "No"
+          }
+        ],
+        "parameters": {
+          "allowMultipleResponses": true,
+          "clearOnActivation": true
+        }
+      }
+    ]
+  },
+  {
     "quizId": "azure-100",
     "quizTitle": "Azure Quiz",
     "questions": [
