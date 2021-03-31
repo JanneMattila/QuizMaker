@@ -30,8 +30,12 @@ namespace QuizMaker.Models.Quiz
         public static QuizViewModel FromJson(string json)
         {
             var model = JsonSerializer.Deserialize<QuizViewModel>(json);
-            model.Json = json;
-            return model;
+            if (model != null)
+            {
+                model.Json = json;
+                return model;
+            }
+            throw new ArgumentException("Not valid model payload", nameof(json));
         }
 
         public static QuizViewModel CreateBlank()

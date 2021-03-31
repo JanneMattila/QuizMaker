@@ -33,11 +33,13 @@ namespace QuizMaker.Hubs
             await Clients.All.Connected(connection);
             await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.ConnectedMethod, connection);
 
+            var userID = this.Context.UserIdentifier;
             var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
-            if (activeQuiz != null)
+            if (activeQuiz != null &&
+                !string.IsNullOrEmpty(userID))
             {
                 var quiz = QuizViewModel.FromJson(activeQuiz.Json);
-                var userHasResponded = await _quizDataContext.UserHasResponseAsync(quiz.ID, this.Context.UserIdentifier);
+                var userHasResponded = await _quizDataContext.UserHasResponseAsync(quiz.ID, userID);
                 if (!userHasResponded)
                 {
                     await Clients.Caller.Quiz(quiz);
@@ -47,7 +49,7 @@ namespace QuizMaker.Hubs
             await base.OnConnectedAsync();
         }
 
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var count = _connectionStorage.Decrement();
             var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);

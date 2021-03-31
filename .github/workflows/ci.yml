@@ -5,14 +5,14 @@ on: [push]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     
     steps:
     - uses: actions/checkout@v1
-    - name: Set Node.js 10.x
+    - name: Set Node.js 14.x
       uses: actions/setup-node@master
       with:
-        version: 10.x
+        version: 14.x
         
     - name: npm install
       run: |
@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.100
+        dotnet-version: 5.0.201
 
     - name: Build with dotnet
       run: dotnet build --configuration Release

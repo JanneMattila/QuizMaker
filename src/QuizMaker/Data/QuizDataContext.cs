@@ -53,9 +53,12 @@ namespace QuizMaker.Data
             {
                 var json = File.ReadAllText(exampleQuizzes);
                 var quizzes = JsonSerializer.Deserialize<QuizViewModel[]>(json);
-                foreach (var quiz in quizzes)
+                if (quizzes != null)
                 {
-                    UpsertQuiz(quiz);
+                    foreach (var quiz in quizzes)
+                    {
+                        UpsertQuiz(quiz);
+                    }
                 }
             }
         }

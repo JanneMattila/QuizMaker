@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+﻿using System;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,13 +6,10 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Identity.Web;
 using QuizMaker.Data;
 using QuizMaker.Hubs;
 using QuizMaker.Services;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace QuizMaker
 {
@@ -31,44 +27,8 @@ namespace QuizMaker
         {
             services.AddApplicationInsightsTelemetry();
 
-            services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-                .AddAzureAD(options => Configuration.Bind("AzureAd", options));
-
-            services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    // Instead of using the default validation (validating against a single issuer value, as we do in
-                    // line of business apps), we inject our own multitenant validation logic
-                    ValidateIssuer = true,
-
-                    // If the app is meant to be accessed by entire organizations, add your issuer validation logic here.
-                    IssuerValidator = (issuer, securityToken, validationParameters) =>
-                    {
-                        return IssuerValidationLogic(issuer) ? issuer : null;
-                    }
-                };
-
-                options.Events = new OpenIdConnectEvents
-                {
-                    OnTicketReceived = context =>
-                    {
-                        // If your authentication logic is based on users then add your logic here
-                        return Task.CompletedTask;
-                    },
-                    OnAuthenticationFailed = context =>
-                    {
-                        context.Response.Redirect("/Error");
-                        context.HandleResponse(); // Suppress the exception
-                        return Task.CompletedTask;
-                    },
-                    // If your application needs to authenticate single users, add your user validation below.
-                    OnTokenValidated = context =>
-                    {
-                        return UserValidationLogic(context.Principal);
-                    }
-                };
-            });
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -101,16 +61,6 @@ namespace QuizMaker
                 .AddControllersWithViews()
                 .AddControllersAsServices();
             services.AddRazorPages();
-        }
-
-        private bool IssuerValidationLogic(string issuer)
-        {
-            return true;
-        }
-
-        private Task UserValidationLogic(ClaimsPrincipal principal)
-        {
-            return Task.CompletedTask;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
