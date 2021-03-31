@@ -462,10 +462,14 @@
           },
           {
             "optionId": "azure-105-1-10",
-            "optionText": "Others"
+            "optionText": "Bicep"
           },
           {
             "optionId": "azure-105-1-11",
+            "optionText": "Others"
+          },
+          {
+            "optionId": "azure-105-1-12",
             "optionText": "None"
           }
         ],
