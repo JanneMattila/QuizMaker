@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:5.0.4-alpine3.13-amd64 AS base
+FROM mcr.microsoft.com/dotnet/runtime:5.0.4-alpine3.13-amd64 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/core/sdk:5.0.201-focal-amd64 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0.201-focal-amd64 AS build
 WORKDIR /src
 COPY "QuizUserSimulator.csproj" .
 RUN dotnet restore "QuizUserSimulator.csproj"
