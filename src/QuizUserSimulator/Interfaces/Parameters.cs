@@ -1,26 +1,25 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace QuizUserSimulator.Interfaces
+namespace QuizUserSimulator.Interfaces;
+
+public class Parameters
 {
-    public class Parameters
-    {
-        /// <summary>
-        /// Question can be answered multiple times.
-        /// </summary>
-        [JsonPropertyName("allowMultipleResponses")]
-        public bool AllowMultipleResponses { get; set; }
+    /// <summary>
+    /// Question can be answered multiple times.
+    /// </summary>
+    [JsonPropertyName("allowMultipleResponses")]
+    public bool AllowMultipleResponses { get; set; }
 
-        /// <summary>
-        /// Questions options can be multiselected (checkbox)
-        /// or single selected (radiobutton).
-        /// </summary>
-        [JsonPropertyName("multiSelect")]
-        public bool MultiSelect { get; set; }
+    /// <summary>
+    /// Questions options can be multiselected (checkbox)
+    /// or single selected (radiobutton).
+    /// </summary>
+    [JsonPropertyName("multiSelect")]
+    public bool MultiSelect { get; set; }
 
-        /// <summary>
-        /// Randomize order of the questions options.
-        /// </summary>
-        [JsonPropertyName("randomizeOrder")]
-        public bool RandomizeOrder { get; set; }
-    }
+    /// <summary>
+    /// Randomize order of the questions options.
+    /// </summary>
+    [JsonPropertyName("randomizeOrder")]
+    public bool RandomizeOrder { get; set; }
 }

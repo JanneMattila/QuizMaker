@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace QuizUserSimulator.Interfaces
+namespace QuizUserSimulator.Interfaces;
+
+public class Question
 {
-    public class Question
-    {
-        [JsonPropertyName("questionId")]
-        public string ID { get; set; }
+    [JsonPropertyName("questionId")]
+    public string ID { get; set; }
 
-        [JsonPropertyName("questionTitle")]
-        public string Title { get; set; }
+    [JsonPropertyName("questionTitle")]
+    public string Title { get; set; }
 
-        [JsonPropertyName("options")]
-        public List<QuestionOption> Options { get; set; }
+    [JsonPropertyName("options")]
+    public List<QuestionOption> Options { get; set; }
 
-        [JsonPropertyName("parameters")]
-        public Parameters Parameters { get; set; }
-    }
+    [JsonPropertyName("parameters")]
+    public Parameters Parameters { get; set; }
 }

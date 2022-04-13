@@ -1,7 +1,6 @@
-﻿namespace QuizMaker.Data
+﻿namespace QuizMaker.Data;
+
+public class QuizDataContextOptions
 {
-    public class QuizDataContextOptions
-    {
-        public string StorageConnectionString { get; set; } = string.Empty;
-    }
+    public string StorageConnectionString { get; set; } = string.Empty;
 }

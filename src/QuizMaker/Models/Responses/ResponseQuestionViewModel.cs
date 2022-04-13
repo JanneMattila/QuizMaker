@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace QuizMaker.Models.Responses
+namespace QuizMaker.Models.Responses;
+
+public class ResponseQuestionViewModel
 {
-    public class ResponseQuestionViewModel
+    [JsonPropertyName("questionId")]
+    public string ID { get; set; } = string.Empty;
+
+    [JsonPropertyName("options")]
+    public List<string> Options { get; set; }
+
+    public ResponseQuestionViewModel()
     {
-        [JsonPropertyName("questionId")]
-        public string ID { get; set; } = string.Empty;
-
-        [JsonPropertyName("options")]
-        public List<string> Options { get; set; }
-
-        public ResponseQuestionViewModel()
-        {
-            Options = new List<string>();
-        }
+        Options = new List<string>();
     }
 }

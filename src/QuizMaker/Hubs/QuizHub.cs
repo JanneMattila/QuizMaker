@@ -1,85 +1,84 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 using QuizMaker.Data;
 using QuizMaker.Models;
 using QuizMaker.Models.Quiz;
 using QuizMaker.Models.Responses;
-using System;
-using System.Threading.Tasks;
 
-namespace QuizMaker.Hubs
+namespace QuizMaker.Hubs;
+
+public class QuizHub : Hub<IQuizHub>
 {
-    public class QuizHub : Hub<IQuizHub>
+    private readonly IQuizDataContext _quizDataContext;
+    private readonly IHubContext<QuizResultsHub> _quizResultsHub;
+    private readonly ConnectionStorage _connectionStorage;
+
+    public QuizHub(IQuizDataContext quizDataContext, IHubContext<QuizResultsHub> quizResultsHub, ConnectionStorage connectionStorage)
     {
-        private readonly IQuizDataContext _quizDataContext;
-        private readonly IHubContext<QuizResultsHub> _quizResultsHub;
-        private readonly ConnectionStorage _connectionStorage;
+        _quizDataContext = quizDataContext;
+        _quizResultsHub = quizResultsHub;
+        _connectionStorage = connectionStorage;
+    }
 
-        public QuizHub(IQuizDataContext quizDataContext, IHubContext<QuizResultsHub> quizResultsHub, ConnectionStorage connectionStorage)
+    public override async Task OnConnectedAsync()
+    {
+        var count = _connectionStorage.Increment();
+        var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);
+        var connection = new ConnectionViewModel()
         {
-            _quizDataContext = quizDataContext;
-            _quizResultsHub = quizResultsHub;
-            _connectionStorage = connectionStorage;
-        }
+            Counter = counter
+        };
 
-        public override async Task OnConnectedAsync()
+        await Clients.All.Connected(connection);
+        await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.ConnectedMethod, connection);
+
+        var userID = this.Context.UserIdentifier;
+        var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
+        if (activeQuiz != null &&
+            !string.IsNullOrEmpty(userID))
         {
-            var count = _connectionStorage.Increment();
-            var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);
-            var connection = new ConnectionViewModel()
+            var quiz = QuizViewModel.FromJson(activeQuiz.Json);
+            var userHasResponded = await _quizDataContext.UserHasResponseAsync(quiz.ID, userID);
+            if (!userHasResponded)
             {
-                Counter = counter
-            };
-
-            await Clients.All.Connected(connection);
-            await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.ConnectedMethod, connection);
-
-            var userID = this.Context.UserIdentifier;
-            var activeQuiz = await _quizDataContext.GetActiveQuizAsync();
-            if (activeQuiz != null &&
-                !string.IsNullOrEmpty(userID))
-            {
-                var quiz = QuizViewModel.FromJson(activeQuiz.Json);
-                var userHasResponded = await _quizDataContext.UserHasResponseAsync(quiz.ID, userID);
-                if (!userHasResponded)
-                {
-                    await Clients.Caller.Quiz(quiz);
-                }
+                await Clients.Caller.Quiz(quiz);
             }
-
-            await base.OnConnectedAsync();
         }
 
-        public override async Task OnDisconnectedAsync(Exception? exception)
+        await base.OnConnectedAsync();
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        var count = _connectionStorage.Decrement();
+        var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);
+        var connection = new ConnectionViewModel()
         {
-            var count = _connectionStorage.Decrement();
-            var counter = await _quizDataContext.UpsertServerConnectionsAsync(count);
-            var connection = new ConnectionViewModel()
-            {
-                Counter = counter
-            };
+            Counter = counter
+        };
 
-            await Clients.All.Disconnected(connection);
-            await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.DisconnectedMethod, connection);
+        await Clients.All.Disconnected(connection);
+        await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.DisconnectedMethod, connection);
 
-            await base.OnDisconnectedAsync(exception);
-        }
+        await base.OnDisconnectedAsync(exception);
+    }
 
-        public async Task QuizResponse(ResponseViewModel quizResponse)
+    public async Task QuizResponse(ResponseViewModel quizResponse)
+    {
+        if (quizResponse == null)
         {
-            if (quizResponse == null)
-            {
-                throw new ArgumentNullException(nameof(quizResponse));
-            }
-
-            await _quizDataContext.UpsertResponseAsync(quizResponse);
-            await Clients.Caller.Quiz(QuizViewModel.CreateBlank());
-
-            // Submit this response to the reports view
-            var resultsBuilder = new QuizResultBuilder(_quizDataContext);
-            var results = await resultsBuilder.GetResultsAsync(quizResponse.ID);
-
-            await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.ResultsMethod, results);
-            await _quizResultsHub.Clients.Group(quizResponse.ID).SendAsync(HubConstants.ResultsMethod, results);
+            throw new ArgumentNullException(nameof(quizResponse));
         }
+
+        await _quizDataContext.UpsertResponseAsync(quizResponse);
+        await Clients.Caller.Quiz(QuizViewModel.CreateBlank());
+
+        // Submit this response to the reports view
+        var resultsBuilder = new QuizResultBuilder(_quizDataContext);
+        var results = await resultsBuilder.GetResultsAsync(quizResponse.ID);
+
+        await _quizResultsHub.Clients.Group(HubConstants.Active).SendAsync(HubConstants.ResultsMethod, results);
+        await _quizResultsHub.Clients.Group(quizResponse.ID).SendAsync(HubConstants.ResultsMethod, results);
     }
 }

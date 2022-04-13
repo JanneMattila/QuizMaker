@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace QuizUserSimulator.Interfaces
+namespace QuizUserSimulator.Interfaces;
+
+public class Connection
 {
-    public class Connection
-    {
-        [JsonPropertyName("counter")]
-        public int Counter { get; set; }
-    }
+    [JsonPropertyName("counter")]
+    public int Counter { get; set; }
 }

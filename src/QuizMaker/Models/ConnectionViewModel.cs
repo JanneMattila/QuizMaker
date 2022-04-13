@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace QuizMaker.Models
+namespace QuizMaker.Models;
+
+public class ConnectionViewModel
 {
-    public class ConnectionViewModel
-    {
-        [JsonPropertyName("counter")]
-        public int Counter { get; set; }
-    }
+    [JsonPropertyName("counter")]
+    public int Counter { get; set; }
 }

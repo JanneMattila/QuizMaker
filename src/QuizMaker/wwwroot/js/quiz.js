@@ -8,7 +8,7 @@ System.register(["./quizTypes.js"], function (exports_1, context_1) {
     function getUserId() {
         var id = "";
         var QuizUserId = "QuizUserId";
-        var searchText = QuizUserId + "=";
+        var searchText = "".concat(QuizUserId, "=");
         var startIndex = document.cookie.indexOf(searchText);
         if (startIndex === -1) {
             try {
@@ -19,7 +19,7 @@ System.register(["./quizTypes.js"], function (exports_1, context_1) {
                 console.log("Secure random number generation is not supported.");
                 id = Math.floor(Math.random() * 10000000000).toString();
             }
-            document.cookie = QuizUserId + "=" + id + "; max-age=" + 3600 * 12 + "; secure; samesite=strict";
+            document.cookie = "".concat(QuizUserId, "=").concat(id, "; max-age=").concat(3600 * 12, "; secure; samesite=strict");
         }
         else {
             startIndex = startIndex + searchText.length;
@@ -51,7 +51,7 @@ System.register(["./quizTypes.js"], function (exports_1, context_1) {
         return titleElement;
     }
     function createInput(type, name, value, text) {
-        var id = name + "-" + value;
+        var id = "".concat(name, "-").concat(value);
         var div = document.createElement("div");
         div.className = "quiz-question-option";
         var radioButton = document.createElement("input");
@@ -68,7 +68,7 @@ System.register(["./quizTypes.js"], function (exports_1, context_1) {
     }
     function updateUserCount(connectionModel) {
         var usersElement = document.getElementById("users");
-        usersElement.innerHTML = connectionModel.counter + " \uD83D\uDC65";
+        usersElement.innerHTML = "".concat(connectionModel.counter, " \uD83D\uDC65");
     }
     return {
         setters: [

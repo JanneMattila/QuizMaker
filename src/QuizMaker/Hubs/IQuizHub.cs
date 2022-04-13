@@ -1,13 +1,12 @@
-﻿using QuizMaker.Models;
+﻿using System.Threading.Tasks;
+using QuizMaker.Models;
 using QuizMaker.Models.Quiz;
-using System.Threading.Tasks;
 
-namespace QuizMaker.Hubs
+namespace QuizMaker.Hubs;
+
+public interface IQuizHub
 {
-    public interface IQuizHub
-    {
-        Task Connected(ConnectionViewModel connection);
-        Task Disconnected(ConnectionViewModel connection);
-        Task Quiz(QuizViewModel quiz);
-    }
+    Task Connected(ConnectionViewModel connection);
+    Task Disconnected(ConnectionViewModel connection);
+    Task Quiz(QuizViewModel quiz);
 }

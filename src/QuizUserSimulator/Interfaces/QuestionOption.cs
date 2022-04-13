@@ -1,13 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace QuizUserSimulator.Interfaces
-{
-    public class QuestionOption
-    {
-        [JsonPropertyName("optionId")]
-        public string OptionId { get; set; }
+namespace QuizUserSimulator.Interfaces;
 
-        [JsonPropertyName("optionText")]
-        public string OptionText { get; set; }
-    }
+public class QuestionOption
+{
+    [JsonPropertyName("optionId")]
+    public string OptionId { get; set; }
+
+    [JsonPropertyName("optionText")]
+    public string OptionText { get; set; }
 }

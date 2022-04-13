@@ -17,7 +17,7 @@ System.register(["./resultTypes.js"], function (exports_1, context_1) {
             resultQuestion = results.results[0];
         }
         var responsesElement = document.getElementById("responses");
-        responsesElement.innerHTML = results.responses + " \uD83D\uDCDD";
+        responsesElement.innerHTML = "".concat(results.responses, " \uD83D\uDCDD");
         var svg = d3.select("svg");
         svg.selectAll("*").remove();
         var containerElement = document.getElementById("containerElement");
@@ -74,7 +74,7 @@ System.register(["./resultTypes.js"], function (exports_1, context_1) {
     }
     function updateUserCount(connection) {
         var usersElement = document.getElementById("users");
-        usersElement.innerHTML = connection.counter + " \uD83D\uDC65";
+        usersElement.innerHTML = "".concat(connection.counter, " \uD83D\uDC65");
     }
     return {
         setters: [

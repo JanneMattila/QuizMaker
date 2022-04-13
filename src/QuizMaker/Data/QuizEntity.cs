@@ -1,17 +1,16 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
 
-namespace QuizMaker.Data
+namespace QuizMaker.Data;
+
+public class QuizEntity : TableEntity
 {
-    public class QuizEntity : TableEntity
+    public QuizEntity()
     {
-        public QuizEntity()
-        {
-        }
-
-        public QuizEntity(string quizKey, string quizQuestionKey) : base(quizKey, quizQuestionKey)
-        {
-        }
-
-        public string Json { get; set; } = string.Empty;
     }
+
+    public QuizEntity(string quizKey, string quizQuestionKey) : base(quizKey, quizQuestionKey)
+    {
+    }
+
+    public string Json { get; set; } = string.Empty;
 }

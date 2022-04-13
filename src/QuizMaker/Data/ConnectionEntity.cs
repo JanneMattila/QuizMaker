@@ -1,17 +1,16 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
 
-namespace QuizMaker.Data
+namespace QuizMaker.Data;
+
+public class ConnectionEntity : TableEntity
 {
-    public class ConnectionEntity : TableEntity
+    public ConnectionEntity()
     {
-        public ConnectionEntity()
-        {
-        }
-
-        public ConnectionEntity(string partitionKey, string rowKey) : base(partitionKey, rowKey)
-        {
-        }
-
-        public int Count { get; set; }
     }
+
+    public ConnectionEntity(string partitionKey, string rowKey) : base(partitionKey, rowKey)
+    {
+    }
+
+    public int Count { get; set; }
 }
