@@ -1,5 +1,5 @@
 ﻿declare const Chart: typeof import("chart.js");
-declare const signalR: typeof import("@aspnet/signalr");
+declare const signalR: typeof import("@microsoft/signalr");
 import { ConnectionViewModel } from "./quizTypes.js";
 import { ResultViewModel, ResultQuestionViewModel } from "./resultTypes.js";
 
