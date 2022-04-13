@@ -83,6 +83,7 @@ System.register(["./quizTypes.js"], function (exports_1, context_1) {
             connection = new signalR.HubConnectionBuilder()
                 .configureLogging(signalR.LogLevel.Information)
                 .withUrl(hubRoute, { accessTokenFactory: function () { return userId; } })
+                .withAutomaticReconnect()
                 .withHubProtocol(protocol)
                 .build();
             answeredQuestions = Array();

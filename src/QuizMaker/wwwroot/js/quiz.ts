@@ -42,6 +42,7 @@ const hubRoute = "/QuizHub";
 const connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Information)
     .withUrl(hubRoute, { accessTokenFactory: () => { return userId; } })
+    .withAutomaticReconnect()
     .withHubProtocol(protocol)
     .build();
 
