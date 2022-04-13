@@ -18,6 +18,7 @@ public class QuizDataContext : IQuizDataContext
     private const string Quizzes = "quizzes";
 
     private readonly CloudStorageAccount _cloudStorageAccount;
+    private readonly CloudTable _adminsTable;
     private readonly CloudTable _connectionsTable;
     private readonly CloudTable _quizzesTable;
     private readonly CloudTable _quizResponsesTable;
@@ -31,6 +32,7 @@ public class QuizDataContext : IQuizDataContext
 
         _cloudStorageAccount = CloudStorageAccount.Parse(options.StorageConnectionString);
         var tableClient = _cloudStorageAccount.CreateCloudTableClient();
+        _adminsTable = tableClient.GetTableReference(TableNames.Admins);
         _connectionsTable = tableClient.GetTableReference(TableNames.Connections);
         _quizzesTable = tableClient.GetTableReference(TableNames.Quizzes);
         _quizResponsesTable = tableClient.GetTableReference(TableNames.QuizResponses);
@@ -38,6 +40,7 @@ public class QuizDataContext : IQuizDataContext
 
     public void Initialize()
     {
+        _adminsTable.CreateIfNotExists();
         _connectionsTable.CreateIfNotExists();
         _quizResponsesTable.CreateIfNotExists();
         if (_quizzesTable.CreateIfNotExists())
@@ -326,5 +329,19 @@ public class QuizDataContext : IQuizDataContext
 
             token = result.ContinuationToken;
         } while (token != null);
+    }
+
+    public async Task<bool> AdminTenantHasAccessAsync(string tenantID)
+    {
+        var retrieveOperation = TableOperation.Retrieve(tenantID, tenantID);
+        var retrieveResult = await _adminsTable.ExecuteAsync(retrieveOperation);
+        return retrieveResult.HttpStatusCode == (int)HttpStatusCode.OK;
+    }
+
+    public async Task<bool> AdminUserHasAccessAsync(string tenantID, string userID)
+    {
+        var retrieveOperation = TableOperation.Retrieve(tenantID, userID);
+        var retrieveResult = await _adminsTable.ExecuteAsync(retrieveOperation);
+        return retrieveResult.HttpStatusCode == (int)HttpStatusCode.OK;
     }
 }

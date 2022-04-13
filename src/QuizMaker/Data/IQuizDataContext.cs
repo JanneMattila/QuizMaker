@@ -21,4 +21,6 @@ public interface IQuizDataContext
     Task<bool> UserHasResponseAsync(string quizID, string userID);
     Task<int> UpsertServerConnectionsAsync(int count);
     Task UpsertResponseAsync(ResponseViewModel quizResponse);
+    Task<bool> AdminTenantHasAccessAsync(string tenantID);
+    Task<bool> AdminUserHasAccessAsync(string tenantID, string userID);
 }
