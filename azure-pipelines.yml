@@ -12,7 +12,7 @@ stages:
   jobs:
   - job: Build
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ubuntu-latest
     steps:
     - task: Docker@2
       inputs:
@@ -22,7 +22,7 @@ stages:
         Dockerfile: 'src/QuizMaker/Dockerfile'
         tags: |
           $(Build.BuildNumber)
-          latest    
+          latest
 
     - task: Docker@2
       inputs:

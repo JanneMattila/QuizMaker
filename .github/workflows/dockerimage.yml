@@ -6,20 +6,20 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
- 
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v1
     - name: Login to GitHub Package Registry
       run: |
         docker login docker.pkg.github.com -u jannemattila -p ${{ secrets.github_package_registry }}
-        
+
     - name: Build the QuizMaker Docker image
       run: |
         cd src/QuizMaker
         docker build . --file Dockerfile --tag docker.pkg.github.com/jannemattila/quizmaker/quizmaker:${image_tag}
         docker push docker.pkg.github.com/jannemattila/quizmaker/quizmaker:${image_tag}
-        
+
     - name: Build the QuizUserSimulator Docker image
       run: |
         cd src/QuizUserSimulator

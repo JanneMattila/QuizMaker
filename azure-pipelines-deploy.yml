@@ -13,7 +13,7 @@ stages:
   - deployment: Deploy
     displayName: Deploy job
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     environment: ${{ parameters.environtName }}
     strategy:
       runOnce:
@@ -24,7 +24,7 @@ stages:
             inputs:
               artifactName: deploy
               downloadPath: '$(System.DefaultWorkingDirectory)'
-          
+
           - task: AzurePowerShell@4
             displayName: 'Azure PowerShell script: FilePath'
             inputs:
