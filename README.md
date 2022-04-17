@@ -3,8 +3,6 @@
 ## Build Status
 
 ![Build Status](https://dev.azure.com/jannemattila/jannemattila/_apis/build/status/JanneMattila.QuizMaker?branchName=master&stageName=Build)
-[![Actions Status](https://github.com/JanneMattila/QuizMaker/workflows/ASP.NET%20Core%20CI/badge.svg)](https://github.com/JanneMattila/QuizMaker/tree/master/.github/workflows)
-[![Actions Status](https://github.com/JanneMattila/QuizMaker/workflows/Docker%20Image%20CI/badge.svg)](https://github.com/JanneMattila/QuizMaker/tree/master/.github/workflows)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jannemattila/quizmaker?style=plastic)](https://hub.docker.com/r/jannemattila/quizsim)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -24,24 +22,10 @@ You can:
 or [Azure Storage Account](https://portal.azure.com/#create/Microsoft.StorageAccount-ARM) 
 for data storage during development.
 
-### Develop in cloud
-
-#### Use Visual Studio Online
-
-You can clone this repository into [Visual Studio Online](https://online.visualstudio.com/environments/new?name=quizmaker&repo=JanneMattila/QuizMaker)
-to start developing this directly in your browser.
-
-**Note**: For now you need execute following commands to get compilation working correctly:
-
-```bash
-sudo apt-get install dotnet-sdk-3.0
-
-cd src/QuizMaker; npm install
-```
-
 ### Develop locally
 
 First clone this to your local machine:
+
 ```bash
 git clone https://github.com/JanneMattila/QuizMaker.git
 ```
@@ -49,7 +33,7 @@ git clone https://github.com/JanneMattila/QuizMaker.git
 #### Use Visual Studio
 
 Open `QuizMaker.sln` in Visual Studio. If you don't have 
-Visual Studio you can get [Visual Studio Community 2019](https://visualstudio.microsoft.com/free-developer-offers/) for free.
+Visual Studio you can get [Visual Studio Community](https://visualstudio.microsoft.com/free-developer-offers/) for free.
 
 #### Use Visual Studio Code
 
