@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
@@ -16,6 +18,10 @@ namespace QuizMaker;
 
 public class Startup
 {
+    private const string QuizAdminClaimName = "QuizAdmin";
+    private const string QuizAdminTenant = "tenant";
+    private const string QuizAdminUser = "user";
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -32,6 +38,12 @@ public class Startup
 
         services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+        services.AddAuthorization(options =>
+        {
+            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireClaim(QuizAdminClaimName, QuizAdminTenant, QuizAdminUser)
+                .Build();
+        });
 
         services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
         {
@@ -81,11 +93,11 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        //if (env.IsDevelopment())
-        //{
-        //    app.UseDeveloperExceptionPage();
-        //}
-        //else
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
         {
             app.UseExceptionHandler("/Home/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -115,19 +127,27 @@ public class Startup
 
     private async Task UserValidationLogic(TokenValidatedContext context)
     {
+        ArgumentNullException.ThrowIfNull(_quizDataContext);
+
         if (context.Principal is null)
         {
             context.Fail("No valid user principal available.");
             return;
         }
 
-        ArgumentNullException.ThrowIfNull(_quizDataContext);
+        var identity = context.Principal.Identity as ClaimsIdentity;
+        if (identity is null)
+        {
+            context.Fail("No valid claims identity available.");
+            return;
+        }
 
         var tenantID = context.Principal.GetTenantId();
         ArgumentNullException.ThrowIfNull(tenantID);
         var hasTenantAccess = await _quizDataContext.AdminTenantHasAccessAsync(tenantID);
         if (hasTenantAccess)
         {
+            identity.AddClaim(new Claim(QuizAdminClaimName, QuizAdminTenant));
             return;
         }
 
@@ -136,8 +156,11 @@ public class Startup
         var hasUserAccess = await _quizDataContext.AdminUserHasAccessAsync(tenantID, objectID);
         if (hasUserAccess)
         {
+            identity.AddClaim(new Claim(QuizAdminClaimName, QuizAdminUser));
             return;
         }
+
+        context.Fail("No valid access configured.");
 
         context.Response.Redirect("/Home/NotAuthorized");
         context.HandleResponse();
