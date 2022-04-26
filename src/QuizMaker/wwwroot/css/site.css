@@ -213,3 +213,37 @@ div.quiz-question-option input {
 .table {
     margin-top: 30px;
 }
+
+.minimalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
+    vertical-align: middle;
+    text-align: right;
+    align-content: center;
+/*    padding: 0px;
+    width: 100%;
+    text-align: center;
+    font-size: calc(12px + 2vmin);
+    text-align: center;*/
+}
+
+.minimalContent {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: table-cell;
+}
+
+.quiz-results-minimalcanvas {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

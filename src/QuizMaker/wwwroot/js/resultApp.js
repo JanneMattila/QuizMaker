@@ -10,8 +10,6 @@ System.register(["./resultTypes.js"], function (exports_1, context_1) {
         return title;
     }
     function renderQuizResults(results, forceDraw) {
-        var resultsTitleElement = document.getElementById("resultsTitle");
-        resultsTitleElement.innerText = getQuestionTitle(results);
         data.labels = [];
         data.datasets[0].data = [];
         var resultQuestion = new resultTypes_js_1.ResultQuestionViewModel();
@@ -26,37 +24,48 @@ System.register(["./resultTypes.js"], function (exports_1, context_1) {
         var responsesElement = document.getElementById("responses");
         responsesElement.innerHTML = "".concat(results.responses, " \uD83D\uDCDD");
         console.log(labels);
-        console.log(forceDraw);
+        console.log("forceDraw: ".concat(forceDraw));
         console.log(data);
         if (forceDraw) {
+            if (window.resultChart !== undefined) {
+                // Release prior chart.js charts
+                window.resultChart.destroy();
+            }
             var canvas = document.getElementById('quizChart');
             var containerElement = document.getElementById("containerElement");
-            canvas.width = Math.min(containerElement.clientWidth, window.innerWidth * 0.8);
-            canvas.height = Math.min(containerElement.clientHeight, window.innerHeight * 0.8);
+            canvas.width = document.documentElement.clientWidth * 0.9;
+            canvas.height = document.documentElement.clientHeight * 0.9;
             var context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
+            Chart.defaults.font.size = 16;
             var config = {
                 type: 'bar',
                 data: data,
                 options: {
                     responsive: false,
-                    legend: {
-                        display: false
+                    plugins: {
+                        title: {
+                            text: getQuestionTitle(results),
+                            display: true,
+                            fullSize: true,
+                            color: '#000000',
+                            font: {
+                                size: 24
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
                     },
                     scales: {
-                        xAxes: [{
-                                ticks: {
-                                    fontSize: 16
-                                }
-                            }],
-                        yAxes: [{
-                                ticks: {
-                                    fontSize: 16,
-                                    suggestedMin: 0,
-                                    suggestedMax: 5,
-                                    stepSize: 1
-                                }
-                            }]
+                        x: {},
+                        y: {
+                            suggestedMin: 0,
+                            suggestedMax: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
                     }
                 }
             };

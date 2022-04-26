@@ -1,12 +1,10 @@
 ﻿
 @{
     ViewData["Title"] = "Quiz Results";
-    ViewData["MinimalLayout"] = true;
+    Layout = "_LayoutMinimal";
 }
 
-<h3 id="resultsTitle">Results</h3>
-
-<canvas id="quizChart" width="1024" height="800" class="quiz-results-canvas"></canvas>
+<canvas id="quizChart" width="1024" height="800" class="quiz-results-minimalcanvas"></canvas>
 <div><text id="users"></text> <text id="responses"></text></div>
 
 @section Scripts {

@@ -37,9 +37,6 @@ function getQuestionTitle(results: ResultViewModel) {
 
 function renderQuizResults(results: ResultViewModel, forceDraw: boolean) {
 
-    const resultsTitleElement = document.getElementById("resultsTitle") as HTMLElement;
-    resultsTitleElement.innerText = getQuestionTitle(results);
-
     data.labels = [];
     data.datasets[0].data = [];
 
@@ -57,40 +54,53 @@ function renderQuizResults(results: ResultViewModel, forceDraw: boolean) {
     responsesElement.innerHTML = `${results.responses} 📝`;
 
     console.log(labels);
-    console.log(forceDraw);
+    console.log(`forceDraw: ${forceDraw}`);
     console.log(data);
 
     if (forceDraw) {
+        if ((<any>window).resultChart !== undefined) {
+            // Release prior chart.js charts
+            (<any>window).resultChart.destroy();
+        }
+
         const canvas = document.getElementById('quizChart') as HTMLCanvasElement;
         const containerElement = document.getElementById("containerElement") as HTMLDivElement;
-        canvas.width = Math.min(containerElement.clientWidth, window.innerWidth * 0.8);
-        canvas.height = Math.min(containerElement.clientHeight, window.innerHeight * 0.8);
+        canvas.width = document.documentElement.clientWidth * 0.9;
+        canvas.height = document.documentElement.clientHeight * 0.9;
 
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
+        Chart.defaults.font.size = 16;
         const config = {
-            type: 'bar',
+            type: 'bar' as any,
             data: data,
             options: {
                 responsive: false,
-                legend: {
-                    display: false
+                plugins: {
+                    title: {
+                        text: getQuestionTitle(results),
+                        display: true,
+                        fullSize: true,
+                        color: '#000000',
+                        font: {
+                            size: 24
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
                 },
                 scales: {
-                    xAxes: [{
+                    x: {
+                    },
+                    y: {
+                        suggestedMin: 0,
+                        suggestedMax: 5,
                         ticks: {
-                            fontSize: 16
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            fontSize: 16,
-                            suggestedMin: 0,
-                            suggestedMax: 5,
                             stepSize: 1
                         }
-                    }]
+                    }
                 }
             }
         };
