@@ -107,8 +107,15 @@ System.register(["./resultTypes.js"], function (exports_1, context_1) {
                 var data = "Results received: " + new Date().toLocaleTimeString();
                 console.log(data);
                 console.log(r);
+                var forceDraw = false;
+                if (results !== undefined &&
+                    r !== undefined &&
+                    results.quizId !== r.quizId) {
+                    forceDraw = true;
+                    console.log("Quiz change so forcing re-draw");
+                }
                 results = r;
-                renderQuizResults(results, false);
+                renderQuizResults(results, forceDraw);
             });
             connection.onclose(function (e) {
                 if (e) {
