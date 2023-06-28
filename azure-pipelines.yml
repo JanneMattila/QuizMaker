@@ -1,3 +1,4 @@
+# Example modification
 variables:
   repositoryQuizMaker: 'jannemattila/quizmaker'
   repositoryQuizSim: 'jannemattila/quizsim'
